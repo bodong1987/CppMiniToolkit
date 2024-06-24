@@ -1,7 +1,5 @@
 #pragma once
 
-#include <Common/Macros.hpp>
-
 namespace CppMiniToolkit
 {
     namespace Details
@@ -46,6 +44,10 @@ namespace CppMiniToolkit
             return ScopedExit<Function>(std::move(f));
         }
     }
+
+    // CAT
+#define _CPPMINITOOLKIT_PP_CAT_IMPL_(a, b ) a ## b
+#define CPPMINITOOLKIT_PP_CAT(a, b) _CPPMINITOOLKIT_PP_CAT_IMPL_( a, b )
 
 #define CPPMINITOOLKIT_SCOPED_EXIT(expression) \
     auto CPPMINITOOLKIT_PP_CAT(scoped_exit_instance_, __COUNTER__) = ::CppMiniToolkit::Details::MakeScopedExit([&]() { expression; })

@@ -64,8 +64,8 @@ namespace CppMiniToolkit
         template <typename TCharType>
         static bool IsExtension(const TCharType* path, const TCharType* extension)
         {
-            const auto pathLength = TCharTraits<TCharType>::length(path);
-            const auto extensionLength = TCharTraits<TCharType>::length(extension);
+            const auto pathLength = std::char_traits<TCharType>::length(path);
+            const auto extensionLength = std::char_traits<TCharType>::length(extension);
 
             return pathLength > extensionLength && 
                 TCharTraits<TCharType>::iCompareN(path + pathLength - extensionLength, extension, extensionLength) == 0;
@@ -86,7 +86,7 @@ namespace CppMiniToolkit
         template <typename TCharType>
         static std::basic_string<TCharType> GetDirectoryPath(const TCharType* path)
         {
-            auto len = TCharTraits<TCharType>::length(path);
+            auto len = std::char_traits<TCharType>::length(path);
             auto pos = TCharTraits<TCharType>::rFindAny(path, GetSplitFlags<TCharType>());
 
             return pos != nullptr ? std::basic_string<TCharType>(path, pos + 1) : std::basic_string<TCharType>();
@@ -147,7 +147,7 @@ namespace CppMiniToolkit
         static bool IsAbsolutePath(const TCharType* path)
         {
 #if CPPMINITOOLKIT_PLATFORM_WINDOWS
-            return (TCharTraits<TCharType>::length(path) >= 2 && path[1] == ':') || (path != nullptr && path[0] == '\\');
+            return (std::char_traits<TCharType>::length(path) >= 2 && path[1] == ':') || (path != nullptr && path[0] == '\\');
 #else
             return path != nullptr && path[0] == '/';
 #endif

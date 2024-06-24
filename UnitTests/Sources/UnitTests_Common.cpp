@@ -1,7 +1,5 @@
 #include <gtest/gtest.h>
 #include <Common/DynamicBuffer.hpp>
-#include <Common/AutoArray.hpp>
-#include <Common/AutoString.hpp>
 #include <Common/HasSignature.hpp>
 
 using namespace CppMiniToolkit;
@@ -100,108 +98,6 @@ TEST(DynamicBuffer, AppendValueBits)
     buffer.AppendValueBits(value);
     EXPECT_EQ(buffer.GetSize(), sizeof(value));
     EXPECT_FALSE(buffer.IsEmpty());
-}
-
-TEST(TAutoArray, DefaultConstructor)
-{
-    TAutoArray<int> array;
-    EXPECT_EQ(array.GetLength(), 0);
-}
-
-TEST(TAutoArray, AddItem)
-{
-    TAutoArray<int> array;
-    for (int i = 0; i < 10; ++i)
-    {
-        array.AddItem(i);
-    }
-    EXPECT_EQ(array.GetLength(), 10);
-    for (int i = 0; i < 10; ++i)
-    {
-        EXPECT_EQ(array[i], i);
-    }
-}
-
-TEST(TAutoArray, CopyConstructor)
-{
-    TAutoArray<int> array1;
-    for (int i = 0; i < 10; ++i)
-    {
-        array1.AddItem(i);
-    }
-    TAutoArray<int> array2(array1);
-    EXPECT_EQ(array2.GetLength(), 10);
-    for (int i = 0; i < 10; ++i)
-    {
-        EXPECT_EQ(array2[i], i);
-    }
-}
-
-TEST(TAutoArray, MoveConstructor)
-{
-    TAutoArray<int> array1;
-    for (int i = 0; i < 10; ++i)
-    {
-        array1.AddItem(i);
-    }
-    TAutoArray<int> array2(std::move(array1));
-    EXPECT_EQ(array2.GetLength(), 10);
-    for (int i = 0; i < 10; ++i)
-    {
-        EXPECT_EQ(array2[i], i);
-    }
-    EXPECT_EQ(array1.GetLength(), 0);
-}
-
-TEST(TAutoArray, ExpandHeapSpace)
-{
-    TAutoArray<int> array;
-    for (int i = 0; i < 1000; ++i)
-    {
-        array.AddItem(i);
-    }
-    EXPECT_EQ(array.GetLength(), 1000);
-    for (int i = 0; i < 1000; ++i)
-    {
-        EXPECT_EQ(array[i], i);
-    }
-}
-
-TEST(TAutoString, DefaultConstructor)
-{
-    TAutoString<char> str;
-    EXPECT_STREQ(str.CStr(), "");
-}
-
-TEST(TAutoString, ConstructorWithCString)
-{
-    TAutoString<char> str("Hello");
-    EXPECT_STREQ(str.CStr(), "Hello");
-}
-
-TEST(TAutoString, AddChar)
-{
-    TAutoString<char> str;
-    str.AddChar('H');
-    str.AddChar('i');
-    EXPECT_STREQ(str.CStr(), "Hi");
-}
-
-TEST(TAutoString, AddStr)
-{
-    TAutoString<char> str;
-    str.AddStr("Hello");
-    str.AddStr(", ");
-    str.AddStr("World");
-    EXPECT_STREQ(str.CStr(), "Hello, World");
-}
-
-TEST(TAutoString, InjectAdd)
-{
-    TAutoString<char> str;
-    str.AddChar('H');
-    str.InjectAdd(1);
-    EXPECT_EQ(str.CStr()[1], '\0');
 }
 
 CPPMINITOOLKIT_DEFINE_HAS_SIGNATURE(HasStaticFooMemberFunction, T::foo, void (*)(void));

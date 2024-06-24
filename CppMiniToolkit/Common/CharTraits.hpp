@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cstdint>
 #include <cstddef>
 #include <cstdarg>
 #include <string>
@@ -73,7 +72,7 @@ namespace CppMiniToolkit
         }
 
     public:
-        static int32_t StaticSprintf(
+        static int32_t StringPrintf(
             char* string,
             size_t sizeInBytes,
             const char* format,
@@ -87,7 +86,7 @@ namespace CppMiniToolkit
 #if CPPMINITOOLKIT_COMPILER_MSVC
             result = _vsprintf_s_l(string, sizeInBytes, format, nullptr, arglist);
 #else
-            result = vsprintf(string, format, arglist);
+            result = vsnprintf(string, sizeInBytes, format, arglist);
 #endif
             va_end(arglist);
 
@@ -160,7 +159,7 @@ namespace CppMiniToolkit
         {
             for (const char* p = str + strlen(str) - 1; p >= str; --p)
             {
-                if(strchr(targets, *p) != nullptr)
+                if (strchr(targets, *p) != nullptr)
                 {
                     return p;
                 }
@@ -251,6 +250,21 @@ namespace CppMiniToolkit
         {
             return toupper(ch);
         }
+
+        static char GetSpace()
+        {
+            return ' ';
+        }
+
+        static char GetZero()
+        {
+            return '0';
+        }
+
+        static char GetEndFlag()
+        {
+            return (char)0;
+        }
     };
 
     template <>
@@ -310,7 +324,7 @@ namespace CppMiniToolkit
             return s;
         }
     public:
-        static int32_t StaticSprintf(
+        static int32_t StringPrintf(
             wchar_t* string,
             size_t sizeInWords,
             const wchar_t* format,
@@ -389,6 +403,11 @@ namespace CppMiniToolkit
         static const wchar_t* iFind(const wchar_t* str, const wchar_t* match)
         {
             return wcscasestr(str, match);
+        }
+
+        static const wchar_t* rFind(const wchar_t* str, wchar_t ch)
+        {
+            return wcsrchr(str, ch);
         }
 
         static const wchar_t* rFind(const wchar_t* str, const wchar_t* subString)
@@ -490,6 +509,21 @@ namespace CppMiniToolkit
         static wchar_t ToUpper(wchar_t ch)
         {
             return towupper(ch);
+        }
+
+        static wchar_t GetSpace()
+        {
+            return L' ';
+        }
+
+        static wchar_t GetZero()
+        {
+            return L'0';
+        }
+
+        static wchar_t GetEndFlag()
+        {
+            return (wchar_t)0;
         }
     };
 
