@@ -14,9 +14,6 @@ Calculate MD5, Crc32
 ## FileSystem
 base file system interfaces without C++ 17 <filesystem>
 
-## Format
-C++ 11 version of https://github.com/bodong1987/CPPFormatLibrary
-
 ## Platform
 Platform-related basic code base
 
