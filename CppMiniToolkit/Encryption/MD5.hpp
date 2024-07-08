@@ -7,6 +7,8 @@
 #include <array>
 #include <fstream>
 
+#include <Common/CharTraits.hpp>
+
 namespace CppMiniToolkit
 {
     struct MD5Value
@@ -27,7 +29,7 @@ namespace CppMiniToolkit
             char buffer[36];
             for (int i = 0; i < 16; ++i)
             {
-                sprintf(buffer + i * 2, "%02x", Bytes[i]);
+                TCharTraits<char>::StringPrintf(buffer + i * 2, 36, "%02x", Bytes[i]);               
             }
 
             return buffer;
@@ -38,7 +40,7 @@ namespace CppMiniToolkit
             char buffer[36];
             for (int i = 0; i < 16; ++i)
             {
-                sprintf(buffer + i * 2, "%02X", Bytes[i]);
+                TCharTraits<char>::StringPrintf(buffer + i * 2, 36, "%02X", Bytes[i]);
             }
 
             return buffer;
