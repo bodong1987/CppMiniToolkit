@@ -29,7 +29,7 @@ namespace CppMiniToolkit
             char buffer[36];
             for (int i = 0; i < 16; ++i)
             {
-                TCharTraits<char>::StringPrintf(buffer + i * 2, 36, "%02x", Bytes[i]);               
+                TCharTraits<char>::StringPrintf(buffer + i * 2, 36 - i * 2, "%02x", Bytes[i]);
             }
 
             return buffer;
@@ -40,7 +40,7 @@ namespace CppMiniToolkit
             char buffer[36];
             for (int i = 0; i < 16; ++i)
             {
-                TCharTraits<char>::StringPrintf(buffer + i * 2, 36, "%02X", Bytes[i]);
+                TCharTraits<char>::StringPrintf(buffer + i * 2, 36 - i * 2, "%02X", Bytes[i]);
             }
 
             return buffer;
