@@ -6,6 +6,7 @@
 #include <string>
 #include <windows.h>
 #include <tchar.h>
+#include <winioctl.h>
 
 #include <Common/ScopedExit.hpp>
 
