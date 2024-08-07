@@ -110,20 +110,23 @@ namespace CppMiniToolkit
                 return true;
             }
 
-            static bool PatchMemory(HMODULE module, LPCSTR segmentName, LPCVOID signature, LPCVOID newBytes, LONGLONG length)
+            static LPVOID PatchMemory(HMODULE module, LPCSTR segmentName, LPCVOID signature, LPCVOID newBytes, LONGLONG length)
             {
-                void* pos = SearchInSection(module, segmentName, signature, length);
+                LPVOID pos = SearchInSection(module, segmentName, signature, length);
 
                 assert(pos != nullptr);
 
                 if (pos == nullptr)
                 {
-                    return false;
+                    return nullptr;
                 }
 
-                ReplaceMemory(pos, newBytes, length);
+                if(!ReplaceMemory(pos, newBytes, length))
+                {
+                    return nullptr;
+                }
 
-                return true;
+                return pos;
             }
         };
     }
