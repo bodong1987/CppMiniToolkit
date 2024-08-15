@@ -54,6 +54,7 @@ namespace CppMiniToolkit
     // reference https://create.stephan-brumme.com/crc32/#git1
     class CRC32
     {
+    public:
         CRC32() = delete;
         ~CRC32() = delete;
     private:
@@ -640,7 +641,7 @@ public:
     private:
 #ifndef CPPMINITOOLKIT_NO_LOOKUPTABLE
         /// look-up table, already declared above
-        constexpr static const uint32_t Crc32Lookup[MaxSlice][256] =
+        constexpr static uint32_t Crc32Lookup[MaxSlice][256] =
         {
             //// same algorithm as crc32_bitwise
             //for (int i = 0; i <= 0xFF; i++)
@@ -1225,6 +1226,8 @@ public:
         };
 #endif // CPPMINITOOLKIT_NO_LOOKUPTABLE
     };
+
+    constexpr uint32_t CRC32::Crc32Lookup[MaxSlice][256];
 }
 
 #undef CPPMINITOOLKIT_LITTLEENDIAN

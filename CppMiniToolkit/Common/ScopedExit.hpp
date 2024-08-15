@@ -1,7 +1,5 @@
 #pragma once
 
-#include <xutility>
-
 namespace CppMiniToolkit
 {
     namespace Details
@@ -9,11 +7,11 @@ namespace CppMiniToolkit
         template <typename TCallable>
         class ScopedExit 
         {
-        private:
+        public:
             // disable copy 
             ScopedExit(const ScopedExit&) = delete;
             ScopedExit& operator = (const ScopedExit&) = delete;
-        public:
+
             explicit ScopedExit(TCallable func) noexcept :
                 Func(std::move(func)), 
                 engaged(true) 
@@ -48,8 +46,8 @@ namespace CppMiniToolkit
     }
 
     // CAT
-#define _CPPMINITOOLKIT_PP_CAT_IMPL_(a, b ) a ## b
-#define CPPMINITOOLKIT_PP_CAT(a, b) _CPPMINITOOLKIT_PP_CAT_IMPL_( a, b )
+#define CPPMINITOOLKIT_PP_CAT_IMPL(a, b ) a ## b
+#define CPPMINITOOLKIT_PP_CAT(a, b) CPPMINITOOLKIT_PP_CAT_IMPL( a, b )
 
 #define CPPMINITOOLKIT_SCOPED_EXIT(expression) \
     auto CPPMINITOOLKIT_PP_CAT(scoped_exit_instance_, __COUNTER__) = ::CppMiniToolkit::Details::MakeScopedExit([&]() { expression; })
