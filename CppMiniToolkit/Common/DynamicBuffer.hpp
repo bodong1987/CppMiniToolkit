@@ -14,9 +14,7 @@ namespace CppMiniToolkit
         typedef std::allocator<uint8_t>			 AllocatorType;
         typedef size_t                           SizeType;
 
-        explicit TDynamicBuffer()
-        {
-        }
+        explicit TDynamicBuffer() = default;
 
         explicit TDynamicBuffer(const void* source, SizeType length)
         {
@@ -168,12 +166,12 @@ namespace CppMiniToolkit
             return At(index);
         }
 
-        const uint8_t& operator [](SizeType index) const
+        const uint8_t& operator [](const SizeType index) const
         {
             return At(index);
         }
 
-        template <typename T, typename _TEnableIfType = typename std::enable_if<std::is_pod<T>::value>::type>
+        template <typename T, typename TEnableIfType = std::enable_if_t<std::is_pod<T>::value>>
         void AppendValueBits(T value)
         {
             Append(&value, sizeof(value));

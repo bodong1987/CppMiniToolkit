@@ -39,7 +39,7 @@ namespace CppMiniToolkit
         };
 
         template <typename Function>
-        inline ScopedExit<Function> MakeScopedExit(Function f) noexcept
+        ScopedExit<Function> MakeScopedExit(Function f) noexcept
         {
             return ScopedExit<Function>(std::move(f));
         }

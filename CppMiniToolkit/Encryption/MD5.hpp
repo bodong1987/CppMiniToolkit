@@ -1,10 +1,9 @@
+// ReSharper disable CppCStyleCast
 #pragma once
 
 #include <cstdint>
 #include <memory>
-#include <cassert>
 #include <string>
-#include <array>
 #include <fstream>
 
 #include <Common/CharTraits.hpp>
@@ -15,13 +14,8 @@ namespace CppMiniToolkit
     {
         union 
         {
-            uint8_t Bytes[16];
+            uint8_t Bytes[16] = {};
         };
-
-        MD5Value()
-        {
-            memset(Bytes, 0, sizeof(Bytes));
-        }
 
         // Convert to a string of hexadecimal digits
         std::string ToHexString() const
@@ -52,10 +46,10 @@ namespace CppMiniToolkit
     {
     private:
         /// MD5 fixed constants in little endian.
-        static const uint32_t kA = 0x67452301;
-        static const uint32_t kB = 0xefcdab89;
-        static const uint32_t kC = 0x98badcfe;
-        static const uint32_t kD = 0x10325476;
+        static constexpr uint32_t kA = 0x67452301;
+        static constexpr uint32_t kB = 0xefcdab89;
+        static constexpr uint32_t kC = 0x98badcfe;
+        static constexpr uint32_t kD = 0x10325476;
 
         struct MD5Context
         {
@@ -122,7 +116,7 @@ namespace CppMiniToolkit
 
     private:
         /// MD5 data block index, input between 0 and 63.
-        constexpr int K(const int i) 
+        static constexpr int K(const int i)
         {
             constexpr int step[4] = { 1, 5, 3, 7 };
             constexpr int begin[4] = { 0, 1, 5, 0 };
@@ -130,7 +124,7 @@ namespace CppMiniToolkit
         }
 
         /// MD5 circular shift times, input between 0 and 63.
-        constexpr int S(const int i) 
+        static constexpr int S(const int i)
         {
             constexpr int shift[4][4] = 
             {
@@ -143,7 +137,7 @@ namespace CppMiniToolkit
         }
 
         /// MD5 T-table constant, input between 0 and 63.
-        constexpr uint32_t T(const int i) 
+        static constexpr uint32_t T(const int i)
         {
             constexpr uint32_t kT[64] =
             {
@@ -168,17 +162,18 @@ namespace CppMiniToolkit
             return kT[i];
         }
         
-#define __MD5_R1 A, B, C, D
-#define __MD5_R2 D, A, B, C
-#define __MD5_R3 C, D, A, B
-#define __MD5_R4 B, C, D, A
+#define __MD5_R1 A, B, C, D /* NOLINT(*-reserved-identifier) */
+#define __MD5_R2 D, A, B, C /* NOLINT(*-reserved-identifier) */
+#define __MD5_R3 C, D, A, B /* NOLINT(*-reserved-identifier) */
+#define __MD5_R4 B, C, D, A /* NOLINT(*-reserved-identifier) */
 
-#define __MD5_F(x, y, z) (z ^ (x & (y ^ z)))
-#define __MD5_G(x, y, z) (y ^ (z & (x ^ y)))
-#define __MD5_H(x, y, z) (x ^ y ^ z)
-#define __MD5_I(x, y, z) (y ^ (x | ~z))
+#define __MD5_F(x, y, z) (z ^ (x & (y ^ z))) /* NOLINT(*-reserved-identifier) */
+#define __MD5_G(x, y, z) (y ^ (z & (x ^ y))) /* NOLINT(*-reserved-identifier) */
+#define __MD5_H(x, y, z) (x ^ y ^ z) /* NOLINT(*-reserved-identifier) */
+#define __MD5_I(x, y, z) (y ^ (x | ~z)) /* NOLINT(*-reserved-identifier) */
 
-#define __MD5_ROUND(i, f, a, b, c, d)           \
+
+#define __MD5_ROUND(i, f, a, b, c, d)         /* NOLINT(*-reserved-identifier) */  \
     do {                                      \
         a += f(b, c, d) + block[K(i)] + T(i); \
         a = a << S(i) | a >> (32 - S(i));     \
@@ -189,15 +184,15 @@ namespace CppMiniToolkit
 #define __MD5_EXPAND(...) __VA_ARGS__
 #define __MD5_ROUND_WRAPPER(...) __MD5_EXPAND(__MD5_ROUND(__VA_ARGS__))
 #else
-#define __MD5_ROUND_WRAPPER __MD5_ROUND
+#define __MD5_ROUND_WRAPPER __MD5_ROUND /* NOLINT(*-reserved-identifier) */
 #endif
 
-#define __MD5_FF(i, ...) __MD5_ROUND_WRAPPER(i | 0x00, __MD5_F, __VA_ARGS__)
-#define __MD5_GG(i, ...) __MD5_ROUND_WRAPPER(i | 0x10, __MD5_G, __VA_ARGS__)
-#define __MD5_HH(i, ...) __MD5_ROUND_WRAPPER(i | 0x20, __MD5_H, __VA_ARGS__)
-#define __MD5_II(i, ...) __MD5_ROUND_WRAPPER(i | 0x30, __MD5_I, __VA_ARGS__)
+#define __MD5_FF(i, ...) __MD5_ROUND_WRAPPER(i | 0x00, __MD5_F, __VA_ARGS__) /* NOLINT(*-reserved-identifier) */
+#define __MD5_GG(i, ...) __MD5_ROUND_WRAPPER(i | 0x10, __MD5_G, __VA_ARGS__) /* NOLINT(*-reserved-identifier) */
+#define __MD5_HH(i, ...) __MD5_ROUND_WRAPPER(i | 0x20, __MD5_H, __VA_ARGS__) /* NOLINT(*-reserved-identifier) */
+#define __MD5_II(i, ...) __MD5_ROUND_WRAPPER(i | 0x30, __MD5_I, __VA_ARGS__) /* NOLINT(*-reserved-identifier) */
 
-#define __MD5_UPDATE(OP)                                  \
+#define __MD5_UPDATE(OP)                 /* NOLINT(*-reserved-identifier) */                 \
     OP(0x0, __MD5_R1); OP(0x1, __MD5_R2); OP(0x2, __MD5_R3); OP(0x3, __MD5_R4); \
     OP(0x4, __MD5_R1); OP(0x5, __MD5_R2); OP(0x6, __MD5_R3); OP(0x7, __MD5_R4); \
     OP(0x8, __MD5_R1); OP(0x9, __MD5_R2); OP(0xa, __MD5_R3); OP(0xb, __MD5_R4); \
@@ -306,10 +301,11 @@ namespace CppMiniToolkit
             std::ifstream file(path, std::ios::binary);
             if (!file) 
             {
-                return MD5Value();
+                return MD5Value(); // NOLINT(*-return-braced-init-list)
             }
 
             MD5 md5;
+            // ReSharper disable once CppTooWideScope
             uint8_t buffer[4096];
 
             while (!file.eof()) 

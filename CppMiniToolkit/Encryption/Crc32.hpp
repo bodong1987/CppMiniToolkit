@@ -1,3 +1,6 @@
+// ReSharper disable CppUseAuto
+// ReSharper disable CppCStyleCast
+// ReSharper disable CppRedundantParentheses
 #pragma once
 
 #include <cstdint>
@@ -59,7 +62,7 @@ namespace CppMiniToolkit
         ~CRC32() = delete;
     private:
         /// zlib's CRC32 polynomial
-        constexpr static const uint32_t Polynomial = 0xEDB88320;
+        constexpr static uint32_t Polynomial = 0xEDB88320;
 
 #if CPPMINITOOLKIT_BYTE_ORDER == CPPMINITOOLKIT_BIGENDIAN
         /// swap endianess
@@ -78,13 +81,13 @@ namespace CppMiniToolkit
 
         /// Slicing-By-16
 #ifdef CPPMINITOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_16
-        constexpr static const size_t MaxSlice = 16;
+        constexpr static size_t MaxSlice = 16;
 #elif defined(CPPMINITOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_8)
-        constexpr static const size_t MaxSlice = 8;
+        constexpr static size_t MaxSlice = 8;
 #elif defined(CPPMINITOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_4)
-        constexpr static const size_t MaxSlice = 4;
+        constexpr static size_t MaxSlice = 4;
 #elif defined(CPPMINITOOLKIT_CRC32_USE_LOOKUP_TABLE_BYTE)
-        constexpr static const size_t MaxSlice = 1;
+        constexpr static size_t MaxSlice = 1;
 #else
 #define CPPMINITOOLKIT_NO_LOOKUPTABLE // don't need Crc32Lookup at all
 #endif    
@@ -92,7 +95,7 @@ namespace CppMiniToolkit
         static uint32_t crc32_bitwise(const void* data, size_t length, uint32_t previousCrc32)
         {
             uint32_t crc = ~previousCrc32; // same as previousCrc32 ^ 0xFFFFFFFF
-            const uint8_t* current = (const uint8_t*)data;
+            const uint8_t* current = static_cast<const uint8_t*>(data);
 
             while (length-- != 0)
             {
@@ -101,7 +104,7 @@ namespace CppMiniToolkit
                 for (int j = 0; j < 8; j++)
                 {
                     // branch-free
-                    crc = (crc >> 1) ^ (-int32_t(crc & 1) & Polynomial);
+                    crc = (crc >> 1) ^ (-static_cast<int32_t>(crc & 1) & Polynomial);
 
                     // branching, much slower:
                     //if (crc & 1)
@@ -119,10 +122,10 @@ namespace CppMiniToolkit
         static uint32_t crc32_halfbyte(const void* data, size_t length, uint32_t previousCrc32)
         {
             uint32_t crc = ~previousCrc32; // same as previousCrc32 ^ 0xFFFFFFFF
-            const uint8_t* current = (const uint8_t*)data;
+            const uint8_t* current = static_cast<const uint8_t*>(data);
 
             /// look-up table for half-byte, same as crc32Lookup[0][16*i]
-            static const uint32_t Crc32Lookup16[16] =
+            constexpr uint32_t Crc32Lookup16[16] =
             {
               0x00000000,0x1DB71064,0x3B6E20C8,0x26D930AC,0x76DC4190,0x6B6B51F4,0x4DB26158,0x5005713C,
               0xEDB88320,0xF00F9344,0xD6D6A3E8,0xCB61B38C,0x9B64C2B0,0x86D3D2D4,0xA00AE278,0xBDBDF21C
@@ -144,7 +147,7 @@ namespace CppMiniToolkit
         static uint32_t crc32_1byte(const void* data, size_t length, uint32_t previousCrc32)
         {
             uint32_t crc = ~previousCrc32; // same as previousCrc32 ^ 0xFFFFFFFF
-            const uint8_t* current = (const uint8_t*)data;
+            const uint8_t* current = static_cast<const uint8_t*>(data);
 
             while (length-- != 0)
                 crc = (crc >> 8) ^ Crc32Lookup[0][(crc & 0xFF) ^ *current++];
@@ -158,11 +161,11 @@ namespace CppMiniToolkit
         static uint32_t crc32_1byte_tableless(const void* data, size_t length, uint32_t previousCrc32)
         {
             uint32_t crc = ~previousCrc32; // same as previousCrc32 ^ 0xFFFFFFFF
-            const uint8_t* current = (const uint8_t*)data;
+            const uint8_t* current = static_cast<const uint8_t*>(data);
 
             while (length-- != 0)
             {
-                uint8_t s = uint8_t(crc) ^ *current++;
+                uint8_t s = static_cast<uint8_t>(crc) ^ *current++;
 
                 // Hagai Gold made me aware of this table-less algorithm and send me code
 
@@ -211,8 +214,8 @@ namespace CppMiniToolkit
         /// compute CRC32 (byte algorithm) without lookup tables
         static uint32_t crc32_1byte_tableless2(const void* data, size_t length, uint32_t previousCrc32)
         {
-            int32_t crc = ~previousCrc32; // note: signed integer, right shift distributes sign bit into lower bits
-            const uint8_t* current = (const uint8_t*)data;
+            int32_t crc = ~previousCrc32; // note: signed integer, right shift distributes sign bit into lower bits NOLINT(*-narrowing-conversions)
+            const uint8_t* current = static_cast<const uint8_t*>(data);
 
             while (length-- != 0)
             {
@@ -227,7 +230,7 @@ namespace CppMiniToolkit
                     (((crc << 25) >> 31) & (Polynomial >> 1)) ^
                     (((crc << 24) >> 31) & Polynomial);
 
-                crc = ((uint32_t)crc >> 8) ^ c; // convert to unsigned integer before right shift
+                crc = (static_cast<uint32_t>(crc) >> 8) ^ c; // convert to unsigned integer before right shift NOLINT(*-narrowing-conversions)
             }
 
             return ~crc; // same as crc ^ 0xFFFFFFFF
@@ -239,7 +242,7 @@ namespace CppMiniToolkit
         static uint32_t crc32_4bytes(const void* data, size_t length, uint32_t previousCrc32)
         {
             uint32_t  crc = ~previousCrc32; // same as previousCrc32 ^ 0xFFFFFFFF
-            const uint32_t* current = (const uint32_t*)data;
+            const uint32_t* current = static_cast<const uint32_t*>(data);
 
             // process four bytes at once (Slicing-by-4)
             while (length >= 4)
@@ -276,7 +279,7 @@ namespace CppMiniToolkit
         static uint32_t crc32_8bytes(const void* data, size_t length, uint32_t previousCrc32)
         {
             uint32_t crc = ~previousCrc32; // same as previousCrc32 ^ 0xFFFFFFFF
-            const uint32_t* current = (const uint32_t*)data;
+            const uint32_t* current = static_cast<const uint32_t*>(data);
 
             // process eight bytes at once (Slicing-by-8)
             while (length >= 8)
@@ -321,11 +324,11 @@ namespace CppMiniToolkit
         static uint32_t crc32_4x8bytes(const void* data, size_t length, uint32_t previousCrc32)
         {
             uint32_t crc = ~previousCrc32; // same as previousCrc32 ^ 0xFFFFFFFF
-            const uint32_t* current = (const uint32_t*)data;
+            const uint32_t* current = static_cast<const uint32_t*>(data);
 
             // enabling optimization (at least -O2) automatically unrolls the inner for-loop
-            const size_t Unroll = 4;
-            const size_t BytesAtOnce = 8 * Unroll;
+            constexpr size_t Unroll = 4;
+            constexpr size_t BytesAtOnce = 8 * Unroll;
 
             // process 4x eight bytes at once (Slicing-by-8)
             while (length >= BytesAtOnce)
@@ -376,11 +379,11 @@ namespace CppMiniToolkit
         static uint32_t crc32_16bytes(const void* data, size_t length, uint32_t previousCrc32)
         {
             uint32_t crc = ~previousCrc32; // same as previousCrc32 ^ 0xFFFFFFFF
-            const uint32_t* current = (const uint32_t*)data;
+            const uint32_t* current = static_cast<const uint32_t*>(data);
 
             // enabling optimization (at least -O2) automatically unrolls the inner for-loop
-            const size_t Unroll = 4;
-            const size_t BytesAtOnce = 16 * Unroll;
+            constexpr size_t Unroll = 4;
+            constexpr size_t BytesAtOnce = 16 * Unroll;
 
             while (length >= BytesAtOnce)
             {
@@ -450,11 +453,11 @@ namespace CppMiniToolkit
             // 256 bytes look-ahead seems to be the sweet spot on Core i7 CPUs
 
             uint32_t crc = ~previousCrc32; // same as previousCrc32 ^ 0xFFFFFFFF
-            const uint32_t* current = (const uint32_t*)data;
+            const uint32_t* current = static_cast<const uint32_t*>(data);
 
             // enabling optimization (at least -O2) automatically unrolls the for-loop
-            const size_t Unroll = 4;
-            const size_t BytesAtOnce = 16 * Unroll;
+            constexpr size_t Unroll = 4;
+            constexpr size_t BytesAtOnce = 16 * Unroll;
 
             while (length >= BytesAtOnce + prefetchAhead)
             {
@@ -572,19 +575,19 @@ public:
                 return crcA;
 
             /// CRC32 => 32 bits
-            const uint32_t CrcBits = 32;
+            constexpr uint32_t CrcBits = 32;
 
             uint32_t odd[CrcBits]; // odd-power-of-two  zeros operator
             uint32_t even[CrcBits]; // even-power-of-two zeros operator
 
             // put operator for one zero bit in odd
             odd[0] = Polynomial;    // CRC-32 polynomial
-            for (int i = 1; i < (int)CrcBits; i++)
+            for (int i = 1; i < static_cast<int>(CrcBits); i++)
                 odd[i] = 1 << (i - 1);
 
             // put operator for two zero bits in even
             // same as gf2_matrix_square(even, odd);
-            for (int i = 0; i < (int)CrcBits; i++)
+            for (int i = 0; i < static_cast<int>(CrcBits); i++)
             {
                 uint32_t vec = odd[i];
                 even[i] = 0;
@@ -594,7 +597,7 @@ public:
             }
             // put operator for four zero bits in odd
             // same as gf2_matrix_square(odd, even);
-            for (int i = 0; i < (int)CrcBits; i++)
+            for (int i = 0; i < static_cast<int>(CrcBits); i++)
             {
                 uint32_t vec = even[i];
                 odd[i] = 0;
@@ -610,7 +613,7 @@ public:
             for (; lengthB > 0; lengthB >>= 1)
             {
                 // same as gf2_matrix_square(a, b);
-                for (int i = 0; i < (int)CrcBits; i++)
+                for (int i = 0; i < static_cast<int>(CrcBits); i++)
                 {
                     uint32_t vec = b[i];
                     a[i] = 0;

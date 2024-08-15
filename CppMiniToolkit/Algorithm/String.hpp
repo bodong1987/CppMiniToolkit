@@ -7,45 +7,44 @@ namespace CppMiniToolkit
 {
     class StringAlgorithm
     {
-    private:
+    public:
         StringAlgorithm() = delete;
         ~StringAlgorithm() = delete;
 
         // equal
-    public:
         template <typename TCharType>
-        inline static bool Equal(const std::basic_string<TCharType>& first, const std::basic_string<TCharType>& second)
+        static bool Equal(const std::basic_string<TCharType>& first, const std::basic_string<TCharType>& second)
         {
             return first == second;
         }
 
         template <typename TCharType>
-        inline static bool Equal(const std::basic_string<TCharType>& first, const TCharType* second)
+        static bool Equal(const std::basic_string<TCharType>& first, const TCharType* second)
         {
             return first == second;
         }
 
         template <typename TCharType>
-        inline static bool Equal(const TCharType* first, const TCharType* second)
+        static bool Equal(const TCharType* first, const TCharType* second)
         {
             return TCharTraits<TCharType>::Compare(first, second) == 0;
         }
 
         // equal(ignore case)
         template <typename TCharType>
-        inline static bool iEqual(const std::basic_string<TCharType>& first, const std::basic_string<TCharType>& second)
+        static bool iEqual(const std::basic_string<TCharType>& first, const std::basic_string<TCharType>& second)
         {
             return TCharTraits<TCharType>::iCompare(first.c_str(), second.c_str()) == 0;
         }
 
         template <typename TCharType>
-        inline static bool iEqual(const std::basic_string<TCharType>& first, const TCharType* second)
+        static bool iEqual(const std::basic_string<TCharType>& first, const TCharType* second)
         {
             return TCharTraits<TCharType>::iCompare(first.c_str(), second) == 0;
         }
 
         template <typename TCharType>
-        inline static bool iEqual(const TCharType* first, const TCharType* second)
+        static bool iEqual(const TCharType* first, const TCharType* second)
         {
             return TCharTraits<TCharType>::iCompare(first, second) == 0;
         }
@@ -53,13 +52,13 @@ namespace CppMiniToolkit
         // search and identifier
     public:
         template <typename TCharType>
-        inline static bool StartWith(const std::basic_string<TCharType>& str, const std::basic_string<TCharType>& start)
+        static bool StartWith(const std::basic_string<TCharType>& str, const std::basic_string<TCharType>& start)
         {
             return str.size() >= start.size() && TCharTraits<TCharType>::CompareN(str.c_str(), start.c_str(), start.size()) == 0;
         }
 
         template <typename TCharType>
-        inline static bool StartWith(const std::basic_string<TCharType>& str, const TCharType* start)
+        static bool StartWith(const std::basic_string<TCharType>& str, const TCharType* start)
         {
             std::size_t length = TCharTraits<TCharType>::length(start);
 
@@ -67,19 +66,19 @@ namespace CppMiniToolkit
         }
 
         template <typename TCharType>
-        inline static bool StartWith(const TCharType* str, const TCharType* start)
+        static bool StartWith(const TCharType* str, const TCharType* start)
         {
             return TCharTraits<TCharType>::CompareN(str, start, TCharTraits<TCharType>::length(start)) == 0;
         }
 
         template <typename TCharType>
-        inline static bool iStartWith(const std::basic_string<TCharType>& str, const std::basic_string<TCharType>& start)
+        static bool iStartWith(const std::basic_string<TCharType>& str, const std::basic_string<TCharType>& start)
         {
             return str.size() >= start.size() && TCharTraits<TCharType>::iCompareN(str.c_str(), start.c_str(), start.size()) == 0;
         }
 
         template <typename TCharType>
-        inline static bool iStartWith(const std::basic_string<TCharType>& str, const TCharType* start)
+        static bool iStartWith(const std::basic_string<TCharType>& str, const TCharType* start)
         {
             std::size_t length = TCharTraits<TCharType>::length(start);
 
@@ -87,55 +86,55 @@ namespace CppMiniToolkit
         }
 
         template <typename TCharType>
-        inline static bool iStartWith(const TCharType* str, const TCharType* start)
+        static bool iStartWith(const TCharType* str, const TCharType* start)
         {
             return TCharTraits<TCharType>::iCompareN(str, start, TCharTraits<TCharType>::length(start)) == 0;
         }
 
         template <typename TCharType>
-        inline static bool Contains(const std::basic_string<TCharType>& str, const std::basic_string<TCharType>& match)
+        static bool Contains(const std::basic_string<TCharType>& str, const std::basic_string<TCharType>& match)
         {
             return str.find(match) != std::basic_string<TCharType>::npos;
         }
 
         template <typename TCharType>
-        inline static bool Contains(const std::basic_string<TCharType>& str, const TCharType* match)
+        static bool Contains(const std::basic_string<TCharType>& str, const TCharType* match)
         {
             return str.find(match) != std::basic_string<TCharType>::npos;
         }
 
         template <typename TCharType>
-        inline static bool Contains(const TCharType* str, const TCharType* match)
+        static bool Contains(const TCharType* str, const TCharType* match)
         {
             return TCharTraits<TCharType>::Find(str, match) != nullptr;
         }
 
         template <typename TCharType>
-        inline static bool iContains(const std::basic_string<TCharType>& str, const std::basic_string<TCharType>& match)
+        static bool iContains(const std::basic_string<TCharType>& str, const std::basic_string<TCharType>& match)
         {
             return TCharTraits<TCharType>::iFind(str.c_str(), match.c_str()) != nullptr;
         }
 
         template <typename TCharType>
-        inline static bool iContains(const std::basic_string<TCharType>& str, const TCharType* match)
+        static bool iContains(const std::basic_string<TCharType>& str, const TCharType* match)
         {
             return TCharTraits<TCharType>::iFind(str.c_str(), match) != nullptr;
         }
-               
+
         template <typename TCharType>
-        inline static bool iContains(const TCharType* str, const TCharType* match)
+        static bool iContains(const TCharType* str, const TCharType* match)
         {
             return TCharTraits<TCharType>::iFind(str, match) != nullptr;
         }
 
         template <typename TCharType>
-        inline static bool EndWith(const std::basic_string<TCharType>& str, const std::basic_string<TCharType>& match)
+        static bool EndWith(const std::basic_string<TCharType>& str, const std::basic_string<TCharType>& match)
         {
             return str.size() >= match.size() && str.rfind(match) == str.size() - match.size();
         }
 
         template <typename TCharType>
-        inline static bool EndWith(const std::basic_string<TCharType>& str, const TCharType* match)
+        static bool EndWith(const std::basic_string<TCharType>& str, const TCharType* match)
         {
             std::size_t matchLength = TCharTraits<TCharType>::length(match);
 
@@ -143,7 +142,7 @@ namespace CppMiniToolkit
         }
 
         template <typename TCharType>
-        inline static bool EndWith(const TCharType* str, const TCharType* match)
+        static bool EndWith(const TCharType* str, const TCharType* match)
         {
             std::size_t strLength = TCharTraits<TCharType>::length(str);
             std::size_t matchLength = TCharTraits<TCharType>::length(match);
@@ -152,7 +151,7 @@ namespace CppMiniToolkit
         }
 
         template <typename TCharType>
-        inline static bool iEndWith(const std::basic_string<TCharType>& str, const std::basic_string<TCharType>& match)
+        static bool iEndWith(const std::basic_string<TCharType>& str, const std::basic_string<TCharType>& match)
         {
             const std::size_t strLength = str.size();
             const std::size_t matchLength = match.size();
@@ -161,7 +160,7 @@ namespace CppMiniToolkit
         }
 
         template <typename TCharType>
-        inline static bool iEndWith(const std::basic_string<TCharType>& str, const TCharType* match)
+        static bool iEndWith(const std::basic_string<TCharType>& str, const TCharType* match)
         {
             const std::size_t strLength = str.size();
             const std::size_t matchLength = TCharTraits<TCharType>::length(match);
@@ -169,9 +168,9 @@ namespace CppMiniToolkit
             return strLength >= matchLength && TCharTraits<TCharType>::iCompareN(str.c_str() + strLength - matchLength, match, matchLength) == 0;
         }
 
-        
+
         template <typename TCharType>
-        inline static bool iEndWith(const TCharType* str, const TCharType* match)
+        static bool iEndWith(const TCharType* str, const TCharType* match)
         {
             const std::size_t strLength = TCharTraits<TCharType>::length(str);
             const std::size_t matchLength = TCharTraits<TCharType>::length(match);
@@ -182,7 +181,7 @@ namespace CppMiniToolkit
         // replace
     private:
         template <typename TCharType, bool ignoreCase>
-        inline static std::basic_string<TCharType>& ReplaceCore(std::basic_string<TCharType>& str, const std::basic_string<TCharType>& match, const std::basic_string<TCharType>& replace)
+        static std::basic_string<TCharType>& ReplaceCore(std::basic_string<TCharType>& str, const std::basic_string<TCharType>& match, const std::basic_string<TCharType>& replace)
         {
             auto ptr = ignoreCase ? TCharTraits<TCharType>::iFind(str.c_str(), match.c_str()) : TCharTraits<TCharType>::Find(str.c_str(), match.c_str());
 
@@ -198,13 +197,13 @@ namespace CppMiniToolkit
 
     public:
         template <typename TCharType>
-        inline static std::basic_string<TCharType>& Replace(std::basic_string<TCharType>& str, const std::basic_string<TCharType>& match, const std::basic_string<TCharType>& replace)
+        static std::basic_string<TCharType>& Replace(std::basic_string<TCharType>& str, const std::basic_string<TCharType>& match, const std::basic_string<TCharType>& replace)
         {
             return ReplaceCore<TCharType, false>(str, match, replace);
         }
-       
+
         template <typename TCharType>
-        inline static std::basic_string<TCharType> ReplaceCopy(const std::basic_string<TCharType>& str, const std::basic_string<TCharType>& match, const std::basic_string<TCharType>& replace)
+        static std::basic_string<TCharType> ReplaceCopy(const std::basic_string<TCharType>& str, const std::basic_string<TCharType>& match, const std::basic_string<TCharType>& replace)
         {
             auto result = str;
             Replace(result, match, replace);
@@ -212,22 +211,22 @@ namespace CppMiniToolkit
         }
 
         template <typename TCharType>
-        inline static std::basic_string<TCharType>& iReplace(std::basic_string<TCharType>& str, const std::basic_string<TCharType>& match, const std::basic_string<TCharType>& replace)
+        static std::basic_string<TCharType>& iReplace(std::basic_string<TCharType>& str, const std::basic_string<TCharType>& match, const std::basic_string<TCharType>& replace)
         {
             return ReplaceCore<TCharType, true>(str, match, replace);
         }
 
         template <typename TCharType>
-        inline static std::basic_string<TCharType> iReplaceCopy(const std::basic_string<TCharType>& str, const std::basic_string<TCharType>& match, const std::basic_string<TCharType>& replace)
+        static std::basic_string<TCharType> iReplaceCopy(const std::basic_string<TCharType>& str, const std::basic_string<TCharType>& match, const std::basic_string<TCharType>& replace)
         {
             auto result = str;
             iReplace(result, match, replace);
             return result;
         }
 
-    private:        
+    private:
         template <typename TCharType, bool ignoreCase>
-        inline static std::basic_string<TCharType>& ReplaceAllCore(std::basic_string<TCharType>& str, const std::basic_string<TCharType>& match, const std::basic_string<TCharType>& replace)
+        static std::basic_string<TCharType>& ReplaceAllCore(std::basic_string<TCharType>& str, const std::basic_string<TCharType>& match, const std::basic_string<TCharType>& replace)
         {
             typename std::basic_string<TCharType>::size_type startPos = std::basic_string<TCharType>::npos;
 
@@ -247,29 +246,29 @@ namespace CppMiniToolkit
             return str;
         }
 
-    public:       
+    public:
         template <typename TCharType>
-        inline static std::basic_string<TCharType>& ReplaceAll(std::basic_string<TCharType>& str, const std::basic_string<TCharType>& match, const std::basic_string<TCharType>& replace)
+        static std::basic_string<TCharType>& ReplaceAll(std::basic_string<TCharType>& str, const std::basic_string<TCharType>& match, const std::basic_string<TCharType>& replace)
         {
             return ReplaceAllCore<TCharType, false>(str, match, replace);
         }
-                
+
         template <typename TCharType>
-        inline static std::basic_string<TCharType> ReplaceAllCopy(const std::basic_string<TCharType>& str, const std::basic_string<TCharType>& match, const std::basic_string<TCharType>& replace)
+        static std::basic_string<TCharType> ReplaceAllCopy(const std::basic_string<TCharType>& str, const std::basic_string<TCharType>& match, const std::basic_string<TCharType>& replace)
         {
             auto result = str;
             ReplaceAll(result, match, replace);
             return result;
         }
-            
+
         template <typename TCharType>
-        inline static std::basic_string<TCharType>& iReplaceAll(std::basic_string<TCharType>& str, const std::basic_string<TCharType>& match, const std::basic_string<TCharType>& replace)
+        static std::basic_string<TCharType>& iReplaceAll(std::basic_string<TCharType>& str, const std::basic_string<TCharType>& match, const std::basic_string<TCharType>& replace)
         {
             return ReplaceAllCore<TCharType, true>(str, match, replace);
         }
 
         template <typename TCharType>
-        inline static std::basic_string<TCharType> iReplaceAllCopy(const std::basic_string<TCharType>& str, const std::basic_string<TCharType>& match, const std::basic_string<TCharType>& replace)
+        static std::basic_string<TCharType> iReplaceAllCopy(const std::basic_string<TCharType>& str, const std::basic_string<TCharType>& match, const std::basic_string<TCharType>& replace)
         {
             auto result = str;
             iReplaceAll(result, match, replace);
@@ -277,9 +276,9 @@ namespace CppMiniToolkit
         }
 
         // trim
-    public:        
+    public:
         template <typename TCharType, typename Predicate>
-        inline static std::basic_string<TCharType>& TrimLeft(std::basic_string<TCharType>& str, Predicate predicate)
+        static std::basic_string<TCharType>& TrimLeft(std::basic_string<TCharType>& str, Predicate predicate)
         {
             for (auto i = 0; i < str.size(); ++i)
             {
@@ -298,7 +297,7 @@ namespace CppMiniToolkit
         }
 
         template <typename TCharType, typename Predicate>
-        inline static std::basic_string<TCharType> TrimLeftCopy(const std::basic_string<TCharType>& str, Predicate predicate)
+        static std::basic_string<TCharType> TrimLeftCopy(const std::basic_string<TCharType>& str, Predicate predicate)
         {
             auto result = str;
             TrimLeft<TCharType, Predicate>(result, predicate);
@@ -306,21 +305,21 @@ namespace CppMiniToolkit
         }
 
         template <typename TCharType>
-        inline static std::basic_string<TCharType>& TrimLeft(std::basic_string<TCharType>& str)
+        static std::basic_string<TCharType>& TrimLeft(std::basic_string<TCharType>& str)
         {
             return TrimLeft(str, TCharTraits<TCharType>::IsSpace);
         }
 
         template <typename TCharType>
-        inline static std::basic_string<TCharType> TrimLeftCopy(const std::basic_string<TCharType>& str)
+        static std::basic_string<TCharType> TrimLeftCopy(const std::basic_string<TCharType>& str)
         {
             auto result = str;
             TrimLeft<TCharType>(result);
             return result;
         }
-       
+
         template <typename TCharType, typename Predicate>
-        inline static std::basic_string<TCharType>& TrimRight(std::basic_string<TCharType>& str, Predicate predicate)
+        static std::basic_string<TCharType>& TrimRight(std::basic_string<TCharType>& str, Predicate predicate)
         {
             if (str.empty())
             {
@@ -344,7 +343,7 @@ namespace CppMiniToolkit
         }
 
         template <typename TCharType, typename Predicate>
-        inline static std::basic_string<TCharType> TrimRightCopy(const std::basic_string<TCharType>& str, Predicate predicate)
+        static std::basic_string<TCharType> TrimRightCopy(const std::basic_string<TCharType>& str, Predicate predicate)
         {
             auto result = str;
             TrimRight<TCharType, Predicate>(result, predicate);
@@ -352,13 +351,13 @@ namespace CppMiniToolkit
         }
 
         template <typename TCharType>
-        inline static std::basic_string<TCharType>& TrimRight(std::basic_string<TCharType>& str)
+        static std::basic_string<TCharType>& TrimRight(std::basic_string<TCharType>& str)
         {
             return TrimRight(str, TCharTraits<TCharType>::IsSpace);
         }
-              
+
         template <typename TCharType>
-        inline static std::basic_string<TCharType> TrimRightCopy(const std::basic_string<TCharType>& str)
+        static std::basic_string<TCharType> TrimRightCopy(const std::basic_string<TCharType>& str)
         {
             auto result = str;
             TrimRight<TCharType>(result);
@@ -366,7 +365,7 @@ namespace CppMiniToolkit
         }
 
         template <typename TCharType, typename Predicate>
-        inline static std::basic_string<TCharType>& Trim(std::basic_string<TCharType>& str, Predicate predicate)
+        static std::basic_string<TCharType>& Trim(std::basic_string<TCharType>& str, Predicate predicate)
         {
             if (str.empty())
             {
@@ -377,17 +376,17 @@ namespace CppMiniToolkit
             TrimRight<TCharType, Predicate>(str, predicate);
             return str;
         }
-               
+
         template <typename TCharType, typename Predicate>
-        inline static std::basic_string<TCharType> TrimCopy(const std::basic_string<TCharType>& str, Predicate predicate)
+        static std::basic_string<TCharType> TrimCopy(const std::basic_string<TCharType>& str, Predicate predicate)
         {
             auto result = str;
             Trim<TCharType, Predicate>(result, predicate);
             return result;
         }
-       
+
         template <typename TCharType>
-        inline static std::basic_string<TCharType>& Trim(std::basic_string<TCharType>& str)
+        static std::basic_string<TCharType>& Trim(std::basic_string<TCharType>& str)
         {
             TrimLeft<TCharType>(str);
             TrimRight<TCharType>(str);
@@ -395,7 +394,7 @@ namespace CppMiniToolkit
         }
 
         template <typename TCharType>
-        inline static std::basic_string<TCharType> TrimCopy(const std::basic_string<TCharType>& str)
+        static std::basic_string<TCharType> TrimCopy(const std::basic_string<TCharType>& str)
         {
             auto result = str;
             Trim<TCharType>(result);
@@ -403,9 +402,9 @@ namespace CppMiniToolkit
         }
 
         // upper/lower
-    public:       
+    public:
         template <typename TCharType>
-        inline static std::basic_string<TCharType>& ToUpper(std::basic_string<TCharType>& str)
+        static std::basic_string<TCharType>& ToUpper(std::basic_string<TCharType>& str)
         {
             for (auto iter = str.begin(); iter != str.end(); ++iter)
             {
@@ -414,9 +413,9 @@ namespace CppMiniToolkit
 
             return str;
         }
-              
+
         template <typename TCharType>
-        inline static std::basic_string<TCharType>& ToLower(std::basic_string<TCharType>& str)
+        static std::basic_string<TCharType>& ToLower(std::basic_string<TCharType>& str)
         {
             for (auto iter = str.begin(); iter != str.end(); ++iter)
             {
@@ -425,17 +424,17 @@ namespace CppMiniToolkit
 
             return str;
         }
-      
+
         template <typename TCharType>
-        inline static std::basic_string<TCharType> ToUpperCopy(const std::basic_string<TCharType>& str)
+        static std::basic_string<TCharType> ToUpperCopy(const std::basic_string<TCharType>& str)
         {
             auto result = str;
             ToUpper<TCharType>(result);
             return result;
         }
-      
+
         template <typename TCharType>
-        inline static std::basic_string<TCharType> ToLowerCopy(const std::basic_string<TCharType>& str)
+        static std::basic_string<TCharType> ToLowerCopy(const std::basic_string<TCharType>& str)
         {
             auto result = str;
             ToLower<TCharType>(result);
@@ -443,9 +442,9 @@ namespace CppMiniToolkit
         }
 
         // find by predicate
-    public:      
+    public:
         template <typename TCharType, typename Predicate>
-        inline static typename std::basic_string<TCharType>::size_type Find(const std::basic_string<TCharType>& str, Predicate predicate, typename std::basic_string<TCharType>::size_type startPos = 0)
+        static typename std::basic_string<TCharType>::size_type Find(const std::basic_string<TCharType>& str, Predicate predicate, typename std::basic_string<TCharType>::size_type startPos = 0)
         {
             for (auto i = startPos; i < str.size(); ++i)
             {
@@ -459,9 +458,9 @@ namespace CppMiniToolkit
         }
 
         // split
-    public:     
+    public:
         template <typename TSequenceType, typename TCharType, typename Predicate>
-        inline static TSequenceType& Split(TSequenceType& sequence, const std::basic_string<TCharType>& str, Predicate predicate)
+        static TSequenceType& Split(TSequenceType& sequence, const std::basic_string<TCharType>& str, Predicate predicate)
         {
             typedef typename std::basic_string<TCharType>::size_type size_type;
 
@@ -484,9 +483,9 @@ namespace CppMiniToolkit
         }
 
         // join
-    public:     
+    public:
         template <typename TSequenceType, typename TCharType, typename Predicate>
-        inline static std::basic_string<TCharType> Join(const TSequenceType& sequence, const TCharType* separator, Predicate predicate)
+        static std::basic_string<TCharType> Join(const TSequenceType& sequence, const TCharType* separator, Predicate predicate)
         {
             std::basic_string<TCharType> Result;
 
@@ -515,23 +514,23 @@ namespace CppMiniToolkit
 
             return Result;
         }
-              
+
         template <typename TSequenceType, typename TCharType, typename Predicate>
-        inline static std::basic_string<TCharType> Join(const TSequenceType& sequence, const std::basic_string<TCharType>& separator, Predicate predicate)
+        static std::basic_string<TCharType> Join(const TSequenceType& sequence, const std::basic_string<TCharType>& separator, Predicate predicate)
         {
             return Join<TSequenceType, TCharType, Predicate>(sequence, separator.c_str(), predicate);
         }
 
         template <typename TSequenceType, typename TCharType>
-        inline static std::basic_string<TCharType> Join(const TSequenceType& sequence, const TCharType* separator)
+        static std::basic_string<TCharType> Join(const TSequenceType& sequence, const TCharType* separator)
         {
             static auto predicate = [](const auto& x) { return true; };
 
             return Join<TSequenceType, TCharType, decltype(predicate)>(sequence, separator, predicate);
         }
-       
+
         template <typename TSequenceType, typename TCharType>
-        inline static std::basic_string<TCharType> Join(const TSequenceType& sequence, const std::basic_string<TCharType>& separator)
+        static std::basic_string<TCharType> Join(const TSequenceType& sequence, const std::basic_string<TCharType>& separator)
         {
             return Join<TSequenceType, TCharType>(sequence, separator.c_str());
         }
