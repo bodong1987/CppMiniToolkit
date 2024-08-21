@@ -6,7 +6,6 @@
 #include <string>
 #include <tchar.h>
 #include <sstream>
-#include <iostream>
 #include <cassert>
 #include <Common/ScopedExit.hpp>
 #include <FileSystem/FileSystem.hpp>
@@ -16,24 +15,25 @@ namespace CppMiniToolkit
 {
     namespace Windows
     {
-        class Envrionment
+        class Environment
         {
-            Envrionment() = delete;
-            ~Envrionment() = delete;
         public:
+            Environment() = delete;
+            ~Environment() = delete;
+
             typedef std::basic_string<TCHAR> StringT;
 
             static StringT SearchApplicationInSystemPath(const StringT& appName)
             {
                 size_t requiredSize;
-                _tgetenv_s(&requiredSize, NULL, 0, _T("PATH"));
+                _tgetenv_s(&requiredSize, nullptr, 0, _T("PATH"));
 
                 if (requiredSize == 0)
                 {
                     return _T("");
                 }
 
-                wchar_t* pathValue = new wchar_t[requiredSize];
+                auto pathValue = new wchar_t[requiredSize];
                 CPPMINITOOLKIT_SCOPED_EXIT(delete[] pathValue);
 
                 _tgetenv_s(&requiredSize, pathValue, requiredSize, _T("PATH"));
@@ -46,7 +46,7 @@ namespace CppMiniToolkit
                 StringT dir;
                 while (std::getline(ss, dir, _T(';')))
                 {
-                    StringT testPath = dir + _T("\\") + appName;
+                    StringT testPath = dir + _T("\\") + appName; // NOLINT(*-inefficient-string-concatenation)
 
                     if (FileSystem::IsFileExists(testPath.c_str()))
                     {
@@ -59,19 +59,20 @@ namespace CppMiniToolkit
 
             static StringT GetSystemVersion()
             {
-                double ret = 0.0;
                 NTSTATUS(WINAPI * RtlGetVersion)(LPOSVERSIONINFOEXW);
                 OSVERSIONINFOEXW osInfo = { sizeof(OSVERSIONINFOEXW) };
 
-                HMODULE ntHandle = GetModuleHandle(_T("ntdll"));
+                const HMODULE ntHandle = GetModuleHandle(_T("ntdll"));
                 assert(ntHandle != nullptr);
 
-                *(FARPROC*)&RtlGetVersion = GetProcAddress(ntHandle, "RtlGetVersion");
+                *reinterpret_cast<FARPROC*>(&RtlGetVersion) = GetProcAddress(ntHandle, "RtlGetVersion");
 
-                if (NULL != RtlGetVersion)
+                if (nullptr != RtlGetVersion)
                 {
+                    //double ret = 0.0;
+                    // ReSharper disable once CppFunctionResultShouldBeUsed
                     RtlGetVersion(&osInfo);
-                    ret = (double)osInfo.dwMajorVersion;
+                    //ret = static_cast<double>(osInfo.dwMajorVersion);
                 }
 
                 StringT SystemType = _T("Unknown Windows");
@@ -136,7 +137,7 @@ namespace CppMiniToolkit
                 std::string Result;
                 SECURITY_ATTRIBUTES sa;
                 sa.nLength = sizeof(sa);
-                sa.lpSecurityDescriptor = NULL;
+                sa.lpSecurityDescriptor = nullptr;
                 sa.bInheritHandle = TRUE;
 
                 HANDLE hRead, hWrite;
@@ -158,7 +159,7 @@ namespace CppMiniToolkit
 
                 StringT cmd = appPath + _T(" ") + appCommandLine;
 
-                if (!CreateProcess(NULL, (LPTSTR)cmd.c_str(), NULL, NULL, TRUE, 0, NULL, NULL, &si, &pi))
+                if (!CreateProcess(nullptr, const_cast<LPTSTR>(cmd.c_str()), nullptr, nullptr, TRUE, 0, nullptr, nullptr, &si, &pi))
                 {
                     CloseHandle(hWrite);
                     CloseHandle(hRead);
@@ -170,7 +171,7 @@ namespace CppMiniToolkit
 
                 std::vector<char> buffer(4096);
                 DWORD bytesRead = 0;
-                while (ReadFile(hRead, buffer.data(), (DWORD)buffer.size(), &bytesRead, NULL))
+                while (ReadFile(hRead, buffer.data(), (DWORD)buffer.size(), &bytesRead, nullptr))
                 {
                     Result.append(buffer.data(), bytesRead);
 
@@ -185,8 +186,8 @@ namespace CppMiniToolkit
                 CloseHandle(pi.hProcess);
 
                 #if CPPMINITOOLKIT_UNICODE
-                auto str = Encoding::ANSIToUTF16(Result.c_str());
-                return (LPCWSTR)str.c_str();
+                const auto str = Encoding::ANSIToUTF16(Result.c_str());
+                return reinterpret_cast<LPCWSTR>(str.c_str());
                 #else
                 return Result;
                 #endif
@@ -221,7 +222,7 @@ namespace CppMiniToolkit
                         VS_FIXEDFILEINFO* fileInfo = nullptr;
                         UINT len = 0;
 
-                        if (VerQueryValue(versionInfo, _T("\\"), (LPVOID*)&fileInfo, &len) != FALSE && fileInfo != nullptr)
+                        if (VerQueryValue(versionInfo, _T("\\"), reinterpret_cast<LPVOID*>(&fileInfo), &len) != FALSE && fileInfo != nullptr)
                         {
                             TCHAR szVersion[128];
                             _stprintf_s(szVersion, _T("%u.%u.%u.%u"), HIWORD(fileInfo->dwFileVersionMS), LOWORD(fileInfo->dwFileVersionMS), HIWORD(fileInfo->dwFileVersionLS), LOWORD(fileInfo->dwFileVersionLS));
@@ -231,14 +232,14 @@ namespace CppMiniToolkit
 
                         if (VerQueryValue(versionInfo, _T("\\VarFileInfo\\Translation"), &buffer, &len) != FALSE && buffer != nullptr)
                         {
-                            WORD* langInfo = (WORD*)buffer;
+                            const auto langInfo = static_cast<WORD*>(buffer);
                             for (UINT i = 0; i < len / sizeof(WORD) / 2; i++)
                             {
-                                WORD lang = langInfo[i * 2];
-                                WORD charset = langInfo[i * 2 + 1];
+                                const WORD lang = langInfo[i * 2];
+                                const WORD charset = langInfo[i * 2 + 1];
 
                                 TCHAR blockName[128] = { 0 };
-                                LPVOID lbuffer = nullptr;
+                                LPVOID blockBuffer;
 
                                 // 040904b0 english
                                 // 080404b0 chinese-simple
@@ -246,9 +247,9 @@ namespace CppMiniToolkit
                                 {
                                     _stprintf_s(blockName, _T("\\StringFileInfo\\%04hx%04hx\\ProductVersion"), lang, charset);
 
-                                    if (VerQueryValue(versionInfo, blockName, &lbuffer, &len) != FALSE && lbuffer != nullptr)
+                                    if (VerQueryValue(versionInfo, blockName, &blockBuffer, &len) != FALSE && blockBuffer != nullptr)
                                     {
-                                        Result.ProductVersion = (TCHAR*)lbuffer;
+                                        Result.ProductVersion = static_cast<TCHAR*>(blockBuffer);
                                     }
                                 }
 
@@ -256,9 +257,9 @@ namespace CppMiniToolkit
                                 {
                                     _stprintf_s(blockName, _T("\\StringFileInfo\\%04hx%04hx\\FileDescription"), lang, charset);
 
-                                    if (VerQueryValue(versionInfo, blockName, &lbuffer, &len) != FALSE && lbuffer != nullptr)
+                                    if (VerQueryValue(versionInfo, blockName, &blockBuffer, &len) != FALSE && blockBuffer != nullptr)
                                     {
-                                        Result.FileDescription = (TCHAR*)lbuffer;
+                                        Result.FileDescription = static_cast<TCHAR*>(blockBuffer);
                                     }
                                 }
 
@@ -266,9 +267,9 @@ namespace CppMiniToolkit
                                 {
                                     _stprintf_s(blockName, _T("\\StringFileInfo\\%04hx%04hx\\LegalCopyright"), lang, charset);
 
-                                    if (VerQueryValue(versionInfo, blockName, &lbuffer, &len) != FALSE && lbuffer != nullptr)
+                                    if (VerQueryValue(versionInfo, blockName, &blockBuffer, &len) != FALSE && blockBuffer != nullptr)
                                     {
-                                        Result.FileCopyright = (TCHAR*)lbuffer;
+                                        Result.FileCopyright = static_cast<TCHAR*>(blockBuffer);
                                     }
                                 }
                             }
@@ -280,10 +281,10 @@ namespace CppMiniToolkit
                 if (GetFileAttributesEx(filePath.c_str(), GetFileExInfoStandard, &fileData) != FALSE)
                 {
                     LARGE_INTEGER fileSize;
-                    fileSize.HighPart = fileData.nFileSizeHigh;
+                    fileSize.HighPart = fileData.nFileSizeHigh; // NOLINT(*-narrowing-conversions)
                     fileSize.LowPart = fileData.nFileSizeLow;
 
-                    Result.FileSize = *(uint64_t*)&fileSize;
+                    Result.FileSize = *reinterpret_cast<uint64_t*>(&fileSize);
 
                     FILETIME localFileTime;
                     if (FileTimeToLocalFileTime(&fileData.ftLastWriteTime, &localFileTime) != FALSE)

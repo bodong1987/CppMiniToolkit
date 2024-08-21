@@ -15,7 +15,7 @@ using namespace CppMiniToolkit;
 #if CPPMINITOOLKIT_PLATFORM_WINDOWS
 TEST(WindowsPlatform, Environment)
 {
-    auto systemVersion = Windows::Envrionment::GetSystemVersion();
+    auto systemVersion = Windows::Environment::GetSystemVersion();
 
     _tprintf_s(_T("Your System:%s\n"), systemVersion.c_str());
 }

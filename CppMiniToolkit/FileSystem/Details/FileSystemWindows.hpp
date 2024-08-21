@@ -16,45 +16,45 @@ namespace CppMiniToolkit
         class FileSystemWindows
         {
         public:
-            static bool IsExists(LPCSTR path)
+            static bool IsExists(LPCSTR const path)
             {
-                DWORD attrs = GetFileAttributesA(path);
+                const DWORD attrs = GetFileAttributesA(path);
                 return attrs != INVALID_FILE_ATTRIBUTES;
             }
 
-            static bool IsExists(LPCWSTR path)
+            static bool IsExists(LPCWSTR const path)
             {
-                DWORD attrs = GetFileAttributesW(path);
+                const DWORD attrs = GetFileAttributesW(path);
                 return attrs != INVALID_FILE_ATTRIBUTES;
             }
 
-            static bool IsFileExists(LPCSTR path)
+            static bool IsFileExists(LPCSTR const path)
             {
-                DWORD attrs = GetFileAttributesA(path);
+                const DWORD attrs = GetFileAttributesA(path);
                 return attrs != INVALID_FILE_ATTRIBUTES && !(attrs & FILE_ATTRIBUTE_DIRECTORY);
             }
             
-            static bool IsFileExists(LPCWSTR path)
+            static bool IsFileExists(LPCWSTR const path)
             {
-                DWORD attrs = GetFileAttributesW(path);
+                const DWORD attrs = GetFileAttributesW(path);
                 return attrs != INVALID_FILE_ATTRIBUTES && !(attrs & FILE_ATTRIBUTE_DIRECTORY);
             }
 
-            static bool IsDirectoryExists(LPCSTR directoryPath)
+            static bool IsDirectoryExists(LPCSTR const directoryPath)
             {
-                DWORD dwAttrib = GetFileAttributesA(directoryPath);
+                const DWORD dwAttrib = GetFileAttributesA(directoryPath);
 
                 return dwAttrib != INVALID_FILE_ATTRIBUTES && (((dwAttrib & FILE_ATTRIBUTE_DIRECTORY) != 0));
             }
 
-            static bool IsDirectoryExists(LPCWSTR directoryPath)
+            static bool IsDirectoryExists(LPCWSTR const directoryPath)
             {
-                DWORD dwAttrib = GetFileAttributesW(directoryPath);
+                const DWORD dwAttrib = GetFileAttributesW(directoryPath);
 
                 return dwAttrib != INVALID_FILE_ATTRIBUTES && (((dwAttrib & FILE_ATTRIBUTE_DIRECTORY) != 0));
             }
 
-            static bool IsDirectoryEmpty(LPCSTR directoryPath)
+            static bool IsDirectoryEmpty(LPCSTR const directoryPath)
             {
                 if (!IsDirectoryExists(directoryPath))
                 {
@@ -73,7 +73,7 @@ namespace CppMiniToolkit
                 return count <= 0;
             }
 
-            static bool IsDirectoryEmpty(LPCWSTR directoryPath)
+            static bool IsDirectoryEmpty(LPCWSTR const directoryPath)
             {
                 if (!IsDirectoryExists(directoryPath))
                 {
@@ -92,7 +92,7 @@ namespace CppMiniToolkit
                 return count <= 0;
             }
 
-            static bool CreateDirectories(LPCSTR directoryPath, bool recursively)
+            static bool CreateDirectories(LPCSTR const directoryPath, const bool recursively) // NOLINT(*-no-recursion)
             {
                 if (directoryPath == nullptr)
                 {
@@ -100,17 +100,17 @@ namespace CppMiniToolkit
                 }
 
                 static const std::string separators("\\/");
-                std::string directory = directoryPath;
+                const std::string directory = directoryPath;
 
                 // If the specified directory name doesn't exist, do our thing
-                DWORD fileAttributes = ::GetFileAttributesA(directory.c_str());
+                const DWORD fileAttributes = ::GetFileAttributesA(directory.c_str());
 
                 if (fileAttributes == INVALID_FILE_ATTRIBUTES)
                 {
                     if (recursively)
                     {
                         // Recursively do it all again for the parent directory, if any
-                        SIZE_T slashIndex = directory.find_last_of(separators);
+                        const SIZE_T slashIndex = directory.find_last_of(separators);
                         if (slashIndex != std::wstring::npos)
                         {
                             if (!CreateDirectories(directory.substr(0, slashIndex).c_str(), recursively))
@@ -122,7 +122,7 @@ namespace CppMiniToolkit
 
                     // Create the last directory on the path (the recursive calls will have taken
                     // care of the parent directories by now)
-                    BOOL result = ::CreateDirectoryA(directory.c_str(), nullptr);
+                    const BOOL result = ::CreateDirectoryA(directory.c_str(), nullptr);
 
                     if (!result)
                     {                        
@@ -134,7 +134,7 @@ namespace CppMiniToolkit
                 else
                 { // Specified directory name already exists as a file or directory
 
-                    bool isDirectoryOrJunction =
+                    const bool isDirectoryOrJunction =
                         ((fileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0) ||
                         ((fileAttributes & FILE_ATTRIBUTE_REPARSE_POINT) != 0);
 
@@ -148,7 +148,7 @@ namespace CppMiniToolkit
                 }
             }
 
-            static bool CreateDirectories(LPCWSTR directoryPath, bool recursively)
+            static bool CreateDirectories(LPCWSTR const directoryPath, const bool recursively) // NOLINT(*-no-recursion)
             {
                 if (directoryPath == nullptr)
                 {
@@ -156,17 +156,17 @@ namespace CppMiniToolkit
                 }
 
                 static const std::wstring separators(L"\\/");
-                std::wstring directory = directoryPath;
+                const std::wstring directory = directoryPath;
 
                 // If the specified directory name doesn't exist, do our thing
-                DWORD fileAttributes = ::GetFileAttributesW(directory.c_str());
+                const DWORD fileAttributes = ::GetFileAttributesW(directory.c_str());
 
                 if (fileAttributes == INVALID_FILE_ATTRIBUTES)
                 {
                     if (recursively)
                     {
                         // Recursively do it all again for the parent directory, if any
-                        SIZE_T slashIndex = directory.find_last_of(separators);
+                        const SIZE_T slashIndex = directory.find_last_of(separators);
                         if (slashIndex != std::wstring::npos)
                         {
                             if (!CreateDirectories(directory.substr(0, slashIndex).c_str(), recursively))
@@ -178,7 +178,7 @@ namespace CppMiniToolkit
 
                     // Create the last directory on the path (the recursive calls will have taken
                     // care of the parent directories by now)
-                    BOOL result = ::CreateDirectoryW(directory.c_str(), nullptr);
+                    const BOOL result = ::CreateDirectoryW(directory.c_str(), nullptr);
 
                     if (!result)
                     {
@@ -190,7 +190,7 @@ namespace CppMiniToolkit
                 else
                 { // Specified directory name already exists as a file or directory
 
-                    bool isDirectoryOrJunction =
+                    const bool isDirectoryOrJunction =
                         ((fileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0) ||
                         ((fileAttributes & FILE_ATTRIBUTE_REPARSE_POINT) != 0);
 
@@ -204,23 +204,22 @@ namespace CppMiniToolkit
                 }
             }
 
-            static bool DeleteDirectories(LPCSTR directoryPath, bool recursively)
-            {                
-                bool             bSubdirectory = false;       // Flag, indicating whether
-
+            static bool DeleteDirectories(LPCSTR const directoryPath, const bool recursively) // NOLINT(*-no-recursion)
+            {
                 // subdirectories have been found
-                HANDLE           hFile;                       // Handle to directory
+                // Handle to directory
                 std::string      strFilePath;                 // Filepath                
                 WIN32_FIND_DATAA FileInformation;             // File information
 
-                std::string      directory = directoryPath;
+                const std::string      directory = directoryPath;
 
-                std::string strPattern = std::string(directoryPath) + "\\*.*";
+                const std::string strPattern = std::string(directoryPath) + "\\*.*";
 
-                hFile = ::FindFirstFileA(strPattern.c_str(), &FileInformation);
+                const HANDLE hFile = ::FindFirstFileA(strPattern.c_str(), &FileInformation); // NOLINT(*-misplaced-const)
 
                 if (hFile != INVALID_HANDLE_VALUE)
                 {
+                    bool bSubdirectory = false;
                     do
                     {
                         if (FileInformation.cFileName[0] != '.')
@@ -233,7 +232,7 @@ namespace CppMiniToolkit
                                 if (recursively)
                                 {
                                     // Delete subdirectory
-                                    auto iRC = DeleteDirectories(strFilePath.c_str(), recursively);
+                                    const auto iRC = DeleteDirectories(strFilePath.c_str(), recursively);
                                     if (!iRC)
                                     {
                                         return iRC;
@@ -266,7 +265,7 @@ namespace CppMiniToolkit
                     // Close handle
                     ::FindClose(hFile);
 
-                    DWORD dwError = GetLastError();
+                    const DWORD dwError = GetLastError();
                     if (dwError != ERROR_NO_MORE_FILES)
                     {
                         return false;
@@ -293,23 +292,22 @@ namespace CppMiniToolkit
                 return true;
             }
 
-            static bool DeleteDirectories(LPCWSTR directoryPath, bool recursively)
+            static bool DeleteDirectories(LPCWSTR directoryPath, bool recursively) // NOLINT(*-no-recursion)
             {
-                bool              bSubdirectory = false;       // Flag, indicating whether
-
                 // subdirectories have been found
-                HANDLE            hFile;                       // Handle to directory
+                // Handle to directory
                 std::wstring      strFilePath;                 // Filepath                
                 WIN32_FIND_DATAW  FileInformation;             // File information
 
-                std::wstring      directory = directoryPath;
+                const std::wstring      directory = directoryPath;
 
-                std::wstring strPattern = std::wstring(directoryPath) + L"\\*.*";
+                const std::wstring strPattern = std::wstring(directoryPath) + L"\\*.*";
 
-                hFile = ::FindFirstFileW(strPattern.c_str(), &FileInformation);
+                const HANDLE hFile = ::FindFirstFileW(strPattern.c_str(), &FileInformation); // NOLINT(*-misplaced-const)
 
                 if (hFile != INVALID_HANDLE_VALUE)
                 {
+                    bool bSubdirectory = false;
                     do
                     {
                         if (FileInformation.cFileName[0] != L'.')
@@ -322,7 +320,7 @@ namespace CppMiniToolkit
                                 if (recursively)
                                 {
                                     // Delete subdirectory
-                                    auto iRC = DeleteDirectories(strFilePath.c_str(), recursively);
+                                    const auto iRC = DeleteDirectories(strFilePath.c_str(), recursively);
                                     if (!iRC)
                                     {
                                         return iRC;
@@ -355,7 +353,7 @@ namespace CppMiniToolkit
                     // Close handle
                     ::FindClose(hFile);
 
-                    DWORD dwError = GetLastError();
+                    const DWORD dwError = GetLastError();
                     if (dwError != ERROR_NO_MORE_FILES)
                     {
                         return false;
@@ -382,27 +380,27 @@ namespace CppMiniToolkit
                 return true;
             }
 
-            static bool DeleteSingleFile(LPCSTR path)
+            static bool DeleteSingleFile(LPCSTR const path)
             {
                 return ::DeleteFileA(path) != FALSE;
             }
 
-            static bool DeleteSingleFile(LPCWSTR path)
+            static bool DeleteSingleFile(LPCWSTR const path)
             {
                 return ::DeleteFileW(path) != FALSE;
             }
 
-            static bool CopySingleFile(LPCSTR from, LPCSTR to, bool forceOverride)
+            static bool CopySingleFile(LPCSTR const from, LPCSTR const to, const bool forceOverride)
             {
                 return ::CopyFileA(from, to, forceOverride?FALSE:TRUE) != FALSE;
             }
 
-            static bool CopySingleFile(LPCWSTR from, LPCWSTR to, bool forceOverride)
+            static bool CopySingleFile(const LPCWSTR from, const LPCWSTR to, const bool forceOverride)
             {
                 return ::CopyFileW(from, to, forceOverride ? FALSE : TRUE) != FALSE;
             }
 
-            static bool MoveSingleFile(LPCSTR from, LPCSTR to, bool forceOverride)
+            static bool MoveSingleFile(const LPCSTR from, const LPCSTR to, const bool forceOverride)
             {
                 if (forceOverride && IsFileExists(to))
                 {
@@ -412,7 +410,7 @@ namespace CppMiniToolkit
                 return ::MoveFileA(from, to) != FALSE;
             }
 
-            static bool MoveSingleFile(LPCWSTR from, LPCWSTR to, bool forceOverride)
+            static bool MoveSingleFile(const LPCWSTR from, const LPCWSTR to, const bool forceOverride)
             {
                 if (forceOverride && IsFileExists(to))
                 {
@@ -422,10 +420,9 @@ namespace CppMiniToolkit
                 return ::MoveFileW(from, to) != FALSE;
             }
 
-            static void CopyDirectoryRecusively(LPCSTR source, LPCSTR destination)
+            static void CopyDirectoryRecursively(const LPCSTR source, const LPCSTR destination) // NOLINT(*-no-recursion)
             {
                 WIN32_FIND_DATAA info;
-                HANDLE hwnd;
                 char temp[1024] = { 0 };
                 char temp_1[1024] = { 0 };
 
@@ -437,7 +434,7 @@ namespace CppMiniToolkit
 
                 CreateDirectories(destination, true);
 
-                hwnd = FindFirstFileA(temp_1, &info);
+                const HANDLE hwnd = FindFirstFileA(temp_1, &info); // NOLINT(*-misplaced-const)
                 do
                 {
                     if (!strcmp(info.cFileName, "."))
@@ -460,7 +457,7 @@ namespace CppMiniToolkit
                         strcat_s(temp_dest, "\\");
                         strcat_s(temp_dest, info.cFileName);
 
-                        CopyDirectoryRecusively(temp_src, temp_dest);
+                        CopyDirectoryRecursively(temp_src, temp_dest);
                     }
                     else
                     {
@@ -475,10 +472,9 @@ namespace CppMiniToolkit
                 FindClose(hwnd);
             }
 
-            static void CopyDirectoryRecusively(LPCWSTR source, LPCWSTR destination)
+            static void CopyDirectoryRecursively(const LPCWSTR source, const LPCWSTR destination) // NOLINT(*-no-recursion)
             {
                 WIN32_FIND_DATAW info;
-                HANDLE hwnd;
                 wchar_t temp[1024] = { 0 };
                 wchar_t temp_1[1024] = { 0 };
 
@@ -490,7 +486,7 @@ namespace CppMiniToolkit
 
                 CreateDirectories(destination, true);
 
-                hwnd = FindFirstFileW(temp_1, &info);
+                const HANDLE hwnd = FindFirstFileW(temp_1, &info); // NOLINT(*-misplaced-const)
                 do
                 {
                     if (!wcscmp(info.cFileName, L"."))
@@ -513,7 +509,7 @@ namespace CppMiniToolkit
                         wcscat_s(temp_dest, L"\\");
                         wcscat_s(temp_dest, info.cFileName);
 
-                        CopyDirectoryRecusively(temp_src, temp_dest);
+                        CopyDirectoryRecursively(temp_src, temp_dest);
                     }
                     else
                     {
@@ -529,26 +525,26 @@ namespace CppMiniToolkit
             }
 
 
-            static void WalkThoughDirectory(std::string directory, std::function<bool (const char*, bool)> visitor, bool recursively, bool includeDirectories)
+            static void WalkThoughDirectory(const std::string& directory, const std::function<bool (const char*, bool)>& visitor, const bool recursively, const bool includeDirectories) // NOLINT(*-no-recursion)
             {
-                WIN32_FIND_DATAA findfiledata;
-                HANDLE hFind = FindFirstFileA((directory + "\\*").c_str(), &findfiledata);
+                WIN32_FIND_DATAA win32_find_dataa;
+                const HANDLE hFind = FindFirstFileA((directory + "\\*").c_str(), &win32_find_dataa); // NOLINT(*-misplaced-const)
                 if (hFind != INVALID_HANDLE_VALUE)
                 {
                     do
                     {
-                        if (strcmp(findfiledata.cFileName, ".") == 0 ||
-                            strcmp(findfiledata.cFileName, "..") == 0)
+                        if (strcmp(win32_find_dataa.cFileName, ".") == 0 ||
+                            strcmp(win32_find_dataa.cFileName, "..") == 0)
                         {
                             continue;
                         }
 
                         // this is directory
-                        if ((findfiledata.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0)
+                        if ((win32_find_dataa.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0)
                         {
                             if (includeDirectories)
                             {
-                                if (!visitor((directory + "\\" + findfiledata.cFileName).c_str(), true))
+                                if (!visitor((directory + "\\" + win32_find_dataa.cFileName).c_str(), true))
                                 {
                                     break;
                                 }
@@ -556,42 +552,42 @@ namespace CppMiniToolkit
 
                             if (recursively)
                             {
-                                WalkThoughDirectory(directory + "\\" + findfiledata.cFileName, visitor, recursively, includeDirectories);
+                                WalkThoughDirectory(directory + "\\" + win32_find_dataa.cFileName, visitor, recursively, includeDirectories);
                             }
                         }
                         else
                         {
-                            if (!visitor((directory + "\\" + findfiledata.cFileName).c_str(), false))
+                            if (!visitor((directory + "\\" + win32_find_dataa.cFileName).c_str(), false))
                             {
                                 break;
                             }
                         }
-                    } while (FindNextFileA(hFind, &findfiledata));
+                    } while (FindNextFileA(hFind, &win32_find_dataa));
 
                     FindClose(hFind);
                 }
             }
 
-            static void WalkThoughDirectory(std::wstring directory, std::function<bool(const wchar_t*, bool)> visitor, bool recursively, bool includeDirectories)
+            static void WalkThoughDirectory(const std::wstring& directory, const std::function<bool(const wchar_t*, bool)>& visitor, const bool recursively, const bool includeDirectories) // NOLINT(*-no-recursion)
             {
-                WIN32_FIND_DATAW findfiledata;
-                HANDLE hFind = FindFirstFileW((directory + L"\\*").c_str(), &findfiledata);
+                WIN32_FIND_DATAW win32_find_dataw;
+                const HANDLE hFind = FindFirstFileW((directory + L"\\*").c_str(), &win32_find_dataw); // NOLINT(*-misplaced-const)
                 if (hFind != INVALID_HANDLE_VALUE)
                 {
                     do
                     {
-                        if (wcscmp(findfiledata.cFileName, L".") == 0 ||
-                            wcscmp(findfiledata.cFileName, L"..") == 0)
+                        if (wcscmp(win32_find_dataw.cFileName, L".") == 0 ||
+                            wcscmp(win32_find_dataw.cFileName, L"..") == 0)
                         {
                             continue;
                         }
 
                         // this is directory
-                        if ((findfiledata.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0)
+                        if ((win32_find_dataw.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0)
                         {
                             if (includeDirectories)
                             {
-                                if (!visitor((directory + L"\\" + findfiledata.cFileName).c_str(), true))
+                                if (!visitor((directory + L"\\" + win32_find_dataw.cFileName).c_str(), true))
                                 {
                                     break;
                                 }
@@ -599,17 +595,17 @@ namespace CppMiniToolkit
 
                             if (recursively)
                             {
-                                WalkThoughDirectory(directory + L"\\" + findfiledata.cFileName, visitor, recursively, includeDirectories);
+                                WalkThoughDirectory(directory + L"\\" + win32_find_dataw.cFileName, visitor, recursively, includeDirectories);
                             }
                         }
                         else
                         {
-                            if (!visitor((directory + L"\\" + findfiledata.cFileName).c_str(), false))
+                            if (!visitor((directory + L"\\" + win32_find_dataw.cFileName).c_str(), false))
                             {
                                 break;
                             }
                         }
-                    } while (FindNextFileW(hFind, &findfiledata));
+                    } while (FindNextFileW(hFind, &win32_find_dataw));
 
                     FindClose(hFind);
                 }

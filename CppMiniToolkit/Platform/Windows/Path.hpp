@@ -16,9 +16,10 @@ namespace CppMiniToolkit
     {
         class PathUtils
         {
+        public:
             PathUtils() = delete;
             ~PathUtils() = delete;
-        public:
+
             typedef std::basic_string<TCHAR> StringT;
 
             static StringT GetEntryPath()
@@ -44,7 +45,7 @@ namespace CppMiniToolkit
                 TCHAR Path[1024];
                 GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS |
                     GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
-                    (LPCTSTR)&GetExecuteModulePath,
+                    reinterpret_cast<LPCTSTR>(&GetExecuteModulePath),
                     &hModule
                 );
 
@@ -62,7 +63,8 @@ namespace CppMiniToolkit
                     return false;
                 }
 
-                HANDLE hDevice = CreateFile((_T("\\\\.\\") + driveName.substr(0, 2)).c_str(), 0, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
+                const HANDLE hDevice = CreateFile((_T("\\\\.\\") + driveName.substr(0, 2)).c_str(), 0, // NOLINT(*-misplaced-const)
+                                                  FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, 0, nullptr);
 
                 if (hDevice == INVALID_HANDLE_VALUE)
                 {
@@ -76,6 +78,7 @@ namespace CppMiniToolkit
                 query.QueryType = PropertyStandardQuery;
                 DWORD count;
                 DEVICE_SEEK_PENALTY_DESCRIPTOR result{};
+
                 if (DeviceIoControl(hDevice, IOCTL_STORAGE_QUERY_PROPERTY,
                     &query, sizeof(query), &result, sizeof(result), &count, nullptr))
                 {

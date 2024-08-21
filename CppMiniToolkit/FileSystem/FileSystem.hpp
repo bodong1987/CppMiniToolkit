@@ -15,10 +15,10 @@ namespace CppMiniToolkit
 {
     class FileSystem
     {
-    private:
+    public:
         FileSystem() = delete;
         ~FileSystem() = delete;
-    public:
+
         // is file or directory exists
         template <typename TCharType>
         static bool IsExists(const TCharType* path)
@@ -84,9 +84,9 @@ namespace CppMiniToolkit
 
         // copy a directory
         template <typename TCharType>
-        static void CopyDirectoryRecusively(const TCharType* source, const TCharType* destination)
+        static void CopyDirectoryRecursively(const TCharType* source, const TCharType* destination)
         {
-            FileSystemDetails::CopyDirectoryRecusively(source, destination);
+            FileSystemDetails::CopyDirectoryRecursively(source, destination);
         }
 
         // walk though directory
@@ -120,11 +120,11 @@ namespace CppMiniToolkit
                 return DynamicBuffer();
             }
 
-            std::streamsize size = file.tellg();
+            const std::streamsize size = file.tellg();
             file.seekg(0, std::ios::beg);
 
             DynamicBuffer buffer(size);
-            if (file.read((char*)buffer.GetBuffer(), size))
+            if (file.read(reinterpret_cast<char*>(buffer.GetBuffer()), size))
             {
                 return buffer;
             }
@@ -145,9 +145,9 @@ namespace CppMiniToolkit
                 return false;
             }
 
-            file.write((const char*)bytes, length);
+            file.write(reinterpret_cast<const char*>(bytes), static_cast<std::streamsize>(length));
 
-            return (bool)file;
+            return static_cast<bool>(file);
         }
 
         template <typename TCharType>

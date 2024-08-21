@@ -8,12 +8,13 @@ namespace CppMiniToolkit
     {
         class TextEncodingGeneric
         {
+        public:
             TextEncodingGeneric() = delete;
             ~TextEncodingGeneric() = delete;
 
         private:
             // @reference https://github.com/Davipb/utf8-utf16-converter/tree/master
-            // The type of a single Unicode codepoint
+            // The type of single Unicode codepoint
             typedef uint32_t codepoint_t;
 
             enum
@@ -67,7 +68,7 @@ namespace CppMiniToolkit
                 // If a character, masked with UTF8_CONTINUATION_MASK, matches this value, it is a UTF-8 continuation byte
                 UTF8_CONTINUATION_VALUE = 0x80,
 
-                // The mask to a apply to a character before testing it against UTF8_CONTINUATION_VALUE
+                // The mask to apply to a character before testing it against UTF8_CONTINUATION_VALUE
                 UTF8_CONTINUATION_MASK = 0xC0,
 
                 // The number of bits of a codepoint that are contained in a UTF-8 continuation byte
@@ -100,7 +101,7 @@ namespace CppMiniToolkit
             // For surrogate pairs, this means the index will be left at the low surrogate.
             static codepoint_t decode_utf16(utf16_t const* utf16, size_t len, size_t* index)
             {
-                utf16_t high = utf16[*index];
+                const utf16_t high = utf16[*index];
 
                 // BMP character
                 if ((high & GENERIC_SURROGATE_MASK) != GENERIC_SURROGATE_VALUE)
@@ -168,7 +169,7 @@ namespace CppMiniToolkit
                 // The patterns for leading bytes of a UTF-8 codepoint encoding
                 // Each pattern represents the leading byte for a character encoded with N UTF-8 bytes,
                 // where N is the index + 1
-                static const utf8_pattern utf8_leading_bytes[] =
+                static constexpr utf8_pattern utf8_leading_bytes[] =
                 {
                     { 0x80, 0x00 }, // 0xxxxxxx
                     { 0xE0, 0xC0 }, // 110xxxxx
@@ -206,14 +207,14 @@ namespace CppMiniToolkit
             static size_t utf16_to_utf8(utf16_t const* utf16, size_t utf16_len, utf8_t* utf8, size_t utf8_len)
             {
                 // The next codepoint that will be written in the UTF-8 string
-                // or the size of the required buffer if utf8 is NULL
+                // or the size of the required buffer if utf8 is nullptr
                 size_t utf8_index = 0;
 
                 for (size_t utf16_index = 0; utf16_index < utf16_len; utf16_index++)
                 {
                     codepoint_t codepoint = decode_utf16(utf16, utf16_len, &utf16_index);
 
-                    if (utf8 == NULL)
+                    if (utf8 == nullptr)
                         utf8_index += calculate_utf8_len(codepoint);
                     else
                         utf8_index += encode_utf8(codepoint, utf8, utf8_len, utf8_index);
@@ -235,7 +236,7 @@ namespace CppMiniToolkit
                 // The patterns for leading bytes of a UTF-8 codepoint encoding
                 // Each pattern represents the leading byte for a character encoded with N UTF-8 bytes,
                 // where N is the index + 1
-                static const utf8_pattern utf8_leading_bytes[] =
+                static constexpr utf8_pattern utf8_leading_bytes[] =
                 {
                     { 0x80, 0x00 }, // 0xxxxxxx
                     { 0xE0, 0xC0 }, // 110xxxxx
@@ -250,7 +251,7 @@ namespace CppMiniToolkit
                 // The pattern of the leading byte
                 utf8_pattern leading_pattern;
                 // If the leading byte matches the current leading pattern
-                bool matches = false;
+                bool matches;
 
                 do
                 {
@@ -362,14 +363,14 @@ namespace CppMiniToolkit
             static size_t utf8_to_utf16(utf8_t const* utf8, size_t utf8_len, utf16_t* utf16, size_t utf16_len)
             {
                 // The next codepoint that will be written in the UTF-16 string
-                // or the size of the required buffer if utf16 is NULL
+                // or the size of the required buffer if utf16 is nullptr
                 size_t utf16_index = 0;
 
                 for (size_t utf8_index = 0; utf8_index < utf8_len; utf8_index++)
                 {
                     codepoint_t codepoint = decode_utf8(utf8, utf8_len, &utf8_index);
 
-                    if (utf16 == NULL)
+                    if (utf16 == nullptr)
                         utf16_index += calculate_utf16_len(codepoint);
                     else
                         utf16_index += encode_utf16(codepoint, utf16, utf16_len, utf16_index);
@@ -383,21 +384,21 @@ namespace CppMiniToolkit
             {
                 const auto length = std::char_traits<char16_t>::length(text);
 
-                auto nLen = utf16_to_utf8((const utf16_t*)text, length, nullptr, 0);
+                const auto nLen = utf16_to_utf8(reinterpret_cast<const utf16_t*>(text), length, nullptr, 0);
 
                 if (nLen <= 0)
                 {
-                    return std::string();
+                    return {};
                 }
 
-                char* pszDst = new char[nLen+1];
+                const auto Dest = new char[nLen+1];
 
-                utf16_to_utf8((const utf16_t*)text, length, (utf8_t*)pszDst, nLen+1);
+                utf16_to_utf8(reinterpret_cast<const utf16_t*>(text), length, reinterpret_cast<utf8_t*>(Dest), nLen+1);
 
-                pszDst[nLen] = 0;
+                Dest[nLen] = 0;
 
-                std::string strTemp(pszDst);
-                delete[] pszDst;
+                std::string strTemp(Dest);
+                delete[] Dest;
 
                 return strTemp;
             }
@@ -406,22 +407,22 @@ namespace CppMiniToolkit
             {
                 const auto length = strlen(text);
 
-                auto nChars = utf8_to_utf16((const utf8_t*)text, length, nullptr, 0);
+                const auto nChars = utf8_to_utf16(reinterpret_cast<const utf8_t*>(text), length, nullptr, 0);
 
                 if (nChars <= 0)
                 {
-                    return std::u16string();
+                    return {};
                 }
 
-                char16_t* pwcsName = new char16_t[nChars+1];
+                const auto Dest = new char16_t[nChars+1];
 
-                utf8_to_utf16((const utf8_t*)text, length, (utf16_t*)pwcsName, nChars+1);
-                pwcsName[nChars] = 0;
+                utf8_to_utf16(reinterpret_cast<const utf8_t*>(text), length, reinterpret_cast<utf16_t*>(Dest), nChars+1);
+                Dest[nChars] = 0;
 
-                std::u16string str(pwcsName);
+                std::u16string str(Dest);
 
                 // delete it
-                delete[] pwcsName;
+                delete[] Dest;
 
                 return str;
             }

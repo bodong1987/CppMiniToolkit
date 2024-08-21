@@ -5,7 +5,6 @@
 #if CPPMINITOOLKIT_PLATFORM_WINDOWS
 #include <string>
 #include <windows.h>
-#include <tchar.h>
 #include <cstdint>
 
 #include <Dbghelp.h>
@@ -19,27 +18,28 @@ namespace CppMiniToolkit
     {
         class ErrorHandling
         {
+        public:
             ErrorHandling() = delete;
             ~ErrorHandling() = delete;
-        public:
+
             typedef std::basic_string<TCHAR> StringT;
 
             static StringT FormatErrorMessage(DWORD errorCode)
             {
                 LPVOID lpMsgBuf = nullptr;
-                DWORD bufLen = FormatMessage(
+                const DWORD bufLen = FormatMessage(
                     FORMAT_MESSAGE_ALLOCATE_BUFFER |
                     FORMAT_MESSAGE_FROM_SYSTEM |
                     FORMAT_MESSAGE_IGNORE_INSERTS,
-                    NULL,
+                    nullptr,
                     errorCode,
                     MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-                    (LPTSTR)&lpMsgBuf,
-                    0, NULL);
+                    reinterpret_cast<LPTSTR>(&lpMsgBuf),
+                    0, nullptr);
 
                 if (bufLen)
-                {                    
-                    LPCTSTR lpMsgStr = (LPCTSTR)lpMsgBuf;
+                {
+                    const auto lpMsgStr = static_cast<LPCTSTR>(lpMsgBuf);
 
                     StringT Result(lpMsgStr, lpMsgStr + bufLen);
 
@@ -48,24 +48,24 @@ namespace CppMiniToolkit
                     return Result;
                 }
 
-                return StringT();
+                return {};
             }
 
             static StringT FormatBytes(uint64_t bytes)
             {
                 static const TCHAR* units[] = { _T("Bytes"), _T("KB"), _T("MB"), _T("GB"), _T("TB") };
 
-                double finalVal = (double)bytes;
-                int i = 0;
+                double finalVal = static_cast<double>(bytes);
 
-                for (i = 0; finalVal >= 1024 && i < 4; i++)
+                int Index = 0;
+                for (; finalVal >= 1024 && Index < 4; Index++)
                 {
                     finalVal /= 1024;
                 }
 
                 TCHAR buffer[64] = { 0 };
 
-                _stprintf_s(buffer, _T("%.2f %s"), finalVal, units[i]);
+                _stprintf_s(buffer, _T("%.2f %s"), finalVal, units[Index]);
 
                 return buffer;
             }
@@ -73,14 +73,14 @@ namespace CppMiniToolkit
             static bool DumpProcess(int processId, const StringT& path)
             {
                 HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, processId);
-                if (hProcess == NULL)
+                if (hProcess == nullptr)
                 {                    
                     return false;
                 }
 
                 CPPMINITOOLKIT_SCOPED_EXIT(CloseHandle(hProcess));
 
-                HANDLE hFile = CreateFile(path.c_str(), GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+                HANDLE hFile = CreateFile(path.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
 
                 if (hFile == INVALID_HANDLE_VALUE)
                 {
@@ -89,12 +89,12 @@ namespace CppMiniToolkit
 
                 CPPMINITOOLKIT_SCOPED_EXIT(CloseHandle(hFile));
 
-                // Ð´Èë minidump
+                // Ð´ï¿½ï¿½ minidump
                 MINIDUMP_EXCEPTION_INFORMATION exceptionInfo;
                 exceptionInfo.ThreadId = GetCurrentThreadId();
-                exceptionInfo.ExceptionPointers = NULL;
+                exceptionInfo.ExceptionPointers = nullptr;
                 exceptionInfo.ClientPointers = FALSE;
-                BOOL result = MiniDumpWriteDump(hProcess, processId, hFile, MiniDumpNormal, &exceptionInfo, NULL, NULL);
+                BOOL result = MiniDumpWriteDump(hProcess, processId, hFile, MiniDumpNormal, &exceptionInfo, nullptr, nullptr);
                 if (!result)
                 {
                     // Failed ? 

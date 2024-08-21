@@ -8,10 +8,10 @@ namespace CppMiniToolkit
 {
     class PathUtils
     {
-    private:
+    public:
         PathUtils() = delete;
         ~PathUtils() = delete;
-
+    private:
         template <typename TCharType>
         static const TCharType* GetSplitFlags()
         {

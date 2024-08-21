@@ -160,7 +160,7 @@ namespace CppMiniToolkit
                 return rename(from, to) == 0;
             }
 
-            static void CopyDirectoryRecusively(const char* source, const char* destination)
+            static void CopyDirectoryRecursively(const char* source, const char* destination)
             {
                 CreateDirectories(destination, true);
 
@@ -188,7 +188,7 @@ namespace CppMiniToolkit
 
                     if (entry->d_type == DT_DIR)
                     {
-                        CopyDirectoryRecusively(srcPath.c_str(), dstPath.c_str());
+                        CopyDirectoryRecursively(srcPath.c_str(), dstPath.c_str());
                     }
                     else
                     {

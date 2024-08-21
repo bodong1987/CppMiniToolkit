@@ -1,4 +1,4 @@
-#include <gtest/gtest.h>
+ï»¿#include <gtest/gtest.h>
 #include <Text/Encoding.hpp>
 #include <Text/Details/TextEncodingGeneric.hpp>
 
@@ -20,16 +20,16 @@ TEST(Encoding, UTF8ToUTF16)
 
 TEST(Encoding, UTF16ToUTF8Chinese)
 {
-    std::u16string utf16 = u"\u4F60\u597D, \u4E16\u754C!";  // "ÄãºÃ, ÊÀ½ç!"
+    std::u16string utf16 = u"\u4F60\u597D, \u4E16\u754C!";  // "ä½ å¥½, ä¸–ç•Œ!"
     std::string utf8 = Encoding::UTF16ToUTF8(utf16.c_str());
-    EXPECT_EQ(utf8, "\xE4\xBD\xA0\xE5\xA5\xBD, \xE4\xB8\x96\xE7\x95\x8C!");  // "ÄãºÃ, ÊÀ½ç!" in UTF-8
+    EXPECT_EQ(utf8, "\xE4\xBD\xA0\xE5\xA5\xBD, \xE4\xB8\x96\xE7\x95\x8C!");  // "ä½ å¥½, ä¸–ç•Œ!" in UTF-8
 }
 
 TEST(Encoding, UTF8ToUTF16Chinese)
 {
-    std::string utf8 = "\xE4\xBD\xA0\xE5\xA5\xBD, \xE4\xB8\x96\xE7\x95\x8C!";  // "ÄãºÃ, ÊÀ½ç!" in UTF-8
+    std::string utf8 = "\xE4\xBD\xA0\xE5\xA5\xBD, \xE4\xB8\x96\xE7\x95\x8C!";  // "ä½ å¥½, ä¸–ç•Œ!" in UTF-8
     std::u16string utf16 = Encoding::UTF8ToUTF16(utf8.c_str());
-    EXPECT_EQ(utf16, u"\u4F60\u597D, \u4E16\u754C!");  // "ÄãºÃ, ÊÀ½ç!"
+    EXPECT_EQ(utf16, u"\u4F60\u597D, \u4E16\u754C!");  // "ä½ å¥½, ä¸–ç•Œ!"
 }
 
 #if CPPMINITOOLKIT_PLATFORM_WINDOWS
@@ -65,15 +65,15 @@ TEST(EncodingGeneric, UTF8ToUTF16)
 
 TEST(EncodingGeneric, UTF16ToUTF8Chinese)
 {
-    std::u16string utf16 = u"\u4F60\u597D, \u4E16\u754C!";  // "ÄãºÃ, ÊÀ½ç!"
+    std::u16string utf16 = u"\u4F60\u597D, \u4E16\u754C!";  // "ä½ å¥½, ä¸–ç•Œ!"
     std::string utf8 = PlatformGeneric::TextEncodingGeneric::UTF16ToUTF8(utf16.c_str());
-    EXPECT_EQ(utf8, "\xE4\xBD\xA0\xE5\xA5\xBD, \xE4\xB8\x96\xE7\x95\x8C!");  // "ÄãºÃ, ÊÀ½ç!" in UTF-8
+    EXPECT_EQ(utf8, "\xE4\xBD\xA0\xE5\xA5\xBD, \xE4\xB8\x96\xE7\x95\x8C!");  // "ä½ å¥½, ä¸–ç•Œ!" in UTF-8
 }
 
 TEST(EncodingGeneric, UTF8ToUTF16Chinese)
 {
-    std::string utf8 = "\xE4\xBD\xA0\xE5\xA5\xBD, \xE4\xB8\x96\xE7\x95\x8C!";  // "ÄãºÃ, ÊÀ½ç!" in UTF-8
+    std::string utf8 = "\xE4\xBD\xA0\xE5\xA5\xBD, \xE4\xB8\x96\xE7\x95\x8C!";  // "ä½ å¥½, ä¸–ç•Œ!" in UTF-8
     std::u16string utf16 = PlatformGeneric::TextEncodingGeneric::UTF8ToUTF16(utf8.c_str());
-    EXPECT_EQ(utf16, u"\u4F60\u597D, \u4E16\u754C!");  // "ÄãºÃ, ÊÀ½ç!"
+    EXPECT_EQ(utf16, u"\u4F60\u597D, \u4E16\u754C!");  // "ä½ å¥½, ä¸–ç•Œ!"
 }
 

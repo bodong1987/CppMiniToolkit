@@ -38,6 +38,16 @@ namespace CppMiniToolkit
         {
             return PlatformWindows::TextEncodingWindows::ANSIToUTF16(text);
         }
+
+        static std::string WCHARToUTF8(const wchar_t* text)
+        {
+            return TextEncodingDetails::UTF16ToUTF8(reinterpret_cast<const char16_t*>(text));
+        }
+
+        static std::wstring UTF8ToWCHAR(const char* text)
+        {
+            return TextEncodingDetails::UTF8ToWCHAR(text);
+        }
 #endif
 
 #if CPPMINITOOLKIT_COMPILER_MSVC_WITH_CPP_CLI        
@@ -101,3 +111,6 @@ namespace CppMiniToolkit
 #endif
     };
 }
+
+#define CPPMINITOOLKIT_UTF8_TO_UTF16(text) CppMiniToolkit::Encoding::UTF8ToUTF16(text)
+#define CPPMINITOOLKIT_UTF16_TO_UTF8(text) CppMiniToolkit::Encoding::UTF8ToUTF16(text)

@@ -16,87 +16,109 @@ namespace CppMiniToolkit
     {
         class TextEncodingWindows
         {
+        public:
             TextEncodingWindows() = delete;
             ~TextEncodingWindows() = delete;
-        public:
+
             static std::string UTF16ToUTF8(const char16_t* text)
             {
-                int nLen = WideCharToMultiByte(CP_UTF8, 0, (LPCWSTR)text, -1, nullptr, 0, nullptr, nullptr);
+                const int nLen = WideCharToMultiByte(CP_UTF8, 0, reinterpret_cast<LPCWSTR>(text), -1, nullptr, 0, nullptr, nullptr);
 
                 if (nLen <= 0)
                 {
-                    return std::string();
+                    return {};
                 }
 
-                char* pszDst = new char[nLen];
+                const auto Dest = new char[nLen];
                 
-                WideCharToMultiByte(CP_UTF8, 0, (LPCWSTR)text, -1, pszDst, nLen, nullptr, nullptr);
-                pszDst[nLen - 1] = 0;
+                WideCharToMultiByte(CP_UTF8, 0, reinterpret_cast<LPCWSTR>(text), -1, Dest, nLen, nullptr, nullptr);
+                Dest[nLen - 1] = 0;
 
-                std::string strTemp(pszDst);
-                delete[] pszDst;
+                std::string strTemp(Dest);
+                delete[] Dest;
 
                 return strTemp;
             }
 
             static std::u16string UTF8ToUTF16(const char* text)
             {
-                int nChars = MultiByteToWideChar(CP_UTF8, 0, text, -1, nullptr, 0);
+                const auto nChars = MultiByteToWideChar(CP_UTF8, 0, text, -1, nullptr, 0);
 
                 if (nChars <= 0)
                 {
-                    return std::u16string();
+                    return {};
                 }
 
-                char16_t* pwcsName = new char16_t[nChars];
+                const auto Dest = new char16_t[nChars];
 
-                MultiByteToWideChar(CP_UTF8, 0, text, -1, (LPWSTR)pwcsName, nChars);
+                MultiByteToWideChar(CP_UTF8, 0, text, -1, reinterpret_cast<LPWSTR>(Dest), nChars);
 
-                std::u16string str(pwcsName);
+                std::u16string str(Dest);
 
                 // delete it
-                delete[] pwcsName;
+                delete[] Dest;
+
+                return str;
+            }
+
+            static std::wstring UTF8ToWCHAR(const char* text)
+            {
+                const auto nChars = MultiByteToWideChar(CP_UTF8, 0, text, -1, nullptr, 0);
+
+                if (nChars <= 0)
+                {
+                    return {};
+                }
+
+                const auto Dest = new wchar_t[nChars];
+
+                MultiByteToWideChar(CP_UTF8, 0, text, -1, (LPWSTR)Dest, nChars);
+
+                std::wstring str(Dest);
+
+                // delete it
+                delete[] Dest;
 
                 return str;
             }
 
             static std::string UTF16ToANSI(const char16_t* text)
             {
-                int nLen = WideCharToMultiByte(CP_ACP, 0, (LPCWSTR)text, -1, nullptr, 0, nullptr, nullptr);
+                const auto nLen = WideCharToMultiByte(CP_ACP, 0, reinterpret_cast<LPCWSTR>(text), -1, nullptr, 0, nullptr, nullptr);
 
                 if (nLen <= 0)
                 {
-                    return std::string();
+                    return {};
                 }
 
-                char* pszDst = new char[nLen];
+                const auto Dest = new char[nLen];
 
-                WideCharToMultiByte(CP_ACP, 0, (LPCWSTR)text, -1, pszDst, nLen, nullptr, nullptr);
-                pszDst[nLen - 1] = 0;
+                WideCharToMultiByte(CP_ACP, 0, reinterpret_cast<LPCWSTR>(text), -1, Dest, nLen, nullptr, nullptr);
+                Dest[nLen - 1] = 0;
 
-                std::string strTemp(pszDst);
-                delete[] pszDst;
+                std::string strTemp(Dest);
+                delete[] Dest;
 
                 return strTemp;
             }
 
             static std::u16string ANSIToUTF16(const char* text)
             {
-                int nChars = MultiByteToWideChar(CP_ACP, 0, text, -1, nullptr, 0);
+                const auto nChars = MultiByteToWideChar(CP_ACP, 0, text, -1, nullptr, 0);
 
                 if (nChars <= 0)
                 {
-                    return std::u16string();
+                    return {};
                 }
 
-                char16_t* pwcsName = new char16_t[nChars];
+                const auto Dest = new char16_t[nChars];
 
-                MultiByteToWideChar(CP_ACP, 0, text, -1, (LPWSTR)pwcsName, nChars);
-                
-                std::u16string str(pwcsName);
+                MultiByteToWideChar(CP_ACP, 0, text, -1, reinterpret_cast<LPWSTR>(Dest), nChars);
+
+                std::u16string str(Dest);
 
                 // delete it
-                delete[] pwcsName;
+                delete[] Dest;
 
                 return str;
             }
