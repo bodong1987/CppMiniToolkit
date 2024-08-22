@@ -9,6 +9,7 @@
 // ReSharper disable once CppUnusedIncludeDirective
 #include <tchar.h>
 #include <Dbghelp.h>
+#include <Common/ScopedExit.hpp>
 
 #pragma comment(lib, "Dbghelp")
 
@@ -73,7 +74,7 @@ namespace CppMiniToolkit
 
             static bool DumpProcess(int processId, const StringT& path)
             {
-                HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, processId);
+                const auto hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, processId);
                 if (hProcess == nullptr)
                 {                    
                     return false;
@@ -81,7 +82,7 @@ namespace CppMiniToolkit
 
                 CPPMINITOOLKIT_SCOPED_EXIT(CloseHandle(hProcess));
 
-                HANDLE hFile = CreateFile(path.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
+                const auto hFile = CreateFile(path.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
 
                 if (hFile == INVALID_HANDLE_VALUE)
                 {
@@ -90,12 +91,12 @@ namespace CppMiniToolkit
 
                 CPPMINITOOLKIT_SCOPED_EXIT(CloseHandle(hFile));
 
-                // д�� minidump
+                // create minidump
                 MINIDUMP_EXCEPTION_INFORMATION exceptionInfo;
                 exceptionInfo.ThreadId = GetCurrentThreadId();
                 exceptionInfo.ExceptionPointers = nullptr;
                 exceptionInfo.ClientPointers = FALSE;
-                BOOL result = MiniDumpWriteDump(hProcess, processId, hFile, MiniDumpNormal, &exceptionInfo, nullptr, nullptr);
+                const BOOL result = MiniDumpWriteDump(hProcess, processId, hFile, MiniDumpNormal, &exceptionInfo, nullptr, nullptr);
                 if (!result)
                 {
                     // Failed ? 
