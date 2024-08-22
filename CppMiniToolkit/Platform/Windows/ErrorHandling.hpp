@@ -6,7 +6,8 @@
 #include <string>
 #include <windows.h>
 #include <cstdint>
-
+// ReSharper disable once CppUnusedIncludeDirective
+#include <tchar.h>
 #include <Dbghelp.h>
 
 #pragma comment(lib, "Dbghelp")
