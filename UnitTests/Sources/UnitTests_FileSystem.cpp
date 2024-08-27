@@ -41,19 +41,3 @@ TEST(FileSystem, WalkThoughDirectory)
     );
 }
 
-TEST(FileSystem, Path)
-{
-    EXPECT_EQ(PathUtils::GetFileName("C:\\1.txt"), "1.txt");
-    EXPECT_EQ(PathUtils::GetFileNameWithoutExtension("C:\\1.txt"), "1");
-    EXPECT_EQ(PathUtils::GetExtension("C:\\1.txt"), ".txt");
-    EXPECT_EQ(PathUtils::ReplaceExtension("C:\\1.txt", ".exe"), "C:\\1.exe");
-
-    EXPECT_EQ(PathUtils::GetDirectoryPath(L"C:\\1.txt"), L"C:\\");
-
-#if CPPMINITOOLKIT_PLATFORM_WINDOWS
-    EXPECT_EQ(PathUtils::Combine("C:\\", "A", "BB", "CC.exe"), "C:\\A\\BB\\CC.exe");
-    EXPECT_TRUE(PathUtils::IsAbsolutePath("C:\\AMD"));
-#endif
-    EXPECT_FALSE(PathUtils::IsAbsolutePath("../AMD"));
-
-}

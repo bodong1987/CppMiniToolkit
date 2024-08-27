@@ -1,4 +1,5 @@
 #pragma once
+// ReSharper disable IdentifierTypo
 
 #if (defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WINDOWS) || defined(_WIN64))
 #define CPPMINITOOLKIT_PLATFORM_WINDOWS   1
@@ -11,13 +12,13 @@
 #define CPPMINITOOLKIT_PLATFORM_APPLE     1
 #include <TargetConditionals.h>
 #else
-#define CPPMINITOOLKIT_PLATFORM_APPLE     0
+#define CPPMINITOOLKIT_PLATFORM_APPLE     0  // NOLINT(modernize-macro-to-enum)
 #endif
 
 #if defined(__OBJC__)
-#define CPPMINITOOLKIT_OBJECTIVE_C        1
+#define CPPMINITOOLKIT_OBJECTIVE_C        1  // NOLINT(modernize-macro-to-enum)
 #else
-#define CPPMINITOOLKIT_OBJECTIVE_C        0
+#define CPPMINITOOLKIT_OBJECTIVE_C        0  // NOLINT(modernize-macro-to-enum)
 #endif
 
 #ifdef _MSC_VER
@@ -34,16 +35,16 @@
 
 // ios or ios simulator
 #if defined(TARGET_OS_IOS) || defined(TARGET_IPHONE_SIMULATOR)
-#define CPPMINITOOLKIT_PLATFORM_IOS       1
+#define CPPMINITOOLKIT_PLATFORM_IOS       1   // NOLINT(modernize-macro-to-enum)
 #else
-#define CPPMINITOOLKIT_PLATFORM_IOS       0
+#define CPPMINITOOLKIT_PLATFORM_IOS       0   // NOLINT(modernize-macro-to-enum)
 #endif
 
 // iphone simulator ???
 #if defined(TARGET_IPHONE_SIMULATOR)
-#define CPPMINITOOLKIT_PLATFORM_IPHONE_SIMULATOR 1
+#define CPPMINITOOLKIT_PLATFORM_IPHONE_SIMULATOR 1  // NOLINT(modernize-macro-to-enum)
 #else
-#define CPPMINITOOLKIT_PLATFORM_IPHONE_SIMULATOR 0
+#define CPPMINITOOLKIT_PLATFORM_IPHONE_SIMULATOR 0  // NOLINT(modernize-macro-to-enum)
 #endif
 
 #if defined(__APPLE__) || defined(APPLE) || defined(_APPLE_)
@@ -53,34 +54,34 @@
 #endif
 
 #if defined(ANDROID) || defined(__ANDROID__)
-#define CPPMINITOOLKIT_PLATFORM_ANDROID   1
+#define CPPMINITOOLKIT_PLATFORM_ANDROID   1  // NOLINT(modernize-macro-to-enum)
 #else
-#define CPPMINITOOLKIT_PLATFORM_ANDROID   0
+#define CPPMINITOOLKIT_PLATFORM_ANDROID   0  // NOLINT(modernize-macro-to-enum)
 #endif
 
 
 #if defined(_WIN64) || defined(_X64) || defined(WIN64) || defined( __LP64__ )
-#define CPPMINITOOLKIT_PLATFORM_X64       1
+#define CPPMINITOOLKIT_PLATFORM_X64       1  // NOLINT(modernize-macro-to-enum)
 #elif defined(WIN32) || defined(_WIN32)
-#define CPPMINITOOLKIT_PLATFORM_X64       0
+#define CPPMINITOOLKIT_PLATFORM_X64       0  // NOLINT(modernize-macro-to-enum)
 #endif
 
 #if defined(__arm__) || defined(__thumb__) || defined(_ARM) || defined(_M_ARM) || defined(_M_ARMT) || defined(__arm)
-#define CPPMINITOOLKIT_PLATFORM_ARM       1
+#define CPPMINITOOLKIT_PLATFORM_ARM       1  // NOLINT(modernize-macro-to-enum)
 #else
-#define CPPMINITOOLKIT_PLATFORM_ARM       0
+#define CPPMINITOOLKIT_PLATFORM_ARM       0  // NOLINT(modernize-macro-to-enum)
 #endif
 
 #if defined(DEBUG)||defined(_DEBUG)
-#define CPPMINITOOLKIT_DEBUG              1
+#define CPPMINITOOLKIT_DEBUG              1  // NOLINT(modernize-macro-to-enum)
 #else
-#define CPPMINITOOLKIT_DEBUG              0
+#define CPPMINITOOLKIT_DEBUG              0  // NOLINT(modernize-macro-to-enum)
 #endif
 
 #if defined(UNICODE)||defined(_UNICODE)
-#define CPPMINITOOLKIT_UNICODE            1
+#define CPPMINITOOLKIT_UNICODE            1  // NOLINT(modernize-macro-to-enum)
 #else
-#define CPPMINITOOLKIT_UNICODE            0
+#define CPPMINITOOLKIT_UNICODE            0  // NOLINT(modernize-macro-to-enum)
 #endif
 
 // is C++/CLI enabled???
@@ -106,3 +107,4 @@
 #define _countof( Array ) (sizeof(Array)/sizeof(Array[0]))
 #endif
 
+#define CPPMINITOOLKIT_UNREFERENCED_PARAMETER(p) (void)(p)

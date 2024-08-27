@@ -5,7 +5,7 @@
 
 namespace CppMiniToolkit
 {
-    class StringAlgorithm
+    class StringAlgorithm  // NOLINT(cppcoreguidelines-special-member-functions)
     {
     public:
         StringAlgorithm() = delete;
@@ -180,10 +180,10 @@ namespace CppMiniToolkit
 
         // replace
     private:
-        template <typename TCharType, bool ignoreCase>
+        template <typename TCharType, bool IgnoreCase>
         static std::basic_string<TCharType>& ReplaceCore(std::basic_string<TCharType>& str, const std::basic_string<TCharType>& match, const std::basic_string<TCharType>& replace)
         {
-            auto ptr = ignoreCase ? TCharTraits<TCharType>::iFind(str.c_str(), match.c_str()) : TCharTraits<TCharType>::Find(str.c_str(), match.c_str());
+            auto ptr = IgnoreCase ? TCharTraits<TCharType>::iFind(str.c_str(), match.c_str()) : TCharTraits<TCharType>::Find(str.c_str(), match.c_str());
 
             if (ptr != nullptr)
             {
@@ -462,10 +462,10 @@ namespace CppMiniToolkit
         template <typename TSequenceType, typename TCharType, typename Predicate>
         static TSequenceType& Split(TSequenceType& sequence, const std::basic_string<TCharType>& str, Predicate predicate)
         {
-            typedef typename std::basic_string<TCharType>::size_type size_type;
+            typedef typename std::basic_string<TCharType>::size_type SizeType;
 
-            size_type startPos = 0;
-            size_type pos = std::basic_string<TCharType>::npos;
+            SizeType startPos = 0;
+            SizeType pos = std::basic_string<TCharType>::npos;
             while ((pos = Find<TCharType, Predicate>(str, predicate, startPos)) != std::basic_string<TCharType>::npos)
             {
                 if (pos == startPos)

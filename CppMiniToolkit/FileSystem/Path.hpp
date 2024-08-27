@@ -6,7 +6,7 @@
 
 namespace CppMiniToolkit
 {
-    class PathUtils
+    class PathUtils  // NOLINT(cppcoreguidelines-special-member-functions)
     {
     public:
         PathUtils() = delete;
@@ -15,8 +15,8 @@ namespace CppMiniToolkit
         template <typename TCharType>
         static const TCharType* GetSplitFlags()
         {
-            static const TCharType s_SplitFlags[] = { '\\', '/', 0 };
-            return s_SplitFlags;
+            static const TCharType S_SplitFlags[] = { '\\', '/', 0 };
+            return S_SplitFlags;
         }
 
     public:
@@ -89,7 +89,7 @@ namespace CppMiniToolkit
             auto len = std::char_traits<TCharType>::length(path);
             auto pos = TCharTraits<TCharType>::rFindAny(path, GetSplitFlags<TCharType>());
 
-            return pos != nullptr ? std::basic_string<TCharType>(path, pos + 1) : std::basic_string<TCharType>();
+            return pos != nullptr ? std::basic_string<TCharType>(path, pos) : std::basic_string<TCharType>();
         }
 
         template <typename TCharType>

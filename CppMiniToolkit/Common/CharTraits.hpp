@@ -14,18 +14,21 @@ namespace CppMiniToolkit
     {
     };
 
+    // ReSharper disable once CppRedundantAccessSpecifier
+    // ReSharper disable once CppDeprecatedEntity
     template <>
-    class TCharTraits<char> :
-        public std::char_traits<char>
+    class TCharTraits<char> : public std::char_traits<char>
     {
     private:
+        // ReSharper disable once CommentTypo
+        // NOLINTBEGIN
         static const char* strrstr(const char* haystack, const char* needle)
         {
             const char* r = nullptr;
 
             if (!needle[0])
             {
-                return (char*)haystack + strlen(haystack);
+                return haystack + length(haystack);
             }
 
             while (true)
@@ -41,7 +44,7 @@ namespace CppMiniToolkit
                 haystack = p + 1;
             }
 
-            return nullptr;
+            // return nullptr;
         }
 
         /*
@@ -54,8 +57,8 @@ namespace CppMiniToolkit
 
             if ((c = *find++) != 0)
             {
-                c = tolower(c);
-                len = strlen(find);
+                c = (char)ToLower(c);
+                len = length(find);
                 do
                 {
                     do
@@ -64,12 +67,14 @@ namespace CppMiniToolkit
                         {
                             return nullptr;
                         }
-                    } while (tolower(sc) != c);
+                    } while (ToLower(sc) != c);
                 } while (iCompareN(s, find, len) != 0);
                 s--;
             }
             return s;
         }
+        // ReSharper disable once CommentTypo
+        // NOLINTEND
 
     public:
         static int32_t StringPrintf(
@@ -79,14 +84,31 @@ namespace CppMiniToolkit
             ...
         )
         {
-            va_list arglist;
+            va_list arglist; // NOLINT
             va_start(arglist, format);
 
-            int result = 0;
+            int result;
 #if CPPMINITOOLKIT_COMPILER_MSVC
             result = _vsprintf_s_l(string, sizeInBytes, format, nullptr, arglist);
 #else
             result = vsnprintf(string, sizeInBytes, format, arglist);
+#endif
+            va_end(arglist);
+
+            return result;
+        }
+
+        template <size_t N>
+        static int32_t StringPrintf(char (&string)[N], const char* format, ...)
+        {
+            va_list arglist; // NOLINT
+            va_start(arglist, format);
+
+            int result;
+#if CPPMINITOOLKIT_COMPILER_MSVC
+            result = _vsprintf_s_l(string, N, format, nullptr, arglist);
+#else
+            result = vsnprintf(string, N, format, arglist);
 #endif
             va_end(arglist);
 
@@ -112,7 +134,7 @@ namespace CppMiniToolkit
             return strcmp(first, second);
         }
 
-        static int CompareN(const char* first, const char* second, std::size_t n)
+        static int CompareN(const char* first, const char* second, const size_t n)
         {
             return strncmp(first, second, n);
         }
@@ -126,7 +148,7 @@ namespace CppMiniToolkit
 #endif
         }
 
-        static int iCompareN(const char* first, const char* second, std::size_t n)
+        static int iCompareN(const char* first, const char* second, const size_t n)
         {
 #if CPPMINITOOLKIT_COMPILER_MSVC
             return _strnicmp(first, second, n);
@@ -145,7 +167,7 @@ namespace CppMiniToolkit
             return strcasestr(str, match);
         }
 
-        static const char* rFind(const char* str, char ch)
+        static const char* rFind(const char* str, const char ch)
         {
             return strrchr(str, ch);
         }
@@ -159,7 +181,7 @@ namespace CppMiniToolkit
         {
             for (const char* p = str + strlen(str) - 1; p >= str; --p)
             {
-                if (strchr(targets, *p) != nullptr)
+                if(strchr(targets, *p) != nullptr)
                 {
                     return p;
                 }
@@ -181,11 +203,13 @@ namespace CppMiniToolkit
             return nullptr;
         }
 
-        static char* Fill(char* Dest, char Val, size_t Length)
+        static char* Fill(char* dest, const char val, const size_t length)
         {
-            return (char*)memset(Dest, Val, Length);
+            return (char*)memset(dest, val, length); // NOLINT
         }
 
+        // ReSharper disable once CommentTypo
+        // NOLINTBEGIN
         static int IsAlnum(char ch)
         {
             return isalnum(ch);
@@ -250,35 +274,40 @@ namespace CppMiniToolkit
         {
             return toupper(ch);
         }
+        // ReSharper disable once CommentTypo
+        // NOLINTEND
 
-        static char GetSpace()
+        constexpr static char GetSpace()
         {
             return ' ';
         }
 
-        static char GetZero()
+        constexpr static char GetZero()
         {
             return '0';
         }
 
-        static char GetEndFlag()
+        constexpr static char GetEndFlag()
         {
-            return (char)0;
+            return 0;
         }
     };
 
+    // ReSharper disable once CppRedundantAccessSpecifier
+    // ReSharper disable once CppDeprecatedEntity
     template <>
-    class TCharTraits<wchar_t> :
-        public std::char_traits<wchar_t>
+    class TCharTraits<wchar_t> : public std::char_traits<wchar_t>
     {
     private:
+        // ReSharper disable once CommentTypo
+        // NOLINTBEGIN
         static const wchar_t* wcsrstr(const wchar_t* haystack, const wchar_t* needle)
         {
             const wchar_t* r = nullptr;
 
             if (!needle[0])
             {
-                return (wchar_t*)haystack + wcslen(haystack);
+                return haystack + length(haystack);
             }
 
             while (true)
@@ -294,7 +323,7 @@ namespace CppMiniToolkit
                 haystack = p + 1;
             }
 
-            return nullptr;
+            // return nullptr;
         }
 
         /*
@@ -307,8 +336,8 @@ namespace CppMiniToolkit
 
             if ((c = *find++) != 0)
             {
-                c = tolower(c);
-                len = wcslen(find);
+                c = (wchar_t)ToLower(c);
+                len = length(find);
                 do
                 {
                     do
@@ -317,12 +346,14 @@ namespace CppMiniToolkit
                         {
                             return nullptr;
                         }
-                    } while (tolower(sc) != c);
+                    } while (ToLower(sc) != c);
                 } while (iCompareN(s, find, len) != 0);
                 s--;
             }
             return s;
         }
+        // ReSharper disable once CommentTypo
+        // NOLINTEND
     public:
         static int32_t StringPrintf(
             wchar_t* string,
@@ -331,18 +362,40 @@ namespace CppMiniToolkit
             ...
         )
         {
-            va_list arglist;
+            va_list arglist; // NOLINT
 
             va_start(arglist, format);
 
-            int result = 0;
+            int result;
 
 #if CPPMINITOOLKIT_COMPILER_MSVC
             result = _vswprintf_s_l(string, sizeInWords, format, nullptr, arglist);
 #elif CPPMINITOOLKIT_COMPILER_GCC && CPPMINITOOLKIT_PLATFORM_WINDOWS
+            CPPMINITOOLKIT_UNREFERENCED_PARAMETER(sizeInWords);
             result = vswprintf(string, format, arglist);
 #else
             result = vswprintf(string, sizeInWords, format, arglist);
+#endif
+            va_end(arglist);
+
+            return result;
+        }
+
+        template <size_t N>
+        static int32_t StringPrintf(wchar_t (&string)[N], const wchar_t* format, ...)
+        {
+            va_list arglist; // NOLINT
+
+            va_start(arglist, format);
+
+            int result;
+
+#if CPPMINITOOLKIT_COMPILER_MSVC
+            result = _vswprintf_s_l(string, N, format, nullptr, arglist);
+#elif CPPMINITOOLKIT_COMPILER_GCC && CPPMINITOOLKIT_PLATFORM_WINDOWS
+            result = vswprintf(string, format, arglist);
+#else
+            result = vswprintf(string, N, format, arglist);
 #endif
             va_end(arglist);
 
@@ -368,7 +421,7 @@ namespace CppMiniToolkit
             return wcscmp(first, second);
         }
 
-        static int CompareN(const wchar_t* first, const wchar_t* second, std::size_t n)
+        static int CompareN(const wchar_t* first, const wchar_t* second, const size_t n)
         {
             return wcsncmp(first, second, n);
         }
@@ -384,7 +437,7 @@ namespace CppMiniToolkit
 #endif
         }
 
-        static int iCompareN(const wchar_t* first, const wchar_t* second, std::size_t n)
+        static int iCompareN(const wchar_t* first, const wchar_t* second, size_t n)
         {
 #if CPPMINITOOLKIT_COMPILER_MSVC
             return _wcsnicmp(first, second, n);
@@ -405,7 +458,7 @@ namespace CppMiniToolkit
             return wcscasestr(str, match);
         }
 
-        static const wchar_t* rFind(const wchar_t* str, wchar_t ch)
+        static const wchar_t* rFind(const wchar_t* str, const wchar_t ch)
         {
             return wcsrchr(str, ch);
         }
@@ -441,89 +494,89 @@ namespace CppMiniToolkit
             return nullptr;
         }
 
-        static wchar_t* Fill(wchar_t* Dest, wchar_t Val, size_t Length)
+        static wchar_t* Fill(wchar_t* dest, const wchar_t val, const size_t length)
         {
-            return (wchar_t*)wmemset(Dest, Val, Length);
+            return wmemset(dest, val, length);
         }
 
-        static int IsAlnum(wchar_t ch)
+        static int IsAlnum(const wchar_t ch) // NOLINT
         {
             return iswalnum(ch);
         }
 
-        static int IsAlpha(wchar_t ch)
+        static int IsAlpha(const wchar_t ch)
         {
             return iswalpha(ch);
         }
 
-        static int IsLower(wchar_t ch)
+        static int IsLower(const wchar_t ch)
         {
             return iswlower(ch);
         }
 
-        static int IsUpper(wchar_t ch)
+        static int IsUpper(const wchar_t ch)
         {
             return iswupper(ch);
         }
 
-        static int IsDigit(wchar_t ch)
+        static int IsDigit(const wchar_t ch)
         {
             return iswdigit(ch);
         }
 
-        static int IsXDigit(wchar_t ch)
+        static int IsXDigit(const wchar_t ch)
         {
             return iswxdigit(ch);
         }
 
-        static int IsCntrl(wchar_t ch)
+        static int IsCntrl(const wchar_t ch) // NOLINT
         {
             return iswcntrl(ch);
         }
 
-        static int IsGraph(wchar_t ch)
+        static int IsGraph(const wchar_t ch)
         {
             return iswgraph(ch);
         }
 
-        static int IsPrint(wchar_t ch)
+        static int IsPrint(const wchar_t ch)
         {
             return iswprint(ch);
         }
 
-        static int IsPunct(wchar_t ch)
+        static int IsPunct(const wchar_t ch) // NOLINT
         {
             return iswpunct(ch);
         }
 
-        static int IsSpace(wchar_t ch)
+        static int IsSpace(const wchar_t ch)
         {
             return iswspace(ch);
         }
 
-        static wchar_t ToLower(wchar_t ch)
+        static wchar_t ToLower(const wchar_t ch)
         {
             return towlower(ch);
         }
 
-        static wchar_t ToUpper(wchar_t ch)
+        static wchar_t ToUpper(const wchar_t ch)
         {
             return towupper(ch);
         }
 
-        static wchar_t GetSpace()
+        constexpr static wchar_t GetSpace()
         {
             return L' ';
         }
 
-        static wchar_t GetZero()
+        constexpr static wchar_t GetZero()
         {
             return L'0';
         }
 
-        static wchar_t GetEndFlag()
+        constexpr static wchar_t GetEndFlag()
         {
-            return (wchar_t)0;
+            return 0;
         }
     };
 
