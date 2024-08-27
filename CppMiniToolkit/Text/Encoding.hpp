@@ -113,4 +113,18 @@ namespace CppMiniToolkit
 }
 
 #define CPPMINITOOLKIT_UTF8_TO_UTF16(text) CppMiniToolkit::Encoding::UTF8ToUTF16(text)
-#define CPPMINITOOLKIT_UTF16_TO_UTF8(text) CppMiniToolkit::Encoding::UTF8ToUTF16(text)
+#define CPPMINITOOLKIT_UTF16_TO_UTF8(text) CppMiniToolkit::Encoding::UTF16ToUTF8(text)
+
+#if CPPMINITOOLKIT_PLATFORM_WINDOWS
+#define CPPMINITOOLKIT_WCHAR_TO_UTF8(text) CppMiniToolkit::Encoding::WCHARToUTF8(text)
+#define CPPMINITOOLKIT_UTF8_TO_WCHAR(text) CppMiniToolkit::Encoding::UTF8ToWCHAR(text)
+
+#if CPPMINITOOLKIT_UNICODE
+#define CPPMINITOOLKIT_TCHAR_TO_UTF8(text) CppMiniToolkit::Encoding::WCHARToUTF8(text)
+#define CPPMINITOOLKIT_UTF8_TO_TCHAR(text) CppMiniToolkit::Encoding::UTF8ToWCHAR(text)
+#else
+#define CPPMINITOOLKIT_TCHAR_TO_UTF8(text) text
+#define CPPMINITOOLKIT_UTF8_TO_TCHAR(text) text
+#endif
+
+#endif

@@ -15,7 +15,7 @@ namespace CppMiniToolkit
         template <typename TCharType>
         static const TCharType* GetSplitFlags()
         {
-            static const TCharType s_SplitFlags[] = { '\\', '/' };
+            static const TCharType s_SplitFlags[] = { '\\', '/', 0 };
             return s_SplitFlags;
         }
 
