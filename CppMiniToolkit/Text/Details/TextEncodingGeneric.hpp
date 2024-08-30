@@ -196,6 +196,7 @@ namespace CppMiniToolkit
                 // Write the leading byte
                 utf8_pattern pattern = utf8_leading_bytes[size - 1];
 
+                // ReSharper disable once CppRedundantParentheses
                 utf8_t lead = codepoint & ~(pattern.mask);
                 lead |= pattern.value;
 

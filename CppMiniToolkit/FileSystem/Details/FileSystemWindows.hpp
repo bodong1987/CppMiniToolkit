@@ -13,6 +13,7 @@ namespace CppMiniToolkit
 {
     namespace PlatformWindows
     {
+        // ReSharper disable CppRedundantParentheses
         class FileSystemWindows
         {
         public:
@@ -131,21 +132,19 @@ namespace CppMiniToolkit
 
                     return true;
                 }
-                else
-                { // Specified directory name already exists as a file or directory
+                // Specified directory name already exists as a file or directory
 
-                    const bool isDirectoryOrJunction =
-                        ((fileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0) ||
-                        ((fileAttributes & FILE_ATTRIBUTE_REPARSE_POINT) != 0);
+                const bool isDirectoryOrJunction =
+                    ((fileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0) ||
+                    ((fileAttributes & FILE_ATTRIBUTE_REPARSE_POINT) != 0);
 
-                    if (!isDirectoryOrJunction)
-                    {
-                        // there is already have a file with the same name
-                        return false;
-                    }
-
-                    return true;
+                if (!isDirectoryOrJunction)
+                {
+                    // there is already have a file with the same name
+                    return false;
                 }
+
+                return true;
             }
 
             static bool CreateDirectories(LPCWSTR const directoryPath, const bool recursively) // NOLINT(*-no-recursion)
@@ -187,21 +186,19 @@ namespace CppMiniToolkit
 
                     return true;
                 }
-                else
-                { // Specified directory name already exists as a file or directory
+                // Specified directory name already exists as a file or directory
 
-                    const bool isDirectoryOrJunction =
-                        ((fileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0) ||
-                        ((fileAttributes & FILE_ATTRIBUTE_REPARSE_POINT) != 0);
+                const bool isDirectoryOrJunction =
+                    ((fileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0) ||
+                    ((fileAttributes & FILE_ATTRIBUTE_REPARSE_POINT) != 0);
 
-                    if (!isDirectoryOrJunction)
-                    {
-                        // there is already have a file with the same name
-                        return false;
-                    }
-
-                    return true;
+                if (!isDirectoryOrJunction)
+                {
+                    // there is already have a file with the same name
+                    return false;
                 }
+
+                return true;
             }
 
             static bool DeleteDirectories(LPCSTR const directoryPath, const bool recursively) // NOLINT(*-no-recursion)
@@ -270,21 +267,18 @@ namespace CppMiniToolkit
                     {
                         return false;
                     }
-                    else
+                    if (!bSubdirectory)
                     {
-                        if (!bSubdirectory)
+                        // Set directory attributes
+                        if (::SetFileAttributesA(directory.c_str(), FILE_ATTRIBUTE_NORMAL) == FALSE)
                         {
-                            // Set directory attributes
-                            if (::SetFileAttributesA(directory.c_str(), FILE_ATTRIBUTE_NORMAL) == FALSE)
-                            {
-                                return false;
-                            }
+                            return false;
+                        }
 
-                            // Delete directory
-                            if (::RemoveDirectoryA(directory.c_str()) == FALSE)
-                            {
-                                return false;
-                            }
+                        // Delete directory
+                        if (::RemoveDirectoryA(directory.c_str()) == FALSE)
+                        {
+                            return false;
                         }
                     }
                 }
@@ -358,21 +352,18 @@ namespace CppMiniToolkit
                     {
                         return false;
                     }
-                    else
+                    if (!bSubdirectory)
                     {
-                        if (!bSubdirectory)
+                        // Set directory attributes
+                        if (::SetFileAttributesW(directory.c_str(), FILE_ATTRIBUTE_NORMAL) == FALSE)
                         {
-                            // Set directory attributes
-                            if (::SetFileAttributesW(directory.c_str(), FILE_ATTRIBUTE_NORMAL) == FALSE)
-                            {
-                                return false;
-                            }
+                            return false;
+                        }
 
-                            // Delete directory
-                            if (::RemoveDirectoryW(directory.c_str()) == FALSE)
-                            {
-                                return false;
-                            }
+                        // Delete directory
+                        if (::RemoveDirectoryW(directory.c_str()) == FALSE)
+                        {
+                            return false;
                         }
                     }
                 }

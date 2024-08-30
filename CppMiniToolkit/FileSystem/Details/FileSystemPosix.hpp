@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 
 #if !CPPMINITOOLKIT_PLATFORM_WINDOWS
 #include <sys/stat.h>
@@ -42,7 +43,7 @@ namespace CppMiniToolkit
                 }
 
                 bool isEmpty = true;
-                struct dirent* entry;
+                dirent* entry;
                 while ((entry = readdir(dir)) != nullptr)
                 {
                     if (strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0)
@@ -105,7 +106,7 @@ namespace CppMiniToolkit
                 }
 
                 bool success = true;
-                struct dirent* entry;
+                dirent* entry;
                 while ((entry = readdir(dir)) != nullptr)
                 {
                     if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
@@ -170,7 +171,7 @@ namespace CppMiniToolkit
                     return;
                 }
 
-                struct dirent* entry;
+                dirent* entry;
                 while ((entry = readdir(dir)) != nullptr)
                 {
                     if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
@@ -207,7 +208,7 @@ namespace CppMiniToolkit
                     return;
                 }
 
-                struct dirent* entry;
+                dirent* entry;
                 while ((entry = readdir(dir)) != nullptr)
                 {
                     if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)

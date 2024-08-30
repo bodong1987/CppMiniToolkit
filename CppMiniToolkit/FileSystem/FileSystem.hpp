@@ -128,10 +128,8 @@ namespace CppMiniToolkit
             {
                 return buffer;
             }
-            else
-            {
-                return DynamicBuffer();
-            }
+
+            return DynamicBuffer();
         }
 
         template <typename TCharType>

@@ -127,6 +127,7 @@ namespace CppMiniToolkit
                 IsWow64Process(GetCurrentProcess(), &isWow64);
 
                 TCHAR versionString[128];
+                // ReSharper disable once CppRedundantParentheses
                 _stprintf_s(versionString, _T(" %s [%d.%d.%d]"), (!isWow64 ? _T("x64") : _T("x86")), osInfo.dwMajorVersion, osInfo.dwMinorVersion, osInfo.dwBuildNumber);
 
                 return SystemType + versionString;
@@ -171,7 +172,7 @@ namespace CppMiniToolkit
 
                 std::vector<char> buffer(4096);
                 DWORD bytesRead = 0;
-                while (ReadFile(hRead, buffer.data(), (DWORD)buffer.size(), &bytesRead, nullptr))
+                while (ReadFile(hRead, buffer.data(), buffer.size(), &bytesRead, nullptr))
                 {
                     Result.append(buffer.data(), bytesRead);
 

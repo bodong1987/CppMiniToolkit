@@ -1,4 +1,5 @@
 // ReSharper disable CppCStyleCast
+// ReSharper disable CppRedundantParentheses
 #pragma once
 
 #include <cstdint>

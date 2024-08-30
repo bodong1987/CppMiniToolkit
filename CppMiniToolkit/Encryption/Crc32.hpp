@@ -165,7 +165,7 @@ namespace CppMiniToolkit
 
             while (length-- != 0)
             {
-                uint8_t s = static_cast<uint8_t>(crc) ^ *current++;
+                const uint8_t s = static_cast<uint8_t>(crc) ^ *current++;
 
                 // Hagai Gold made me aware of this table-less algorithm and send me code
 
@@ -182,8 +182,8 @@ namespace CppMiniToolkit
                 //      (t >> 23);
 
                 // the fastest I can come up with:
-                uint32_t low = (s ^ (s << 6)) & 0xFF;
-                uint32_t a = (low * ((1 << 23) + (1 << 14) + (1 << 2)));
+                const uint32_t low = (s ^ (s << 6)) & 0xFF;
+                const uint32_t a = (low * ((1 << 23) + (1 << 14) + (1 << 2)));
                 crc = (crc >> 8) ^
                     (low * ((1 << 24) + (1 << 16) + (1 << 8))) ^
                     a ^

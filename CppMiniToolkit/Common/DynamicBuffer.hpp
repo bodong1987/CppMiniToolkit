@@ -7,6 +7,7 @@
 
 namespace CppMiniToolkit
 {
+    // ReSharper disable CppRedundantParentheses
     template <int AlignLength = 4>
     class TDynamicBuffer
     {
@@ -16,12 +17,12 @@ namespace CppMiniToolkit
 
         explicit TDynamicBuffer() = default;
 
-        explicit TDynamicBuffer(const void* source, SizeType length)
+        explicit TDynamicBuffer(const void* source, const SizeType length)
         {
             Assign(source, length);
         }
                 
-        explicit TDynamicBuffer(SizeType size) 
+        explicit TDynamicBuffer(const SizeType size)
         {
             Assign(size);
         }
@@ -123,7 +124,7 @@ namespace CppMiniToolkit
             return GetData();
         }
 
-        uint8_t* GetData(SizeType off = 0)
+        uint8_t* GetData(const SizeType off = 0)
         {
             if (!Buffer)
             {
@@ -135,7 +136,7 @@ namespace CppMiniToolkit
             return Buffer + off;
         }
 
-        const uint8_t* GetData(SizeType off = 0) const
+        const uint8_t* GetData(const SizeType off = 0) const
         {
             if (!Buffer)
             {
@@ -147,21 +148,21 @@ namespace CppMiniToolkit
             return Buffer + off;
         }
                 
-        uint8_t& At(SizeType index)
+        uint8_t& At(const SizeType index)
         {
             assert(index < GetSize() && "invalid parameters!");
 
             return Buffer[index];
         }
 
-        const uint8_t& At(SizeType index) const
+        const uint8_t& At(const SizeType index) const
         {
             assert(index < GetSize() && "invalid parameters!");
 
             return Buffer[index];
         }
 
-        uint8_t& operator [](SizeType index)
+        uint8_t& operator [](const SizeType index)
         {
             return At(index);
         }
@@ -185,10 +186,11 @@ namespace CppMiniToolkit
             }
         }
                 
-        void Append(const void* source, SizeType length)
+        void Append(const void* source, const SizeType length)
         {
             assert(source && "input pSource can't be none!");
 
+            // ReSharper disable once CppDFAConstantConditions
             if (length <= 0 || source == nullptr)
             {
                 return;
@@ -226,7 +228,7 @@ namespace CppMiniToolkit
             }
         }
 
-        void Assign(SizeType size)
+        void Assign(const SizeType size)
         {
             Clear();
 
@@ -249,14 +251,15 @@ namespace CppMiniToolkit
             }
         }
 
-        void Assign(const void* source, SizeType size)
+        void Assign(const void* source, const SizeType size)
         {
             Clear();
 
             Append(source, size);
         }
               
-        bool Assign(SizeType offset, const void* source, SizeType size)
+        // ReSharper disable once CppMemberFunctionMayBeConst
+        bool Assign(const SizeType offset, const void* source, const SizeType size)
         {
             assert(offset + size <= GetSize());
 
@@ -293,7 +296,7 @@ namespace CppMiniToolkit
             }
         }
 
-        void Reserve(SizeType size)
+        void Reserve(const SizeType size)
         {
             if (size > AllocatedSize)
             {
@@ -325,7 +328,7 @@ namespace CppMiniToolkit
         }
 
     private:
-        static SizeType Align(SizeType size)
+        static SizeType Align(const SizeType size)
         {
             return (size + AlignLength - 1) & (~(AlignLength - 1));
         }
