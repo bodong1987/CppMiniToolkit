@@ -47,6 +47,18 @@ namespace CppMiniToolkit
             return FileSystemDetails::IsDirectoryEmpty(directoryPath);
         }
 
+        // cretae directory if that directory not exists
+        template <typename TCharType>
+        static bool CreateDirectoryIfNotExists(const TCharType* directoryPath)
+        {
+            if(!IsDirectoryExists(directoryPath))
+            {
+                return CreateDirectories(directoryPath);
+            }
+
+            return true;
+        }
+
         // create directory recursively
         template <typename TCharType>
         static bool CreateDirectories(const TCharType* directoryPath, bool recursively = true)
@@ -109,31 +121,53 @@ namespace CppMiniToolkit
                 );
         }
 
+        // get file length
         template <typename TCharType>
-        static DynamicBuffer ReadAllBytes(const TCharType* path)
+        static size_t GetFileLength(const TCharType* path)
+        {
+            std::ifstream file(path, std::ios::binary|std::ios::ate);
+            if (!file)
+            {
+                return 0;
+            }
+
+            const std::streamsize size = file.tellg();
+            return size;
+        }
+
+        template <typename TCharType>
+        static bool ReadAllBytes(const TCharType* path, DynamicBuffer& buffer)
         {
             assert(path != nullptr);
 
             std::ifstream file(path, std::ios::binary|std::ios::ate);
             if (!file)
             {
-                return DynamicBuffer();
+                return false;
             }
 
             const std::streamsize size = file.tellg();
             file.seekg(0, std::ios::beg);
 
-            DynamicBuffer buffer(size);
+            buffer.Assign(size);
             if (file.read(reinterpret_cast<char*>(buffer.GetBuffer()), size))
             {
-                return buffer;
+                return true;
             }
 
-            return DynamicBuffer();
+            return false;
         }
 
         template <typename TCharType>
-        static bool WriteAllBytes(const TCharType* path, const uint8_t* bytes, size_t length)
+        static DynamicBuffer ReadAllBytes(const TCharType* path)
+        {
+            DynamicBuffer buffer;
+            ReadAllBytes(path, buffer);
+            return buffer;
+        }
+
+        template <typename TCharType>
+        static bool WriteAllBytes(const TCharType* path, const uint8_t* bytes, const size_t length)
         {
             assert(path != nullptr);
 

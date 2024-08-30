@@ -50,7 +50,6 @@ namespace CppMiniToolkit
         }
 
         // search and identifier
-    public:
         template <typename TCharType>
         static bool StartWith(const std::basic_string<TCharType>& str, const std::basic_string<TCharType>& start)
         {
@@ -276,7 +275,6 @@ namespace CppMiniToolkit
         }
 
         // trim
-    public:
         template <typename TCharType, typename Predicate>
         static std::basic_string<TCharType>& TrimLeft(std::basic_string<TCharType>& str, Predicate predicate)
         {
@@ -402,7 +400,6 @@ namespace CppMiniToolkit
         }
 
         // upper/lower
-    public:
         template <typename TCharType>
         static std::basic_string<TCharType>& ToUpper(std::basic_string<TCharType>& str)
         {
