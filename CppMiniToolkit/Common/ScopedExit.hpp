@@ -8,26 +8,26 @@ namespace CppMiniToolkit
         class ScopedExit 
         {
         public:
-            // disable copy 
             ScopedExit(const ScopedExit&) = delete;
-            ScopedExit& operator = (const ScopedExit&) = delete;
+            ScopedExit& operator = (const ScopedExit&) = delete;            
+            ScopedExit& operator = (ScopedExit&&) = delete;
 
             explicit ScopedExit(TCallable func) noexcept :
                 Func(std::move(func)), 
-                engaged(true) 
+                Engaged(true) 
             {
             }
 
             ScopedExit(ScopedExit&& other) noexcept : 
                 Func(std::move(other.Func)), 
-                engaged(other.engaged)
+                Engaged(other.Engaged)
             {
-                other.engaged = false;
+                other.Engaged = false;
             }
 
             ~ScopedExit()
             {
-                if (engaged)
+                if (Engaged)
                 {
                     Func();
                 }
@@ -35,7 +35,7 @@ namespace CppMiniToolkit
 
         private:
             TCallable Func;
-            bool engaged;
+            bool Engaged;
         };
 
         template <typename Function>

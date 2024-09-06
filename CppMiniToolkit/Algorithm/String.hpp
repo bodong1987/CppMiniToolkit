@@ -224,14 +224,14 @@ namespace CppMiniToolkit
         }
 
     private:
-        template <typename TCharType, bool ignoreCase>
+        template <typename TCharType, bool IgnoreCase>
         static std::basic_string<TCharType>& ReplaceAllCore(std::basic_string<TCharType>& str, const std::basic_string<TCharType>& match, const std::basic_string<TCharType>& replace)
         {
             typename std::basic_string<TCharType>::size_type startPos = std::basic_string<TCharType>::npos;
 
             do
             {
-                auto ptr = !ignoreCase ? TCharTraits<TCharType>::Find(str.c_str() + startPos, match.c_str()) : TCharTraits<TCharType>::iFind(str.c_str() + startPos, match.c_str());
+                auto ptr = !IgnoreCase ? TCharTraits<TCharType>::Find(str.c_str() + startPos, match.c_str()) : TCharTraits<TCharType>::iFind(str.c_str() + startPos, match.c_str());
 
                 if (ptr == nullptr)
                 {
@@ -278,7 +278,7 @@ namespace CppMiniToolkit
         template <typename TCharType, typename Predicate>
         static std::basic_string<TCharType>& TrimLeft(std::basic_string<TCharType>& str, Predicate predicate)
         {
-            for (auto i = 0; i < str.size(); ++i)
+            for (size_t i = 0; i < str.size(); ++i)
             {
                 if (!predicate(str[i]))
                 {
@@ -405,7 +405,7 @@ namespace CppMiniToolkit
         {
             for (auto iter = str.begin(); iter != str.end(); ++iter)
             {
-                *iter = TCharTraits<TCharType>::ToUpper(*iter);
+                *iter = static_cast<TCharType>(TCharTraits<TCharType>::ToUpper(*iter));
             }
 
             return str;
@@ -416,7 +416,7 @@ namespace CppMiniToolkit
         {
             for (auto iter = str.begin(); iter != str.end(); ++iter)
             {
-                *iter = TCharTraits<TCharType>::ToLower(*iter);
+                *iter = static_cast<TCharType>(TCharTraits<TCharType>::ToLower(*iter));
             }
 
             return str;
@@ -521,7 +521,7 @@ namespace CppMiniToolkit
         template <typename TSequenceType, typename TCharType>
         static std::basic_string<TCharType> Join(const TSequenceType& sequence, const TCharType* separator)
         {
-            static auto predicate = [](const auto& x) { return true; };
+            static auto predicate = [](const auto&) { return true; };
 
             return Join<TSequenceType, TCharType, decltype(predicate)>(sequence, separator, predicate);
         }

@@ -15,8 +15,7 @@ namespace CppMiniToolkit
     class Encoding
     {
     public:
-        Encoding() = delete;
-        ~Encoding() = delete;
+        CPPMINITOOLKIT_DECLARE_TOOLKIT_CLASS_TYPE(Encoding);
 
         static std::string UTF16ToUTF8(const char16_t* text)
         {

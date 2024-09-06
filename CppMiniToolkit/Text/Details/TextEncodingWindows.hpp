@@ -17,8 +17,7 @@ namespace CppMiniToolkit
         class TextEncodingWindows
         {
         public:
-            TextEncodingWindows() = delete;
-            ~TextEncodingWindows() = delete;
+            CPPMINITOOLKIT_DECLARE_TOOLKIT_CLASS_TYPE(TextEncodingWindows);
 
             static std::string UTF16ToUTF8(const char16_t* text)
             {
@@ -72,7 +71,7 @@ namespace CppMiniToolkit
 
                 const auto Dest = new wchar_t[nChars];
 
-                MultiByteToWideChar(CP_UTF8, 0, text, -1, (LPWSTR)Dest, nChars);
+                MultiByteToWideChar(CP_UTF8, 0, text, -1, Dest, nChars);
 
                 std::wstring str(Dest);
 

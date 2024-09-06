@@ -1,3 +1,4 @@
+// ReSharper disable CppRedundantQualifier
 #pragma once
 
 #if !CPPMINITOOLKIT_PLATFORM_WINDOWS
@@ -8,6 +9,7 @@
 
 #include <windows.h>
 #include <string>
+#include <Common/ScopedExit.hpp>
 
 namespace CppMiniToolkit
 {
@@ -100,7 +102,7 @@ namespace CppMiniToolkit
                     return false;
                 }
 
-                static const std::string separators("\\/");
+                static const std::string S_Separators("\\/");
                 const std::string directory = directoryPath;
 
                 // If the specified directory name doesn't exist, do our thing
@@ -111,7 +113,7 @@ namespace CppMiniToolkit
                     if (recursively)
                     {
                         // Recursively do it all again for the parent directory, if any
-                        const SIZE_T slashIndex = directory.find_last_of(separators);
+                        const SIZE_T slashIndex = directory.find_last_of(S_Separators);
                         if (slashIndex != std::wstring::npos)
                         {
                             if (!CreateDirectories(directory.substr(0, slashIndex).c_str(), recursively))
@@ -154,7 +156,7 @@ namespace CppMiniToolkit
                     return false;
                 }
 
-                static const std::wstring separators(L"\\/");
+                static const std::wstring S_Separators(L"\\/");
                 const std::wstring directory = directoryPath;
 
                 // If the specified directory name doesn't exist, do our thing
@@ -165,7 +167,7 @@ namespace CppMiniToolkit
                     if (recursively)
                     {
                         // Recursively do it all again for the parent directory, if any
-                        const SIZE_T slashIndex = directory.find_last_of(separators);
+                        const SIZE_T slashIndex = directory.find_last_of(S_Separators);
                         if (slashIndex != std::wstring::npos)
                         {
                             if (!CreateDirectories(directory.substr(0, slashIndex).c_str(), recursively))
@@ -414,18 +416,18 @@ namespace CppMiniToolkit
             static void CopyDirectoryRecursively(const LPCSTR source, const LPCSTR destination) // NOLINT(*-no-recursion)
             {
                 WIN32_FIND_DATAA info;
-                char temp[1024] = { 0 };
-                char temp_1[1024] = { 0 };
+                char temp[1024] = {};
+                char temp_1[1024] = {};
 
-                char temp_src[1024] = { 0 };
-                char temp_dest[1024] = { 0 };
+                char temp_src[1024] = {};
+                char temp_dest[1024] = {};
 
                 strcpy_s(temp_1, source);
                 strcat_s(temp_1, "\\*.*");
 
                 CreateDirectories(destination, true);
 
-                const HANDLE hwnd = FindFirstFileA(temp_1, &info); // NOLINT(*-misplaced-const)
+                const HANDLE handle = FindFirstFileA(temp_1, &info); // NOLINT(*-misplaced-const)
                 do
                 {
                     if (!strcmp(info.cFileName, "."))
@@ -458,19 +460,19 @@ namespace CppMiniToolkit
 
                         ::CopyFileA(temp_src, temp, FALSE);
                     }
-                } while (FindNextFileA(hwnd, &info));
+                } while (FindNextFileA(handle, &info));
 
-                FindClose(hwnd);
+                FindClose(handle);
             }
 
             static void CopyDirectoryRecursively(const LPCWSTR source, const LPCWSTR destination) // NOLINT(*-no-recursion)
             {
                 WIN32_FIND_DATAW info;
-                wchar_t temp[1024] = { 0 };
-                wchar_t temp_1[1024] = { 0 };
+                wchar_t temp[1024] = {};
+                wchar_t temp_1[1024] = {};
 
-                wchar_t temp_src[1024] = { 0 };
-                wchar_t temp_dest[1024] = { 0 };
+                wchar_t temp_src[1024] = {};
+                wchar_t temp_dest[1024] = {};
 
                 wcscpy_s(temp_1, source);
                 wcscat_s(temp_1, L"\\*.*");
@@ -600,6 +602,40 @@ namespace CppMiniToolkit
 
                     FindClose(hFind);
                 }
+            }
+
+            static bool IsDriveSSD(const std::basic_string<TCHAR>& driveName)
+            {
+                assert(driveName.size()>=2);
+
+                if (driveName.size() < 2)
+                {
+                    return false;
+                }
+
+                const HANDLE hDevice = CreateFile((TEXT("\\\\.\\") + driveName.substr(0, 2)).c_str(), 0, // NOLINT(*-misplaced-const)
+                                                  FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, 0, nullptr);
+
+                if (hDevice == INVALID_HANDLE_VALUE)
+                {
+                    return false;
+                }
+
+                CPPMINITOOLKIT_SCOPED_EXIT(CloseHandle(hDevice));
+
+                STORAGE_PROPERTY_QUERY query{};
+                query.PropertyId = StorageDeviceSeekPenaltyProperty;
+                query.QueryType = PropertyStandardQuery;
+                DWORD count;
+                DEVICE_SEEK_PENALTY_DESCRIPTOR result{};
+
+                if (DeviceIoControl(hDevice, IOCTL_STORAGE_QUERY_PROPERTY,
+                    &query, sizeof(query), &result, sizeof(result), &count, nullptr))
+                {
+                    return !result.IncursSeekPenalty;
+                }
+
+                return false;
             }
         };
     }

@@ -13,10 +13,10 @@ namespace CppMiniToolkit
 {
     namespace Windows
     {
-        class QueryThreadInformationUtils
+        class ThreadOperationUtils
         {
         public:
-            CPPMINITOOLKIT_DECLARE_TOOLKIT_CLASS_TYPE(QueryThreadInformationUtils);
+            CPPMINITOOLKIT_DECLARE_TOOLKIT_CLASS_TYPE(ThreadOperationUtils);
 
             // ReSharper disable IdentifierTypo
             typedef enum {  // NOLINT(performance-enum-size)
@@ -67,6 +67,26 @@ namespace CppMiniToolkit
                 return GetThreadDescription;
             }
 
+            typedef HRESULT (WINAPI *SetThreadDescriptionType)(HANDLE hThread, PCWSTR lpThreadDescription);
+            static SetThreadDescriptionType GetKernel32SetThreadDescriptionFunction()
+            {
+                static SetThreadDescriptionType SetThreadDescription = nullptr;
+                if (SetThreadDescription == nullptr)
+                {
+                    const HMODULE hKernel32 = GetModuleHandleW(L"kernel32.dll");
+                    if (!hKernel32)
+                    {
+                        return nullptr;
+                    }
+
+                    SetThreadDescription = reinterpret_cast<SetThreadDescriptionType>(GetProcAddress(hKernel32, "SetThreadDescription"));  // NOLINT(clang-diagnostic-cast-function-type-strict)
+                    
+                    assert(SetThreadDescription != nullptr);
+                }
+
+                return SetThreadDescription;
+            }
+            
             // Query thread start address
             static LPCVOID GetThreadStartAddress(HANDLE hThread)
             {
@@ -124,7 +144,28 @@ namespace CppMiniToolkit
 
                 return {};
             }
-            
+
+            static void SetThreadName(DWORD threadId, const WCHAR* threadName)
+            {
+                const auto hThread = OpenThread(THREAD_SET_LIMITED_INFORMATION, FALSE, threadId);
+                if (!hThread)
+                {
+                    return;
+                }
+
+                CPPMINITOOLKIT_SCOPED_EXIT(CloseHandle(hThread));
+                
+                SetThreadName(hThread, threadName);
+            }
+
+            static void SetThreadName(HANDLE hThread, const WCHAR* threadName)
+            {
+                static SetThreadDescriptionType SetThreadDescription = GetKernel32SetThreadDescriptionFunction();
+                assert(SetThreadDescription != nullptr);
+
+                const auto hr = SetThreadDescription(hThread, threadName);
+                CPPMINITOOLKIT_UNREFERENCED_PARAMETER(hr);
+            }
         };
     }
 }

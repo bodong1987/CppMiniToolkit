@@ -46,7 +46,7 @@ namespace CppMiniToolkit
             return FileSystemDetails::IsDirectoryEmpty(directoryPath);
         }
 
-        // cretae directory if that directory not exists
+        // create directory if that directory not exists
         template <typename TCharType>
         static bool CreateDirectoryIfNotExists(const TCharType* directoryPath)
         {
@@ -111,7 +111,7 @@ namespace CppMiniToolkit
         template <typename TCharType>
         static void WalkThoughDirectory(const TCharType* directory, bool recursively = false, bool includeDirectories = true)
         {
-            auto visitor = [](const TCharType* path, bool isDirectory) { return true; };
+            auto visitor = [](const TCharType*, bool) { return true; };
             WalkThoughDirectoryEx<TCharType>(
                 directory,
                 visitor,

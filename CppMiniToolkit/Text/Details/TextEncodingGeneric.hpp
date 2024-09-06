@@ -1,3 +1,4 @@
+// ReSharper disable CppInconsistentNaming
 #pragma once
 
 #include <string>
@@ -9,8 +10,7 @@ namespace CppMiniToolkit
         class TextEncodingGeneric
         {
         public:
-            TextEncodingGeneric() = delete;
-            ~TextEncodingGeneric() = delete;
+            CPPMINITOOLKIT_DECLARE_TOOLKIT_CLASS_TYPE(TextEncodingGeneric);
 
         private:
             // @reference https://github.com/Davipb/utf8-utf16-converter/tree/master
@@ -115,7 +115,7 @@ namespace CppMiniToolkit
                 if (*index == len - 1)
                     return INVALID_CODEPOINT;
 
-                utf16_t low = utf16[*index + 1];
+                const utf16_t low = utf16[*index + 1];
 
                 // Unmatched high surrogate, invalid
                 if ((low & SURROGATE_MASK) != LOW_SURROGATE_VALUE)
@@ -177,7 +177,7 @@ namespace CppMiniToolkit
                     { 0xF8, 0xF0 }  // 11110xxx
                 };
 
-                int size = calculate_utf8_len(codepoint);
+                const int size = calculate_utf8_len(codepoint);
 
                 // Not enough space left on the string
                 if (index + size > len)
@@ -186,7 +186,7 @@ namespace CppMiniToolkit
                 // Write the continuation bytes in reverse order first
                 for (int cont_index = size - 1; cont_index > 0; cont_index--)
                 {
-                    utf8_t cont = codepoint & ~UTF8_CONTINUATION_MASK;
+                    utf8_t cont = codepoint & ~UTF8_CONTINUATION_MASK;  // NOLINT(clang-diagnostic-implicit-int-conversion)
                     cont |= UTF8_CONTINUATION_VALUE;
 
                     utf8[index + cont_index] = cont;
@@ -194,7 +194,7 @@ namespace CppMiniToolkit
                 }
 
                 // Write the leading byte
-                utf8_pattern pattern = utf8_leading_bytes[size - 1];
+                const utf8_pattern pattern = utf8_leading_bytes[size - 1];
 
                 // ReSharper disable once CppRedundantParentheses
                 utf8_t lead = codepoint & ~(pattern.mask);
@@ -213,7 +213,7 @@ namespace CppMiniToolkit
 
                 for (size_t utf16_index = 0; utf16_index < utf16_len; utf16_index++)
                 {
-                    codepoint_t codepoint = decode_utf16(utf16, utf16_len, &utf16_index);
+                    const codepoint_t codepoint = decode_utf16(utf16, utf16_len, &utf16_index);
 
                     if (utf8 == nullptr)
                         utf8_index += calculate_utf8_len(codepoint);
@@ -245,7 +245,7 @@ namespace CppMiniToolkit
                     { 0xF8, 0xF0 }  // 11110xxx
                 };
 
-                utf8_t leading = utf8[*index];
+                const utf8_t leading = utf8[*index];
 
                 // The number of bytes that are used to encode the codepoint
                 int encoding_len = 0;
@@ -276,7 +276,7 @@ namespace CppMiniToolkit
                     if (*index + 1 >= len)
                         return INVALID_CODEPOINT;
 
-                    utf8_t continuation = utf8[*index + 1];
+                    const utf8_t continuation = utf8[*index + 1];
 
                     // Number of continuation bytes not the same as advertised on the leading byte
                     // Invalid encoding
@@ -289,7 +289,7 @@ namespace CppMiniToolkit
                     (*index)++;
                 }
 
-                int proper_len = calculate_utf8_len(codepoint);
+                const int proper_len = calculate_utf8_len(codepoint);
 
                 // Overlong encoding: too many bytes were used to encode a short codepoint
                 // Invalid encoding
@@ -336,7 +336,7 @@ namespace CppMiniToolkit
 
                 if (codepoint <= BMP_END)
                 {
-                    utf16[index] = codepoint;
+                    utf16[index] = codepoint;  // NOLINT(clang-diagnostic-implicit-int-conversion)
                     return 1;
                 }
 
@@ -369,7 +369,7 @@ namespace CppMiniToolkit
 
                 for (size_t utf8_index = 0; utf8_index < utf8_len; utf8_index++)
                 {
-                    codepoint_t codepoint = decode_utf8(utf8, utf8_len, &utf8_index);
+                    const codepoint_t codepoint = decode_utf8(utf8, utf8_len, &utf8_index);
 
                     if (utf16 == nullptr)
                         utf16_index += calculate_utf16_len(codepoint);

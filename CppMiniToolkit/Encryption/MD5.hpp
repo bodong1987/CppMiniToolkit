@@ -1,5 +1,6 @@
 // ReSharper disable CppCStyleCast
 // ReSharper disable CppRedundantParentheses
+// ReSharper disable CppInconsistentNaming
 #pragma once
 
 #include <cstdint>
@@ -11,6 +12,7 @@
 
 namespace CppMiniToolkit
 {
+    // ReSharper disable once CppInconsistentNaming
     struct MD5Value
     {
         union 
@@ -24,7 +26,7 @@ namespace CppMiniToolkit
             char buffer[36];
             for (int i = 0; i < 16; ++i)
             {
-                TCharTraits<char>::StringPrintf(buffer + i * 2, 36 - i * 2, "%02x", Bytes[i]);
+                TCharTraits<char>::StringPrintf(buffer + i * 2, 36 - i * 2, "%02x", Bytes[i]);  // NOLINT(bugprone-implicit-widening-of-multiplication-result)
             }
 
             return buffer;
@@ -35,7 +37,7 @@ namespace CppMiniToolkit
             char buffer[36];
             for (int i = 0; i < 16; ++i)
             {
-                TCharTraits<char>::StringPrintf(buffer + i * 2, 36 - i * 2, "%02X", Bytes[i]);
+                TCharTraits<char>::StringPrintf(buffer + i * 2, 36 - i * 2, "%02X", Bytes[i]);  // NOLINT(bugprone-implicit-widening-of-multiplication-result)
             }
 
             return buffer;
@@ -43,15 +45,17 @@ namespace CppMiniToolkit
     };
 
     // @reference : https://github.com/dnomd343/md5sum
+    // ReSharper disable once CppInconsistentNaming
     class MD5
     {
     private:
         /// MD5 fixed constants in little endian.
+        // ReSharper disable CppInconsistentNaming
         static constexpr uint32_t kA = 0x67452301;
         static constexpr uint32_t kB = 0xefcdab89;
         static constexpr uint32_t kC = 0x98badcfe;
         static constexpr uint32_t kD = 0x10325476;
-
+        
         struct MD5Context
         {
             uint32_t A = kA;
@@ -61,6 +65,7 @@ namespace CppMiniToolkit
             uint64_t size = 0; 
         };
 
+        // ReSharper restore CppInconsistentNaming
     public:
         MD5& Reset()
         {
@@ -112,7 +117,7 @@ namespace CppMiniToolkit
 
         MD5Value GetDigest() const
         {
-            return *(MD5Value*)&Context;
+            return *reinterpret_cast<const MD5Value*>(&Context);
         }
 
     private:
@@ -163,45 +168,45 @@ namespace CppMiniToolkit
             return kT[i];
         }
         
-#define __MD5_R1 A, B, C, D /* NOLINT(*-reserved-identifier) */
-#define __MD5_R2 D, A, B, C /* NOLINT(*-reserved-identifier) */
-#define __MD5_R3 C, D, A, B /* NOLINT(*-reserved-identifier) */
-#define __MD5_R4 B, C, D, A /* NOLINT(*-reserved-identifier) */
+#define LOCAL_MD5_R1 A, B, C, D 
+#define LOCAL_MD5_R2 D, A, B, C 
+#define LOCAL_MD5_R3 C, D, A, B 
+#define LOCAL_MD5_R4 B, C, D, A 
 
-#define __MD5_F(x, y, z) (z ^ (x & (y ^ z))) /* NOLINT(*-reserved-identifier) */
-#define __MD5_G(x, y, z) (y ^ (z & (x ^ y))) /* NOLINT(*-reserved-identifier) */
-#define __MD5_H(x, y, z) (x ^ y ^ z) /* NOLINT(*-reserved-identifier) */
-#define __MD5_I(x, y, z) (y ^ (x | ~z)) /* NOLINT(*-reserved-identifier) */
+#define LOCAL_MD5_F(x, y, z) ((z) ^ ((x) & ((y) ^ (z)))) 
+#define LOCAL_MD5_G(x, y, z) ((y) ^ ((z) & ((x) ^ (y)))) 
+#define LOCAL_MD5_H(x, y, z) ((x) ^ (y) ^ (z))
+#define LOCAL_MD5_I(x, y, z) ((y) ^ ((x) | ~(z))) 
 
 
-#define __MD5_ROUND(i, f, a, b, c, d)         /* NOLINT(*-reserved-identifier) */  \
+#define LOCAL_MD5_ROUND(i, f, a, b, c, d)           \
     do {                                      \
-        a += f(b, c, d) + block[K(i)] + T(i); \
-        a = a << S(i) | a >> (32 - S(i));     \
-        a += b;                               \
+        (a) += f(b, c, d) + block[K(i)] + T(i); \
+        (a) = (a) << S(i) | (a) >> (32 - S(i));     \
+        (a) += (b);                               \
     } while (0)
 
 #ifdef _MSC_VER
-#define __MD5_EXPAND(...) __VA_ARGS__
-#define __MD5_ROUND_WRAPPER(...) __MD5_EXPAND(__MD5_ROUND(__VA_ARGS__))
+#define LOCAL_MD5_EXPAND(...) __VA_ARGS__ 
+#define LOCAL_MD5_ROUND_WRAPPER(...) LOCAL_MD5_EXPAND(LOCAL_MD5_ROUND(__VA_ARGS__)) 
 #else
-#define __MD5_ROUND_WRAPPER __MD5_ROUND /* NOLINT(*-reserved-identifier) */
+#define LOCAL_MD5_ROUND_WRAPPER LOCAL_MD5_ROUND 
 #endif
 
-#define __MD5_FF(i, ...) __MD5_ROUND_WRAPPER(i | 0x00, __MD5_F, __VA_ARGS__) /* NOLINT(*-reserved-identifier) */
-#define __MD5_GG(i, ...) __MD5_ROUND_WRAPPER(i | 0x10, __MD5_G, __VA_ARGS__) /* NOLINT(*-reserved-identifier) */
-#define __MD5_HH(i, ...) __MD5_ROUND_WRAPPER(i | 0x20, __MD5_H, __VA_ARGS__) /* NOLINT(*-reserved-identifier) */
-#define __MD5_II(i, ...) __MD5_ROUND_WRAPPER(i | 0x30, __MD5_I, __VA_ARGS__) /* NOLINT(*-reserved-identifier) */
+#define LOCAL_MD5_FF(i, ...) LOCAL_MD5_ROUND_WRAPPER(i | 0x00, LOCAL_MD5_F, __VA_ARGS__) 
+#define LOCAL_MD5_GG(i, ...) LOCAL_MD5_ROUND_WRAPPER(i | 0x10, LOCAL_MD5_G, __VA_ARGS__) 
+#define LOCAL_MD5_HH(i, ...) LOCAL_MD5_ROUND_WRAPPER(i | 0x20, LOCAL_MD5_H, __VA_ARGS__) 
+#define LOCAL_MD5_II(i, ...) LOCAL_MD5_ROUND_WRAPPER(i | 0x30, LOCAL_MD5_I, __VA_ARGS__) 
 
-#define __MD5_UPDATE(OP)                 /* NOLINT(*-reserved-identifier) */                 \
-    OP(0x0, __MD5_R1); OP(0x1, __MD5_R2); OP(0x2, __MD5_R3); OP(0x3, __MD5_R4); \
-    OP(0x4, __MD5_R1); OP(0x5, __MD5_R2); OP(0x6, __MD5_R3); OP(0x7, __MD5_R4); \
-    OP(0x8, __MD5_R1); OP(0x9, __MD5_R2); OP(0xa, __MD5_R3); OP(0xb, __MD5_R4); \
-    OP(0xc, __MD5_R1); OP(0xd, __MD5_R2); OP(0xe, __MD5_R3); OP(0xf, __MD5_R4);
+#define LOCAL_MD5_UPDATE(OP)                                  \
+    OP(0x0, LOCAL_MD5_R1); OP(0x1, LOCAL_MD5_R2); OP(0x2, LOCAL_MD5_R3); OP(0x3, LOCAL_MD5_R4); \
+    OP(0x4, LOCAL_MD5_R1); OP(0x5, LOCAL_MD5_R2); OP(0x6, LOCAL_MD5_R3); OP(0x7, LOCAL_MD5_R4); \
+    OP(0x8, LOCAL_MD5_R1); OP(0x9, LOCAL_MD5_R2); OP(0xa, LOCAL_MD5_R3); OP(0xb, LOCAL_MD5_R4); \
+    OP(0xc, LOCAL_MD5_R1); OP(0xd, LOCAL_MD5_R2); OP(0xe, LOCAL_MD5_R3); OP(0xf, LOCAL_MD5_R4);
 
         const void* UpdateCore(const void* bytes, size_t length)
         {
-            const uint32_t* block = static_cast<const uint32_t*>(bytes);
+            auto block = static_cast<const uint32_t*>(bytes);
             const void* limit = block + ((length &= ~0b111111ULL) >> 2);
 
             auto A = Context.A;
@@ -215,10 +220,10 @@ namespace CppMiniToolkit
                 const auto B_ = B;
                 const auto C_ = C;
                 const auto D_ = D;
-                __MD5_UPDATE(__MD5_FF)
-                __MD5_UPDATE(__MD5_GG)
-                __MD5_UPDATE(__MD5_HH)
-                __MD5_UPDATE(__MD5_II)
+                LOCAL_MD5_UPDATE(LOCAL_MD5_FF)
+                LOCAL_MD5_UPDATE(LOCAL_MD5_GG)
+                LOCAL_MD5_UPDATE(LOCAL_MD5_HH)
+                LOCAL_MD5_UPDATE(LOCAL_MD5_II)
                 
                 A += A_;
                 B += B_;
@@ -235,24 +240,24 @@ namespace CppMiniToolkit
 
             return limit;
         }
-#undef __MD5_UPDATE
-#undef __MD5_FF
-#undef __MD5_GG
-#undef __MD5_HH
-#undef __MD5_II
-#undef __MD5_ROUND
-#ifdef _MSC_VER
-#undef __MD5_EXPAND
+#undef LOCAL_MD5_UPDATE 
+#undef LOCAL_MD5_FF 
+#undef LOCAL_MD5_GG 
+#undef LOCAL_MD5_HH 
+#undef LOCAL_MD5_II 
+#undef LOCAL_MD5_ROUND 
+#ifdef _MSC_VER 
+#undef LOCAL_MD5_EXPAND 
 #endif
-#undef __MD5_ROUND_WRAPPER
-#undef __MD5_F
-#undef __MD5_G
-#undef __MD5_H
-#undef __MD5_I
-#undef __MD5_R1
-#undef __MD5_R2
-#undef __MD5_R3
-#undef __MD5_R4
+#undef LOCAL_MD5_ROUND_WRAPPER 
+#undef LOCAL_MD5_F 
+#undef LOCAL_MD5_G 
+#undef LOCAL_MD5_H 
+#undef LOCAL_MD5_I 
+#undef LOCAL_MD5_R1 
+#undef LOCAL_MD5_R2 
+#undef LOCAL_MD5_R3 
+#undef LOCAL_MD5_R4 
 
         MD5& FinalizeCore(const void* bytes, size_t length)
         {
@@ -289,7 +294,7 @@ namespace CppMiniToolkit
 
 
     public:
-        static MD5Value Caculate(const uint8_t* bytes, size_t length)
+        static MD5Value Calculate(const uint8_t* bytes, size_t length)
         {
             MD5 md5;
             md5.FinalizeCore(bytes, length);
@@ -297,7 +302,7 @@ namespace CppMiniToolkit
         }
 
         template <typename TCharType>
-        static MD5Value CaculateFile(const TCharType* path)
+        static MD5Value CalculateFile(const TCharType* path)
         {
             std::ifstream file(path, std::ios::binary);
             if (!file) 
@@ -313,7 +318,7 @@ namespace CppMiniToolkit
             {
                 file.read(reinterpret_cast<char*>(buffer), sizeof(buffer));
 
-                auto size = file.gcount();
+                const auto size = file.gcount();
 
                 if (size > 0) 
                 {
@@ -328,7 +333,7 @@ namespace CppMiniToolkit
 
     private:
         MD5Context Context;
-        uint8_t    Buffer[64] = {0};
+        uint8_t    Buffer[64] = {};
         uint64_t   BufferSize = 0;
     };
 }

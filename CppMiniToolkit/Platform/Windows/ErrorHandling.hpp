@@ -63,7 +63,7 @@ namespace CppMiniToolkit
                     finalVal /= 1024;
                 }
 
-                TCHAR buffer[64] = { 0 };
+                TCHAR buffer[64] = {};
 
                 _stprintf_s(buffer, _T("%.2f %s"), finalVal, units[Index]);
 

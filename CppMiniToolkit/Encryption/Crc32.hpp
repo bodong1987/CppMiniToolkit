@@ -55,11 +55,12 @@
 namespace CppMiniToolkit
 {
     // reference https://create.stephan-brumme.com/crc32/#git1
-    class CRC32
+    // ReSharper disable once CppInconsistentNaming
+    class CRC32  // NOLINT(cppcoreguidelines-special-member-functions)
     {
     public:
-        CRC32() = delete;
-        ~CRC32() = delete;
+        CPPMINITOOLKIT_DECLARE_TOOLKIT_CLASS_TYPE(CRC32);
+        
     private:
         /// zlib's CRC32 polynomial
         constexpr static uint32_t Polynomial = 0xEDB88320;
@@ -221,7 +222,7 @@ namespace CppMiniToolkit
             {
                 crc = crc ^ *current++;
 
-                uint32_t c = (((crc << 31) >> 31) & ((Polynomial >> 7) ^ (Polynomial >> 1))) ^
+                const uint32_t c = (((crc << 31) >> 31) & ((Polynomial >> 7) ^ (Polynomial >> 1))) ^
                     (((crc << 30) >> 31) & ((Polynomial >> 6) ^ Polynomial)) ^
                     (((crc << 29) >> 31) & (Polynomial >> 5)) ^
                     (((crc << 28) >> 31) & (Polynomial >> 4)) ^
@@ -1230,7 +1231,7 @@ public:
 #endif // CPPMINITOOLKIT_NO_LOOKUPTABLE
     };
 
-    constexpr uint32_t CRC32::Crc32Lookup[MaxSlice][256];
+    constexpr uint32_t CRC32::Crc32Lookup[MaxSlice][256];  // NOLINT(clang-diagnostic-deprecated-redundant-constexpr-static-def, readability-redundant-declaration)
 }
 
 #undef CPPMINITOOLKIT_LITTLEENDIAN

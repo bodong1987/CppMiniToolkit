@@ -22,6 +22,40 @@ namespace CppMiniToolkit
 
             typedef std::basic_string<TCHAR> StringT;
 
+            typedef std::basic_string<TCHAR> StringT;
+
+            static StringT GetEntryPath()
+            {
+                TCHAR Path[1024];
+                GetModuleFileName(::GetModuleHandle(nullptr), Path, _countof(Path));
+
+                return Path;
+            }
+            
+            static StringT GetEntryDirectory()
+            {
+                auto EntryPath = GetEntryPath();
+
+                const auto pos = EntryPath.find_last_of(_T('\\'));
+
+                return pos != StringT::npos ? EntryPath.substr(0, pos) : EntryPath;
+            }
+
+            static StringT GetExecuteModulePath()
+            {
+                HMODULE hModule = nullptr;
+                TCHAR Path[1024];
+                GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS |
+                    GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+                    reinterpret_cast<LPCTSTR>(&GetExecuteModulePath),
+                    &hModule
+                );
+
+                GetModuleFileName(hModule, Path, _countof(Path));
+
+                return Path;
+            }
+            
             static StringT SearchApplicationInSystemPath(const StringT& appName)
             {
                 size_t requiredSize;
@@ -59,12 +93,12 @@ namespace CppMiniToolkit
             static StringT GetSystemVersion()
             {
                 NTSTATUS(WINAPI * RtlGetVersion)(LPOSVERSIONINFOEXW);
-                OSVERSIONINFOEXW osInfo = { sizeof(OSVERSIONINFOEXW) };
+                OSVERSIONINFOEXW osInfo = { sizeof(OSVERSIONINFOEXW) };  // NOLINT(clang-diagnostic-missing-field-initializers)
 
                 const HMODULE ntHandle = GetModuleHandle(_T("ntdll"));
                 assert(ntHandle != nullptr);
 
-                *reinterpret_cast<FARPROC*>(&RtlGetVersion) = GetProcAddress(ntHandle, "RtlGetVersion");
+                *reinterpret_cast<FARPROC*>(&RtlGetVersion) = GetProcAddress(ntHandle, "RtlGetVersion");  // NOLINT(clang-diagnostic-undefined-reinterpret-cast)
 
                 if (nullptr != RtlGetVersion)
                 {
@@ -157,7 +191,7 @@ namespace CppMiniToolkit
                 PROCESS_INFORMATION pi;
                 ZeroMemory(&pi, sizeof(pi));
 
-                StringT cmd = appPath + _T(" ") + appCommandLine;
+                const StringT cmd = appPath + _T(" ") + appCommandLine;
 
                 if (!CreateProcess(nullptr, const_cast<LPTSTR>(cmd.c_str()), nullptr, nullptr, TRUE, 0, nullptr, nullptr, &si, &pi))
                 {
@@ -213,7 +247,7 @@ namespace CppMiniToolkit
 
                 if (size > 0)
                 {
-                    uint8_t* versionInfo = new uint8_t[size];
+                    auto versionInfo = new uint8_t[size];
                     CPPMINITOOLKIT_SCOPED_EXIT(delete[] versionInfo);
 
                     if (GetFileVersionInfo(filePath.c_str(), 0, size, versionInfo) != FALSE)
@@ -233,12 +267,12 @@ namespace CppMiniToolkit
                         if (VerQueryValue(versionInfo, _T("\\VarFileInfo\\Translation"), &buffer, &len) != FALSE && buffer != nullptr)
                         {
                             const auto langInfo = static_cast<WORD*>(buffer);
-                            for (UINT i = 0; i < len / sizeof(WORD) / 2; i++)
+                            for (size_t i = 0; i < len / sizeof(WORD) / 2; i++)
                             {
-                                const WORD lang = langInfo[i * 2];
+                                const WORD lang = langInfo[i * 2];  // NOLINT(bugprone-implicit-widening-of-multiplication-result)
                                 const WORD charset = langInfo[i * 2 + 1];
 
-                                TCHAR blockName[128] = { 0 };
+                                TCHAR blockName[128] = {};
                                 LPVOID blockBuffer;
 
                                 // 040904b0 english

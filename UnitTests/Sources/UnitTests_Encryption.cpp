@@ -10,7 +10,7 @@ using namespace CppMiniToolkit;
 TEST(MD5, CaculateBytes)
 {
     const char* Text = "Hello World!";
-    auto md5 = MD5::Caculate((const uint8_t*)Text, strlen(Text));
+    auto md5 = MD5::Calculate((const uint8_t*)Text, strlen(Text));
     std::string md5Text = md5.ToHexString();
     EXPECT_EQ(md5Text, "ed076287532e86365e841e92bfc50d8c");
 }
@@ -31,7 +31,7 @@ TEST(MD5, CaculateFile)
 
     FileSystem::WriteAllBytes(tempFile, buffer);
 
-    auto md5 = MD5::CaculateFile(tempFile);
+    auto md5 = MD5::CalculateFile(tempFile);
     auto md5Text = md5.ToHexUpperString();
 
     FileSystem::DeleteSingleFile(tempFile);

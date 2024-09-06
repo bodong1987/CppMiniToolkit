@@ -55,7 +55,7 @@ namespace CppMiniToolkit
             other.AllocatedSize = 0;
         }
 
-        TDynamicBuffer& operator = (const TDynamicBuffer& other)
+        TDynamicBuffer& operator = (const TDynamicBuffer& other)  // NOLINT(bugprone-unhandled-self-assignment)
         {
             if (this == &other)
             {
@@ -172,6 +172,7 @@ namespace CppMiniToolkit
             return At(index);
         }
 
+        // ReSharper disable once CppTemplateParameterNeverUsed
         template <typename T, typename TEnableIfType = std::enable_if_t<std::is_pod<T>::value>>
         void AppendValueBits(T value)
         {
@@ -203,27 +204,27 @@ namespace CppMiniToolkit
             }
             else
             {
-                auto current = Buffer;
-                const SizeType old = Size;
-                const SizeType aold = AllocatedSize;
+                const auto CurrentBuffer = Buffer;
+                const SizeType OldSize = Size;
+                const SizeType OldAllocatedSize = AllocatedSize;
 
-                const SizeType asize = Align((AllocatedSize + length) * 2);
+                const SizeType NewAllocSize = Align((AllocatedSize + length) * 2);
 
-                Buffer = Allocator.allocate(asize);
+                Buffer = Allocator.allocate(NewAllocSize);
 
-                if (current && old > 0)
+                if (CurrentBuffer && OldSize > 0)
                 {
-                    memcpy(Buffer, current, old);
+                    memcpy(Buffer, CurrentBuffer, OldSize);
                 }
 
-                memcpy(Buffer + old, source, length);
+                memcpy(Buffer + OldSize, source, length);
 
-                Size = old + length;
-                AllocatedSize = asize;
+                Size = OldSize + length;
+                AllocatedSize = NewAllocSize;
 
-                if (current)
+                if (CurrentBuffer)
                 {
-                    Allocator.deallocate(current, aold);
+                    Allocator.deallocate(CurrentBuffer, OldAllocatedSize);
                 }
             }
         }
@@ -242,11 +243,11 @@ namespace CppMiniToolkit
                 {
                     Release();
 
-                    const SizeType asize = Align(size);
+                    const SizeType AlignedSize = Align(size);
 
-                    Buffer = Allocator.allocate(asize);
+                    Buffer = Allocator.allocate(AlignedSize);
                     Size = size;
-                    AllocatedSize = asize;
+                    AllocatedSize = AlignedSize;
                 }
             }
         }
@@ -279,7 +280,7 @@ namespace CppMiniToolkit
                 if (Size > 0)
                 {
                     const SizeType s = Size;
-                    auto buf = Allocator.allocate(Align(s));
+                    const auto buf = Allocator.allocate(Align(s));
 
                     memcpy(buf, GetData(), Size);
 
@@ -301,7 +302,7 @@ namespace CppMiniToolkit
             if (size > AllocatedSize)
             {
                 const SizeType s = Size;
-                auto buf = Allocator.allocate(Align(size));
+                const auto buf = Allocator.allocate(Align(size));
 
                 if (Size > 0)
                 {
