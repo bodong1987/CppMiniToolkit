@@ -56,6 +56,7 @@ namespace CppMiniToolkit
                 return NtQueryInformationProcess;
             }
 
+            // ReSharper disable once CppParameterMayBeConst
             static DWORD GetParentProcessId(HANDLE hProcess)
             {
                 static NtQueryInformationProcessFunctionType NtQueryInformationProcess = GetNtDllNtQueryInformationProcessFunction();
@@ -70,6 +71,7 @@ namespace CppMiniToolkit
                     return 0;
                 }
 
+                // ReSharper disable once CppRedundantCastExpression
                 return static_cast<DWORD>(pbi.InheritedFromUniqueProcessId);
             }
 
@@ -101,45 +103,46 @@ namespace CppMiniToolkit
                 return GetProcessPath(hProcess);
             }
 
+            // ReSharper disable once CppParameterMayBeConst
             static std::wstring GetProcessPath(HANDLE hProcess)
             {
                 static NtQueryInformationProcessFunctionType NtQueryInformationProcess = GetNtDllNtQueryInformationProcessFunction();
                 assert(NtQueryInformationProcess != nullptr);
-                
+
                 PROCESS_BASIC_INFORMATION pbi;
                 ULONG returnLength;
-                const NTSTATUS status = NtQueryInformationProcess(hProcess, 0, &pbi, sizeof(pbi), &returnLength);
+                const NTSTATUS status = NtQueryInformationProcess(hProcess, ProcessBasicInformation, &pbi, sizeof(pbi), &returnLength);
                 if (status != 0)
                 {
                     return {};
                 }
 
-                const PVOID pebAddress = pbi.PebBaseAddress;
+                // ReSharper disable once CppLocalVariableMayBeConst
+                PVOID pebAddress = pbi.PebBaseAddress;
                 PVOID rtlUserProcParamsAddress;
-                if (!ReadProcessMemory(hProcess, static_cast<PCHAR>(pebAddress) + 0x20, &rtlUserProcParamsAddress, sizeof(PVOID), nullptr))  // NOLINT(bugprone-multi-level-implicit-pointer-conversion)
+                if (!ReadProcessMemory(hProcess, static_cast<PCHAR>(pebAddress) + offsetof(PEB, ProcessParameters), &rtlUserProcParamsAddress, sizeof(PVOID), nullptr))
                 {
                     return {};
                 }
 
-                UNICODE_STRING commandLine;
-                if (!ReadProcessMemory(hProcess, static_cast<PCHAR>(rtlUserProcParamsAddress) + 0x70, &commandLine, sizeof(commandLine), nullptr))
+                UNICODE_STRING imagePathName;
+                if (!ReadProcessMemory(hProcess, static_cast<PCHAR>(rtlUserProcParamsAddress) + offsetof(RTL_USER_PROCESS_PARAMETERS, ImagePathName), &imagePathName, sizeof(imagePathName), nullptr))
                 {
                     return {};
                 }
 
-                const auto commandLineContents = new WCHAR[commandLine.Length / 2 + 1];
-                CPP_MINI_TOOLKIT_SCOPED_EXIT(delete[] commandLineContents);
-                if (!ReadProcessMemory(hProcess, commandLine.Buffer, commandLineContents, commandLine.Length, nullptr))
-                {   
+                auto imagePathContents = std::make_unique<WCHAR[]>(imagePathName.Length / 2 + 1);
+                if (!ReadProcessMemory(hProcess, imagePathName.Buffer, imagePathContents.get(), imagePathName.Length, nullptr))
+                {
                     return {};
                 }
 
-                commandLineContents[commandLine.Length / 2] = 0;
-
-                std::wstring commandLineWStr(commandLineContents);
-                return commandLineWStr;
+                imagePathContents[imagePathName.Length / 2] = 0;
+                std::wstring imagePathWStr(imagePathContents.get());
+                return imagePathWStr;
             }
         };
     }
 }
+
 #endif

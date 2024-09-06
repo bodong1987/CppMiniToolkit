@@ -203,6 +203,7 @@ namespace CppMiniToolkit
 
                 std::vector<char> buffer(4096);
                 DWORD bytesRead = 0;
+                // ReSharper disable once CppRedundantCastExpression
                 while (ReadFile(hRead, buffer.data(), static_cast<DWORD>(buffer.size()), &bytesRead, nullptr))
                 {
                     Result.append(buffer.data(), bytesRead);
@@ -241,11 +242,11 @@ namespace CppMiniToolkit
 
                 // get version data
                 DWORD handle = 0;
-                DWORD size = GetFileVersionInfoSize(filePath.c_str(), &handle);
+                const DWORD size = GetFileVersionInfoSize(filePath.c_str(), &handle);
 
                 if (size > 0)
                 {
-                    auto versionInfo = new uint8_t[size];
+                    const auto versionInfo = new uint8_t[size];
                     CPP_MINI_TOOLKIT_SCOPED_EXIT(delete[] versionInfo);
 
                     if (GetFileVersionInfo(filePath.c_str(), 0, size, versionInfo) != FALSE)

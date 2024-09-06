@@ -46,7 +46,8 @@ TEST(WindowsPlatform, QueryThreadInformation)
 
 TEST(WindowsPlatform, QueryProcessInformation)
 {
-    const auto MyName = PathUtils::GetFileName(PlatformWindows::ProcessOperationUtils::GetProcessPath(GetCurrentProcess()).c_str());
+    const auto path = PlatformWindows::ProcessOperationUtils::GetProcessPath(GetCurrentProcess());
+    const auto MyName = PathUtils::GetFileName(path.c_str());
 
     EXPECT_STREQ(MyName.c_str(), L"UnitTests.exe");
 }

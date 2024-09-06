@@ -77,7 +77,7 @@ namespace CppMiniToolkit
 
             static const BYTE* FuzzySearchInMemory(const BYTE* startPos, const SIZE_T size, const BYTE* signature, const SIZE_T length, const BYTE wildcard)
             {
-                auto compare = [=](BYTE a, BYTE b) -> bool {
+                auto compare = [=](const BYTE a, const BYTE b) -> bool {
                     return a == b || b == wildcard;
                 };
 

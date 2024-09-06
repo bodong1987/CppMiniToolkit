@@ -1,9 +1,13 @@
+// ReSharper disable CppParameterMayBeConst
 #pragma once
-#include <string>
+
+#include <Common/BuildConfig.hpp>
 
 #if !CPP_MINI_TOOLKIT_PLATFORM_WINDOWS
+#include <string>
 #include <sys/stat.h>
 #include <dirent.h>
+// ReSharper disable once CppUnusedIncludeDirective
 #include <unistd.h>
 #include <cstdio>
 #include <cstring>
@@ -13,24 +17,26 @@ namespace CppMiniToolkit
 {
     namespace PlatformPosix
     {
+        // ReSharper disable CppLocalVariableMayBeConst
+
         class FileSystemPosix
         {
         public:
             static bool IsExists(const char* path)
             {
-                struct stat info;
+                struct stat info{};
                 return stat(path, &info) == 0;
             }
 
             static bool IsFileExists(const char* path)
             {
-                struct stat info;
+                struct stat info{};
                 return stat(path, &info) == 0 && S_ISREG(info.st_mode);
             }
 
             static bool IsDirectoryExists(const char* directoryPath)
             {
-                struct stat info;
+                struct stat info{};
                 return stat(directoryPath, &info) == 0 && S_ISDIR(info.st_mode);
             }
 
@@ -200,7 +206,7 @@ namespace CppMiniToolkit
                 closedir(dir);
             }
 
-            static void WalkThoughDirectory(const char* directory, std::function<bool(const char*, bool)> visitor, bool recursively, bool includeDirectories)
+            static void WalkThoughDirectory(const char* directory, const std::function<bool(const char*, bool)>& visitor, bool recursively, bool includeDirectories) // NOLINT(*-no-recursion)
             {
                 DIR* dir = opendir(directory);
                 if (!dir)

@@ -24,7 +24,7 @@ namespace CppMiniToolkit
 
             typedef std::basic_string<TCHAR> StringT;
 
-            static StringT FormatErrorMessage(DWORD errorCode)
+            static StringT FormatErrorMessage(const DWORD errorCode)
             {
                 LPVOID lpMsgBuf = nullptr;
                 const DWORD bufLen = FormatMessage(
@@ -51,11 +51,11 @@ namespace CppMiniToolkit
                 return {};
             }
 
-            static StringT FormatBytes(uint64_t bytes)
+            static StringT FormatBytes(const uint64_t bytes)
             {
                 static const TCHAR* units[] = { _T("Bytes"), _T("KB"), _T("MB"), _T("GB"), _T("TB") };
 
-                double finalVal = static_cast<double>(bytes);
+                auto finalVal = static_cast<double>(bytes);
 
                 int Index = 0;
                 for (; finalVal >= 1024 && Index < 4; Index++)
@@ -70,7 +70,7 @@ namespace CppMiniToolkit
                 return buffer;
             }
 
-            static bool DumpProcess(int processId, const StringT& path)
+            static bool DumpProcess(const int processId, const StringT& path)
             {
                 const auto hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, processId);
                 if (hProcess == nullptr)

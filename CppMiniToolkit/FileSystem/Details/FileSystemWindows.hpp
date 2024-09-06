@@ -290,7 +290,8 @@ namespace CppMiniToolkit
                 return true;
             }
 
-            static bool DeleteDirectories(LPCWSTR directoryPath, bool recursively) // NOLINT(*-no-recursion)
+            // ReSharper disable once CppParameterMayBeConst
+            static bool DeleteDirectories(LPCWSTR directoryPath, const bool recursively) // NOLINT(*-no-recursion)
             {
                 // subdirectories have been found
                 // Handle to directory

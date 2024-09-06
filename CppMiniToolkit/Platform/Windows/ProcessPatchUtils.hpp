@@ -34,7 +34,7 @@ namespace CppMiniToolkit
             }
 
             template <SIZE_T CodeLength>
-            static bool ReplaceAssemblyFunctionAddress(BYTE (&codes)[CodeLength], BYTE flag,
+            static bool ReplaceAssemblyFunctionAddress(BYTE (&codes)[CodeLength], const BYTE flag,
                                                        const LPCVOID addressOfFunction)
             {
                 return ReplaceAssemblyFunctionAddress(codes, CodeLength, flag, addressOfFunction);

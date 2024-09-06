@@ -1,3 +1,4 @@
+// ReSharper disable CppParameterMayBeConst
 #pragma once
 
 #include <string>

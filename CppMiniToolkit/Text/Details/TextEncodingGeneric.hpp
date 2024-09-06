@@ -1,4 +1,5 @@
 // ReSharper disable CppInconsistentNaming
+// ReSharper disable CppParameterMayBeConst
 #pragma once
 
 #include <string>
@@ -7,6 +8,7 @@ namespace CppMiniToolkit
 {
     namespace PlatformGeneric
     {
+        // ReSharper disable CppLocalVariableMayBeConst
         class TextEncodingGeneric
         {
         public:
@@ -99,7 +101,7 @@ namespace CppMiniToolkit
             // When the function returns, this will be left at the index of the last character
             // that composes the returned codepoint.
             // For surrogate pairs, this means the index will be left at the low surrogate.
-            static codepoint_t decode_utf16(utf16_t const* utf16, size_t len, size_t* index)
+            static codepoint_t decode_utf16(utf16_t const* utf16, const size_t len, size_t* index)
             {
                 const utf16_t high = utf16[*index];
 

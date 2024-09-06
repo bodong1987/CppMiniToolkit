@@ -439,6 +439,7 @@ namespace CppMiniToolkit
         }
 
         // find by predicate
+        // ReSharper disable once CppRedundantAccessSpecifier
     public:
         template <typename TCharType, typename Predicate>
         static typename std::basic_string<TCharType>::size_type Find(const std::basic_string<TCharType>& str, Predicate predicate, typename std::basic_string<TCharType>::size_type startPos = 0)
@@ -455,6 +456,7 @@ namespace CppMiniToolkit
         }
 
         // split
+        // ReSharper disable once CppRedundantAccessSpecifier
     public:
         template <typename TSequenceType, typename TCharType, typename Predicate>
         static TSequenceType& Split(TSequenceType& sequence, const std::basic_string<TCharType>& str, Predicate predicate)
@@ -480,6 +482,7 @@ namespace CppMiniToolkit
         }
 
         // join
+        // ReSharper disable once CppRedundantAccessSpecifier
     public:
         template <typename TSequenceType, typename TCharType, typename Predicate>
         static std::basic_string<TCharType> Join(const TSequenceType& sequence, const TCharType* separator, Predicate predicate)

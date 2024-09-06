@@ -1,7 +1,9 @@
 // ReSharper disable CppUseAuto
 // ReSharper disable CppCStyleCast
 // ReSharper disable CppRedundantParentheses
+// ReSharper disable CppParameterMayBeConst
 #pragma once
+// ReSharper disable CppLocalVariableMayBeConst
 
 #include <cstdint>
 #include <cstddef>

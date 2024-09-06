@@ -48,7 +48,6 @@ namespace CppMiniToolkit
     // ReSharper disable once CppInconsistentNaming
     class MD5
     {
-    private:
         /// MD5 fixed constants in little endian.
         // ReSharper disable CppInconsistentNaming
         static constexpr uint32_t kA = 0x67452301;
@@ -294,7 +293,7 @@ namespace CppMiniToolkit
 
 
     public:
-        static MD5Value Calculate(const uint8_t* bytes, size_t length)
+        static MD5Value Calculate(const uint8_t* bytes, const size_t length)
         {
             MD5 md5;
             md5.FinalizeCore(bytes, length);

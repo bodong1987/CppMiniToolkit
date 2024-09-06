@@ -31,16 +31,16 @@ namespace CppMiniToolkit
         {
             if (other.GetSize() > 0)
             {
-                const SizeType asize = Align(other.GetSize());
+                const SizeType AlignSize = Align(other.GetSize());
 
-                Buffer = Allocator.allocate(asize);
+                Buffer = Allocator.allocate(AlignSize);
 
                 assert(Buffer);
 
                 memcpy(Buffer, other.GetData(), other.GetSize());
 
                 Size = other.GetSize();
-                AllocatedSize = asize;
+                AllocatedSize = AlignSize;
             }
         }
                 
@@ -328,12 +328,12 @@ namespace CppMiniToolkit
             Size = AllocatedSize = 0;
         }
 
-    private:
         static SizeType Align(const SizeType size)
         {
             return (size + AlignLength - 1) & (~(AlignLength - 1));
         }
 
+        // ReSharper disable once CppRedundantAccessSpecifier
     private:
         uint8_t*                Buffer = nullptr;
         SizeType				Size = 0;
