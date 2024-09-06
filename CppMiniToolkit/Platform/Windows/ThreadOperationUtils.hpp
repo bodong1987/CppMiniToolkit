@@ -5,7 +5,7 @@
 
 #include "Common/ScopedExit.hpp"
 
-#if CPPMINITOOLKIT_PLATFORM_WINDOWS
+#if CPP_MINI_TOOLKIT_PLATFORM_WINDOWS
 #include <windows.h>
 #include <cassert>
 
@@ -16,7 +16,7 @@ namespace CppMiniToolkit
         class ThreadOperationUtils
         {
         public:
-            CPPMINITOOLKIT_DECLARE_TOOLKIT_CLASS_TYPE(ThreadOperationUtils);
+            CPP_MINI_TOOLKIT_DECLARE_TOOLKIT_CLASS_TYPE(ThreadOperationUtils);
 
             // ReSharper disable IdentifierTypo
             typedef enum {  // NOLINT(performance-enum-size)
@@ -118,11 +118,11 @@ namespace CppMiniToolkit
 
                 PWSTR threadDescription = nullptr;
                 const auto Result = GetThreadDescription(hThread, &threadDescription);
-                CPPMINITOOLKIT_UNREFERENCED_PARAMETER(Result);
+                CPP_MINI_TOOLKIT_UNREFERENCED_PARAMETER(Result);
         
                 if (threadDescription != nullptr)
                 {
-                    CPPMINITOOLKIT_SCOPED_EXIT(LocalFree(threadDescription));
+                    CPP_MINI_TOOLKIT_SCOPED_EXIT(LocalFree(threadDescription));
                     
                     if(hProcess != nullptr)
                     {
@@ -153,7 +153,7 @@ namespace CppMiniToolkit
                     return;
                 }
 
-                CPPMINITOOLKIT_SCOPED_EXIT(CloseHandle(hThread));
+                CPP_MINI_TOOLKIT_SCOPED_EXIT(CloseHandle(hThread));
                 
                 SetThreadName(hThread, threadName);
             }
@@ -164,7 +164,7 @@ namespace CppMiniToolkit
                 assert(SetThreadDescription != nullptr);
 
                 const auto hr = SetThreadDescription(hThread, threadName);
-                CPPMINITOOLKIT_UNREFERENCED_PARAMETER(hr);
+                CPP_MINI_TOOLKIT_UNREFERENCED_PARAMETER(hr);
             }
         };
     }

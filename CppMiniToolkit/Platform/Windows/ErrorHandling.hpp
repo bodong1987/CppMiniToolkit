@@ -2,7 +2,7 @@
 
 #include <Common/Build.hpp>
 
-#if CPPMINITOOLKIT_PLATFORM_WINDOWS
+#if CPP_MINI_TOOLKIT_PLATFORM_WINDOWS
 #include <string>
 #include <windows.h>
 #include <cstdint>
@@ -20,7 +20,7 @@ namespace CppMiniToolkit
         class ErrorHandling
         {
         public:
-            CPPMINITOOLKIT_DECLARE_TOOLKIT_CLASS_TYPE(ErrorHandling);
+            CPP_MINI_TOOLKIT_DECLARE_TOOLKIT_CLASS_TYPE(ErrorHandling);
 
             typedef std::basic_string<TCHAR> StringT;
 
@@ -78,7 +78,7 @@ namespace CppMiniToolkit
                     return false;
                 }
 
-                CPPMINITOOLKIT_SCOPED_EXIT(CloseHandle(hProcess));
+                CPP_MINI_TOOLKIT_SCOPED_EXIT(CloseHandle(hProcess));
 
                 const auto hFile = CreateFile(path.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
 
@@ -87,7 +87,7 @@ namespace CppMiniToolkit
                     return false;
                 }
 
-                CPPMINITOOLKIT_SCOPED_EXIT(CloseHandle(hFile));
+                CPP_MINI_TOOLKIT_SCOPED_EXIT(CloseHandle(hFile));
 
                 // create minidump
                 MINIDUMP_EXCEPTION_INFORMATION exceptionInfo;

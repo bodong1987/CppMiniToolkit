@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 
-#if !CPPMINITOOLKIT_PLATFORM_WINDOWS
+#if !CPP_MINI_TOOLKIT_PLATFORM_WINDOWS
 #include <sys/stat.h>
 #include <dirent.h>
 #include <unistd.h>

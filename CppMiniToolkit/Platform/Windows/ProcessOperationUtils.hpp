@@ -3,7 +3,7 @@
 #include <Common/Build.hpp>
 #include <Common/ScopedExit.hpp>
 
-#if CPPMINITOOLKIT_PLATFORM_WINDOWS
+#if CPP_MINI_TOOLKIT_PLATFORM_WINDOWS
 #include <windows.h>
 #include <cassert>
 #include <string>
@@ -16,7 +16,7 @@ namespace CppMiniToolkit
         class ProcessOperationUtils
         {
         public:
-            CPPMINITOOLKIT_DECLARE_TOOLKIT_CLASS_TYPE(ProcessOperationUtils);
+            CPP_MINI_TOOLKIT_DECLARE_TOOLKIT_CLASS_TYPE(ProcessOperationUtils);
 
             // ReSharper disable CppInconsistentNaming
             typedef struct {
@@ -82,7 +82,7 @@ namespace CppMiniToolkit
                     return 0;
                 }
 
-                CPPMINITOOLKIT_SCOPED_EXIT(CloseHandle(hProcess));
+                CPP_MINI_TOOLKIT_SCOPED_EXIT(CloseHandle(hProcess));
 
                 return GetParentProcessId(hProcess);
             }
@@ -96,7 +96,7 @@ namespace CppMiniToolkit
                     return {};
                 }
 
-                CPPMINITOOLKIT_SCOPED_EXIT(CloseHandle(hProcess));
+                CPP_MINI_TOOLKIT_SCOPED_EXIT(CloseHandle(hProcess));
 
                 return GetProcessPath(hProcess);
             }
@@ -128,7 +128,7 @@ namespace CppMiniToolkit
                 }
 
                 const auto commandLineContents = new WCHAR[commandLine.Length / 2 + 1];
-                CPPMINITOOLKIT_SCOPED_EXIT(delete[] commandLineContents);
+                CPP_MINI_TOOLKIT_SCOPED_EXIT(delete[] commandLineContents);
                 if (!ReadProcessMemory(hProcess, commandLine.Buffer, commandLineContents, commandLine.Length, nullptr))
                 {   
                     return {};

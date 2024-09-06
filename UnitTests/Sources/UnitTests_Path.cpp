@@ -73,7 +73,7 @@ TEST(PathUtils, IsExtension)
 
 TEST(PathUtils, Combine)
 {
-#if CPPMINITOOLKIT_PLATFORM_WINDOWS
+#if CPP_MINI_TOOLKIT_PLATFORM_WINDOWS
     EXPECT_EQ(PathUtils::Combine("C:\\", "folder", "file.txt"), "C:\\folder\\file.txt");
     EXPECT_EQ(PathUtils::Combine("C:\\folder", "subfolder", "file.txt"), "C:\\folder\\subfolder\\file.txt");
 #else
@@ -86,7 +86,7 @@ TEST(PathUtils, Combine)
 
 TEST(PathUtils, IsAbsolutePath)
 {
-#if CPPMINITOOLKIT_PLATFORM_WINDOWS
+#if CPP_MINI_TOOLKIT_PLATFORM_WINDOWS
     EXPECT_TRUE(PathUtils::IsAbsolutePath("C:\\folder\\file.txt"));
     EXPECT_TRUE(PathUtils::IsAbsolutePath("\\folder\\file.txt"));
 #else
@@ -100,7 +100,7 @@ TEST(PathUtils, IsAbsolutePath)
 
 TEST(PathUtils, IsRelativePath)
 {
-#if CPPMINITOOLKIT_PLATFORM_WINDOWS
+#if CPP_MINI_TOOLKIT_PLATFORM_WINDOWS
     EXPECT_FALSE(PathUtils::IsRelativePath("C:\\folder\\file.txt"));
     EXPECT_FALSE(PathUtils::IsRelativePath("\\folder\\file.txt"));
 #else

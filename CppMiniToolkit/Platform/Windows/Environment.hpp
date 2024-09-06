@@ -2,7 +2,7 @@
 
 #include <Common/Build.hpp>
 
-#if CPPMINITOOLKIT_PLATFORM_WINDOWS
+#if CPP_MINI_TOOLKIT_PLATFORM_WINDOWS
 #include <string>
 #include <tchar.h>
 #include <sstream>
@@ -18,7 +18,7 @@ namespace CppMiniToolkit
         class Environment
         {
         public:
-            CPPMINITOOLKIT_DECLARE_TOOLKIT_CLASS_TYPE(Environment);
+            CPP_MINI_TOOLKIT_DECLARE_TOOLKIT_CLASS_TYPE(Environment);
 
             typedef std::basic_string<TCHAR> StringT;
 
@@ -67,11 +67,11 @@ namespace CppMiniToolkit
                 }
 
                 auto pathValue = new wchar_t[requiredSize];
-                CPPMINITOOLKIT_SCOPED_EXIT(delete[] pathValue);
+                CPP_MINI_TOOLKIT_SCOPED_EXIT(delete[] pathValue);
 
                 _tgetenv_s(&requiredSize, pathValue, requiredSize, _T("PATH"));
 
-#if CPPMINITOOLKIT_UNICODE
+#if CPP_MINI_TOOLKIT_UNICODE
                 std::wstringstream ss(pathValue);
 #else
                 std::stringstream ss(pathValue);
@@ -219,7 +219,7 @@ namespace CppMiniToolkit
                 CloseHandle(pi.hThread);
                 CloseHandle(pi.hProcess);
 
-                #if CPPMINITOOLKIT_UNICODE
+                #if CPP_MINI_TOOLKIT_UNICODE
                 const auto str = Encoding::ANSIToUTF16(Result.c_str());
                 return reinterpret_cast<LPCWSTR>(str.c_str());
                 #else
@@ -248,7 +248,7 @@ namespace CppMiniToolkit
                 if (size > 0)
                 {
                     auto versionInfo = new uint8_t[size];
-                    CPPMINITOOLKIT_SCOPED_EXIT(delete[] versionInfo);
+                    CPP_MINI_TOOLKIT_SCOPED_EXIT(delete[] versionInfo);
 
                     if (GetFileVersionInfo(filePath.c_str(), 0, size, versionInfo) != FALSE)
                     {

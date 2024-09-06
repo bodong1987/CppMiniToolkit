@@ -1,6 +1,6 @@
 #pragma once
 
-#if !CPPMINITOOLKIT_PLATFORM_WINDOWS
+#if !CPP_MINI_TOOLKIT_PLATFORM_WINDOWS
 #error "This header file is provide for windows only"
 #endif
 
@@ -17,7 +17,7 @@ namespace CppMiniToolkit
         class TextEncodingWindows
         {
         public:
-            CPPMINITOOLKIT_DECLARE_TOOLKIT_CLASS_TYPE(TextEncodingWindows);
+            CPP_MINI_TOOLKIT_DECLARE_TOOLKIT_CLASS_TYPE(TextEncodingWindows);
 
             static std::string UTF16ToUTF8(const char16_t* text)
             {

@@ -3,7 +3,7 @@
 #include <cstdint>
 
 // ReSharper disable once IdentifierTypo
-#define CPPMINITOOLKIT_DEFINE_HAS_SIGNATURE(traitsName, funcName, signature)        \
+#define CPP_MINI_TOOLKIT_DEFINE_HAS_SIGNATURE(traitsName, funcName, signature)        \
     template <typename U>                                                           \
     class traitsName /*NOLINT(bugprone-macro-parentheses)*/                         \
     {                                                                               \

@@ -6,50 +6,50 @@
 #include <cstdint>
 #include <cstddef>
 
-#define CPPMINITOOLKIT_CRC32_USE_LOOKUP_TABLE_BYTE
-#define CPPMINITOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_4
-#define CPPMINITOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_8
-#define CPPMINITOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_16
+#define CPP_MINI_TOOLKIT_CRC32_USE_LOOKUP_TABLE_BYTE
+#define CPP_MINI_TOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_4
+#define CPP_MINI_TOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_8
+#define CPP_MINI_TOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_16
 
-#ifndef CPPMINITOOLKIT_LITTLEENDIAN
-#define CPPMINITOOLKIT_LITTLEENDIAN 1234
+#ifndef CPP_MINI_TOOLKIT_LITTLEENDIAN
+#define CPP_MINI_TOOLKIT_LITTLEENDIAN 1234
 #endif
-#ifndef CPPMINITOOLKIT_BIGENDIAN
-#define CPPMINITOOLKIT_BIGENDIAN    4321
+#ifndef CPP_MINI_TOOLKIT_BIGENDIAN
+#define CPP_MINI_TOOLKIT_BIGENDIAN    4321
 #endif
 
 // define endianess and some integer data types
 #if defined(_MSC_VER) || defined(__MINGW32__)
   // Windows always little endian
-#define CPPMINITOOLKIT_BYTE_ORDER CPPMINITOOLKIT_LITTLEENDIAN
+#define CPP_MINI_TOOLKIT_BYTE_ORDER CPP_MINI_TOOLKIT_LITTLEENDIAN
 
 // intrinsics / prefetching
 #if defined(__MINGW32__) || defined(__clang__)
-#define CPPMINITOOLKIT_PREFETCH(location) __builtin_prefetch(location)
+#define CPP_MINI_TOOLKIT_PREFETCH(location) __builtin_prefetch(location)
 #else
 #if defined(__SSE2__)
 #include <xmmintrin.h>
-#define CPPMINITOOLKIT_PREFETCH(location) _mm_prefetch(location, _MM_HINT_T0)
+#define CPP_MINI_TOOLKIT_PREFETCH(location) _mm_prefetch(location, _MM_HINT_T0)
 #else
-#define CPPMINITOOLKIT_PREFETCH(location) ;
+#define CPP_MINI_TOOLKIT_PREFETCH(location) ;
 #endif
 #endif
 #else
-  // defines CPPMINITOOLKIT_BYTE_ORDER as CPPMINITOOLKIT_LITTLEENDIAN or CPPMINITOOLKIT_BIGENDIAN
+  // defines CPP_MINI_TOOLKIT_BYTE_ORDER as CPP_MINI_TOOLKIT_LITTLEENDIAN or CPP_MINI_TOOLKIT_BIGENDIAN
 #include <sys/param.h>
 
 // intrinsics / prefetching
 #ifdef __GNUC__
-#define CPPMINITOOLKIT_PREFETCH(location) __builtin_prefetch(location)
+#define CPP_MINI_TOOLKIT_PREFETCH(location) __builtin_prefetch(location)
 #else
   // no prefetching
-#define CPPMINITOOLKIT_PREFETCH(location) ;
+#define CPP_MINI_TOOLKIT_PREFETCH(location) ;
 #endif
 #endif
 
 // abort if byte order is undefined
-#if !defined(CPPMINITOOLKIT_BYTE_ORDER)
-#error undefined byte order, compile with -DCPPMINITOOLKIT_BYTE_ORDER=1234 (if little endian) or -DCPPMINITOOLKIT_BYTE_ORDER=4321 (big endian)
+#if !defined(CPP_MINI_TOOLKIT_BYTE_ORDER)
+#error undefined byte order, compile with -DCPP_MINI_TOOLKIT_BYTE_ORDER=1234 (if little endian) or -DCPP_MINI_TOOLKIT_BYTE_ORDER=4321 (big endian)
 #endif
 
 namespace CppMiniToolkit
@@ -59,13 +59,13 @@ namespace CppMiniToolkit
     class CRC32  // NOLINT(cppcoreguidelines-special-member-functions)
     {
     public:
-        CPPMINITOOLKIT_DECLARE_TOOLKIT_CLASS_TYPE(CRC32);
+        CPP_MINI_TOOLKIT_DECLARE_TOOLKIT_CLASS_TYPE(CRC32);
         
     private:
         /// zlib's CRC32 polynomial
         constexpr static uint32_t Polynomial = 0xEDB88320;
 
-#if CPPMINITOOLKIT_BYTE_ORDER == CPPMINITOOLKIT_BIGENDIAN
+#if CPP_MINI_TOOLKIT_BYTE_ORDER == CPP_MINI_TOOLKIT_BIGENDIAN
         /// swap endianess
         static inline uint32_t swap(uint32_t x)
         {
@@ -81,16 +81,16 @@ namespace CppMiniToolkit
 #endif
 
         /// Slicing-By-16
-#ifdef CPPMINITOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_16
+#ifdef CPP_MINI_TOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_16
         constexpr static size_t MaxSlice = 16;
-#elif defined(CPPMINITOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_8)
+#elif defined(CPP_MINI_TOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_8)
         constexpr static size_t MaxSlice = 8;
-#elif defined(CPPMINITOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_4)
+#elif defined(CPP_MINI_TOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_4)
         constexpr static size_t MaxSlice = 4;
-#elif defined(CPPMINITOOLKIT_CRC32_USE_LOOKUP_TABLE_BYTE)
+#elif defined(CPP_MINI_TOOLKIT_CRC32_USE_LOOKUP_TABLE_BYTE)
         constexpr static size_t MaxSlice = 1;
 #else
-#define CPPMINITOOLKIT_NO_LOOKUPTABLE // don't need Crc32Lookup at all
+#define CPP_MINI_TOOLKIT_NO_LOOKUPTABLE // don't need Crc32Lookup at all
 #endif    
         /// compute CRC32 (bitwise algorithm)
         static uint32_t crc32_bitwise(const void* data, size_t length, uint32_t previousCrc32)
@@ -143,7 +143,7 @@ namespace CppMiniToolkit
         }
 
 
-#ifdef CPPMINITOOLKIT_CRC32_USE_LOOKUP_TABLE_BYTE
+#ifdef CPP_MINI_TOOLKIT_CRC32_USE_LOOKUP_TABLE_BYTE
         /// compute CRC32 (standard algorithm)
         static uint32_t crc32_1byte(const void* data, size_t length, uint32_t previousCrc32)
         {
@@ -238,7 +238,7 @@ namespace CppMiniToolkit
         }
 
 
-#ifdef CPPMINITOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_4
+#ifdef CPP_MINI_TOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_4
         /// compute CRC32 (Slicing-by-4 algorithm)
         static uint32_t crc32_4bytes(const void* data, size_t length, uint32_t previousCrc32)
         {
@@ -248,7 +248,7 @@ namespace CppMiniToolkit
             // process four bytes at once (Slicing-by-4)
             while (length >= 4)
             {
-#if CPPMINITOOLKIT_BYTE_ORDER == CPPMINITOOLKIT_BIGENDIAN
+#if CPP_MINI_TOOLKIT_BYTE_ORDER == CPP_MINI_TOOLKIT_BIGENDIAN
                 uint32_t one = *current++ ^ swap(crc);
                 crc = Crc32Lookup[0][one & 0xFF] ^
                     Crc32Lookup[1][(one >> 8) & 0xFF] ^
@@ -275,7 +275,7 @@ namespace CppMiniToolkit
 #endif
 
 
-#ifdef CPPMINITOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_8
+#ifdef CPP_MINI_TOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_8
         /// compute CRC32 (Slicing-by-8 algorithm)
         static uint32_t crc32_8bytes(const void* data, size_t length, uint32_t previousCrc32)
         {
@@ -285,7 +285,7 @@ namespace CppMiniToolkit
             // process eight bytes at once (Slicing-by-8)
             while (length >= 8)
             {
-#if CPPMINITOOLKIT_BYTE_ORDER == CPPMINITOOLKIT_BIGENDIAN
+#if CPP_MINI_TOOLKIT_BYTE_ORDER == CPP_MINI_TOOLKIT_BIGENDIAN
                 uint32_t one = *current++ ^ swap(crc);
                 uint32_t two = *current++;
                 crc = Crc32Lookup[0][two & 0xFF] ^
@@ -336,7 +336,7 @@ namespace CppMiniToolkit
             {
                 for (size_t unrolling = 0; unrolling < Unroll; unrolling++)
                 {
-#if CPPMINITOOLKIT_BYTE_ORDER == CPPMINITOOLKIT_BIGENDIAN
+#if CPP_MINI_TOOLKIT_BYTE_ORDER == CPP_MINI_TOOLKIT_BIGENDIAN
                     uint32_t one = *current++ ^ swap(crc);
                     uint32_t two = *current++;
                     crc = Crc32Lookup[0][two & 0xFF] ^
@@ -372,10 +372,10 @@ namespace CppMiniToolkit
 
             return ~crc; // same as crc ^ 0xFFFFFFFF
         }
-#endif // CPPMINITOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_8
+#endif // CPP_MINI_TOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_8
 
 
-#ifdef CPPMINITOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_16
+#ifdef CPP_MINI_TOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_16
         /// compute CRC32 (Slicing-by-16 algorithm)
         static uint32_t crc32_16bytes(const void* data, size_t length, uint32_t previousCrc32)
         {
@@ -390,7 +390,7 @@ namespace CppMiniToolkit
             {
                 for (size_t unrolling = 0; unrolling < Unroll; unrolling++)
                 {
-#if CPPMINITOOLKIT_BYTE_ORDER == CPPMINITOOLKIT_BIGENDIAN
+#if CPP_MINI_TOOLKIT_BYTE_ORDER == CPP_MINI_TOOLKIT_BIGENDIAN
                     uint32_t one = *current++ ^ swap(crc);
                     uint32_t two = *current++;
                     uint32_t three = *current++;
@@ -462,11 +462,11 @@ namespace CppMiniToolkit
 
             while (length >= BytesAtOnce + prefetchAhead)
             {
-                CPPMINITOOLKIT_PREFETCH(((const char*)current) + prefetchAhead);
+                CPP_MINI_TOOLKIT_PREFETCH(((const char*)current) + prefetchAhead);
 
                 for (size_t unrolling = 0; unrolling < Unroll; unrolling++)
                 {
-#if CPPMINITOOLKIT_BYTE_ORDER == CPPMINITOOLKIT_BIGENDIAN
+#if CPP_MINI_TOOLKIT_BYTE_ORDER == CPP_MINI_TOOLKIT_BIGENDIAN
                     uint32_t one = *current++ ^ swap(crc);
                     uint32_t two = *current++;
                     uint32_t three = *current++;
@@ -527,13 +527,13 @@ public:
         /// compute CRC32 using the fastest algorithm for large datasets on modern CPUs
         static uint32_t Caculate(const void* data, size_t length, uint32_t previousCrc32 = 0)
         {
-#ifdef CPPMINITOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_16
+#ifdef CPP_MINI_TOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_16
             return crc32_16bytes(data, length, previousCrc32);
-#elif defined(CPPMINITOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_8)
+#elif defined(CPP_MINI_TOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_8)
             return crc32_8bytes(data, length, previousCrc32);
-#elif defined(CPPMINITOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_4)
+#elif defined(CPP_MINI_TOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_4)
             return crc32_4bytes(data, length, previousCrc32);
-#elif defined(CPPMINITOOLKIT_CRC32_USE_LOOKUP_TABLE_BYTE)
+#elif defined(CPP_MINI_TOOLKIT_CRC32_USE_LOOKUP_TABLE_BYTE)
             return crc32_1byte(data, length, previousCrc32);
 #else
             return crc32_halfbyte(data, length, previousCrc32);
@@ -643,7 +643,7 @@ public:
         }
 
     private:
-#ifndef CPPMINITOOLKIT_NO_LOOKUPTABLE
+#ifndef CPP_MINI_TOOLKIT_NO_LOOKUPTABLE
         /// look-up table, already declared above
         constexpr static uint32_t Crc32Lookup[MaxSlice][256] =
         {
@@ -696,7 +696,7 @@ public:
                 0xB3667A2E,0xC4614AB8,0x5D681B02,0x2A6F2B94,0xB40BBE37,0xC30C8EA1,0x5A05DF1B,0x2D02EF8D,
               }
 
-            #if defined(CPPMINITOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_4) || defined(CPPMINITOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_8) || defined(CPPMINITOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_16)
+            #if defined(CPP_MINI_TOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_4) || defined(CPP_MINI_TOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_8) || defined(CPP_MINI_TOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_16)
               // beyond this point only relevant for Slicing-by-4, Slicing-by-8 and Slicing-by-16
               ,{
                 0x00000000,0x191B3141,0x32366282,0x2B2D53C3,0x646CC504,0x7D77F445,0x565AA786,0x4F4196C7,
@@ -802,8 +802,8 @@ public:
                 0x866616A7,0x3EDA71C2,0x2C6FDE2C,0x94D3B949,0x090481F0,0xB1B8E695,0xA30D497B,0x1BB12E1E,
                 0x43D23E48,0xFB6E592D,0xE9DBF6C3,0x516791A6,0xCCB0A91F,0x740CCE7A,0x66B96194,0xDE0506F1,
               }
-            #endif // defined(CPPMINITOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_4) || defined(CPPMINITOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_8) || defined(CPPMINITOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_16)
-            #if defined (CPPMINITOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_8) || defined(CPPMINITOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_16)
+            #endif // defined(CPP_MINI_TOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_4) || defined(CPP_MINI_TOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_8) || defined(CPP_MINI_TOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_16)
+            #if defined (CPP_MINI_TOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_8) || defined(CPP_MINI_TOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_16)
               // beyond this point only relevant for Slicing-by-8 and Slicing-by-16
               ,{
                 0x00000000,0x3D6029B0,0x7AC05360,0x47A07AD0,0xF580A6C0,0xC8E08F70,0x8F40F5A0,0xB220DC10,
@@ -944,8 +944,8 @@ public:
                 0xFF6B144A,0x33C114D4,0xBD4E1337,0x71E413A9,0x7B211AB0,0xB78B1A2E,0x39041DCD,0xF5AE1D53,
                 0x2C8E0FFF,0xE0240F61,0x6EAB0882,0xA201081C,0xA8C40105,0x646E019B,0xEAE10678,0x264B06E6,
               }
-            #endif // CPPMINITOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_8 || CPPMINITOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_16
-            #ifdef CPPMINITOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_16
+            #endif // CPP_MINI_TOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_8 || CPP_MINI_TOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_16
+            #ifdef CPP_MINI_TOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_16
               // beyond this point only relevant for Slicing-by-16
               ,{
                 0x00000000,0x177B1443,0x2EF62886,0x398D3CC5,0x5DEC510C,0x4A97454F,0x731A798A,0x64616DC9,
@@ -1226,15 +1226,15 @@ public:
                 0x839B5EED,0x2DF3CF7C,0x043B7B8E,0xAA53EA1F,0x57AA126A,0xF9C283FB,0xD00A3709,0x7E62A698,
                 0xF088C1A2,0x5EE05033,0x7728E4C1,0xD9407550,0x24B98D25,0x8AD11CB4,0xA319A846,0x0D7139D7,
               }
-            #endif // CPPMINITOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_16
+            #endif // CPP_MINI_TOOLKIT_CRC32_USE_LOOKUP_TABLE_SLICING_BY_16
         };
-#endif // CPPMINITOOLKIT_NO_LOOKUPTABLE
+#endif // CPP_MINI_TOOLKIT_NO_LOOKUPTABLE
     };
 
     constexpr uint32_t CRC32::Crc32Lookup[MaxSlice][256];  // NOLINT(clang-diagnostic-deprecated-redundant-constexpr-static-def, readability-redundant-declaration)
 }
 
-#undef CPPMINITOOLKIT_LITTLEENDIAN
-#undef CPPMINITOOLKIT_BIGENDIAN
-#undef CPPMINITOOLKIT_PREFETCH
+#undef CPP_MINI_TOOLKIT_LITTLEENDIAN
+#undef CPP_MINI_TOOLKIT_BIGENDIAN
+#undef CPP_MINI_TOOLKIT_PREFETCH
 

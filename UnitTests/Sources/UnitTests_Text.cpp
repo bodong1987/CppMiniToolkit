@@ -32,7 +32,7 @@ TEST(Encoding, UTF8ToUTF16Chinese)
     EXPECT_EQ(utf16, u"\u4F60\u597D, \u4E16\u754C!");  // "你好, 世界!"
 }
 
-#if CPPMINITOOLKIT_PLATFORM_WINDOWS
+#if CPP_MINI_TOOLKIT_PLATFORM_WINDOWS
 TEST(Encoding, UTF16ToANSI)
 {
     std::u16string utf16 = u"Hello, World!";

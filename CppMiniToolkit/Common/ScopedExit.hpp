@@ -46,9 +46,9 @@ namespace CppMiniToolkit
     }
 
     // CAT
-#define CPPMINITOOLKIT_PP_CAT_IMPL(a, b ) a ## b
-#define CPPMINITOOLKIT_PP_CAT(a, b) CPPMINITOOLKIT_PP_CAT_IMPL( a, b )
+#define CPP_MINI_TOOLKIT_PP_CAT_IMPL(a, b ) a ## b
+#define CPP_MINI_TOOLKIT_PP_CAT(a, b) CPP_MINI_TOOLKIT_PP_CAT_IMPL( a, b )
 
-#define CPPMINITOOLKIT_SCOPED_EXIT(expression) \
-    auto CPPMINITOOLKIT_PP_CAT(scoped_exit_instance_, __COUNTER__) = ::CppMiniToolkit::Details::MakeScopedExit([&]() { expression; })
+#define CPP_MINI_TOOLKIT_SCOPED_EXIT(expression) \
+    auto CPP_MINI_TOOLKIT_PP_CAT(scoped_exit_instance_, __COUNTER__) = ::CppMiniToolkit::Details::MakeScopedExit([&]() { expression; })
 }

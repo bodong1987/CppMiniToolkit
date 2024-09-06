@@ -9,7 +9,7 @@ namespace CppMiniToolkit
     class PathUtils
     {
     public:
-        CPPMINITOOLKIT_DECLARE_TOOLKIT_CLASS_TYPE(PathUtils);
+        CPP_MINI_TOOLKIT_DECLARE_TOOLKIT_CLASS_TYPE(PathUtils);
         
     private:
         template <typename TCharType>
@@ -146,7 +146,7 @@ namespace CppMiniToolkit
         template <typename TCharType>
         static bool IsAbsolutePath(const TCharType* path)
         {
-#if CPPMINITOOLKIT_PLATFORM_WINDOWS
+#if CPP_MINI_TOOLKIT_PLATFORM_WINDOWS
             return (std::char_traits<TCharType>::length(path) >= 2 && path[1] == ':') || (path != nullptr && path[0] == '\\');
 #else
             return path != nullptr && path[0] == '/';

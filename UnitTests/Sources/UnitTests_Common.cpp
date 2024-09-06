@@ -100,7 +100,7 @@ TEST(DynamicBuffer, AppendValueBits)
     EXPECT_FALSE(buffer.IsEmpty());
 }
 
-CPPMINITOOLKIT_DEFINE_HAS_SIGNATURE(HasStaticFooMemberFunction, T::foo, void (*)(void));
+CPP_MINI_TOOLKIT_DEFINE_HAS_SIGNATURE(HasStaticFooMemberFunction, T::foo, void (*)(void));
 
 struct StaticFoo { static void foo(){} };
 struct NormalFoo { void foo(){} };

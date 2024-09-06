@@ -88,7 +88,7 @@ namespace CppMiniToolkit
             va_start(arglist, format);
 
             int result;
-#if CPPMINITOOLKIT_COMPILER_MSVC
+#if CPP_MINI_TOOLKIT_COMPILER_MSVC
             result = _vsprintf_s_l(string, sizeInBytes, format, nullptr, arglist);
 #else
             result = vsnprintf(string, sizeInBytes, format, arglist);
@@ -105,7 +105,7 @@ namespace CppMiniToolkit
             va_start(arglist, format);
 
             int result;
-#if CPPMINITOOLKIT_COMPILER_MSVC
+#if CPP_MINI_TOOLKIT_COMPILER_MSVC
             result = _vsprintf_s_l(string, N, format, nullptr, arglist);
 #else
             result = vsnprintf(string, N, format, arglist);
@@ -122,7 +122,7 @@ namespace CppMiniToolkit
 
         static char StaticPathSeparator()
         {
-#if CPPMINITOOLKIT_PLATFORM_WINDOWS
+#if CPP_MINI_TOOLKIT_PLATFORM_WINDOWS
             return '\\';
 #else
             return '/';
@@ -141,7 +141,7 @@ namespace CppMiniToolkit
 
         static int iCompare(const char* first, const char* second)
         {
-#if CPPMINITOOLKIT_COMPILER_MSVC
+#if CPP_MINI_TOOLKIT_COMPILER_MSVC
             return _stricmp(first, second);
 #else
             return strcasecmp(first, second);
@@ -150,7 +150,7 @@ namespace CppMiniToolkit
 
         static int iCompareN(const char* first, const char* second, const size_t n)
         {
-#if CPPMINITOOLKIT_COMPILER_MSVC
+#if CPP_MINI_TOOLKIT_COMPILER_MSVC
             return _strnicmp(first, second, n);
 #else
             return strncasecmp(first, second, n);
@@ -368,10 +368,10 @@ namespace CppMiniToolkit
 
             int result;
 
-#if CPPMINITOOLKIT_COMPILER_MSVC
+#if CPP_MINI_TOOLKIT_COMPILER_MSVC
             result = _vswprintf_s_l(string, sizeInWords, format, nullptr, arglist);
-#elif CPPMINITOOLKIT_COMPILER_GCC && CPPMINITOOLKIT_PLATFORM_WINDOWS
-            CPPMINITOOLKIT_UNREFERENCED_PARAMETER(sizeInWords);
+#elif CPP_MINI_TOOLKIT_COMPILER_GCC && CPP_MINI_TOOLKIT_PLATFORM_WINDOWS
+            CPP_MINI_TOOLKIT_UNREFERENCED_PARAMETER(sizeInWords);
             result = vswprintf(string, format, arglist);
 #else
             result = vswprintf(string, sizeInWords, format, arglist);
@@ -390,9 +390,9 @@ namespace CppMiniToolkit
 
             int result;
 
-#if CPPMINITOOLKIT_COMPILER_MSVC
+#if CPP_MINI_TOOLKIT_COMPILER_MSVC
             result = _vswprintf_s_l(string, N, format, nullptr, arglist);
-#elif CPPMINITOOLKIT_COMPILER_GCC && CPPMINITOOLKIT_PLATFORM_WINDOWS
+#elif CPP_MINI_TOOLKIT_COMPILER_GCC && CPP_MINI_TOOLKIT_PLATFORM_WINDOWS
             result = vswprintf(string, format, arglist);
 #else
             result = vswprintf(string, N, format, arglist);
@@ -409,7 +409,7 @@ namespace CppMiniToolkit
 
         static wchar_t StaticPathSeparator()
         {
-#if CPPMINITOOLKIT_PLATFORM_WINDOWS
+#if CPP_MINI_TOOLKIT_PLATFORM_WINDOWS
             return L'\\';
 #else
             return L'/';
@@ -428,9 +428,9 @@ namespace CppMiniToolkit
 
         static int iCompare(const wchar_t* first, const wchar_t* second)
         {
-#if CPPMINITOOLKIT_COMPILER_MSVC
+#if CPP_MINI_TOOLKIT_COMPILER_MSVC
             return _wcsicmp(first, second);
-#elif CPPMINITOOLKIT_COMPILER_GCC && CPPMINITOOLKIT_PLATFORM_WINDOWS
+#elif CPP_MINI_TOOLKIT_COMPILER_GCC && CPP_MINI_TOOLKIT_PLATFORM_WINDOWS
             return wcsicmp(first, second);
 #else
             return wcscasecmp(first, second);
@@ -439,9 +439,9 @@ namespace CppMiniToolkit
 
         static int iCompareN(const wchar_t* first, const wchar_t* second, size_t n)
         {
-#if CPPMINITOOLKIT_COMPILER_MSVC
+#if CPP_MINI_TOOLKIT_COMPILER_MSVC
             return _wcsnicmp(first, second, n);
-#elif CPPMINITOOLKIT_COMPILER_GCC && CPPMINITOOLKIT_PLATFORM_WINDOWS
+#elif CPP_MINI_TOOLKIT_COMPILER_GCC && CPP_MINI_TOOLKIT_PLATFORM_WINDOWS
             return wcsnicmp(first, second, n);
 #else
             return wcsncasecmp(first, second, n);
