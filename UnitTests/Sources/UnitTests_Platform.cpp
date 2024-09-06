@@ -7,6 +7,7 @@
 #include <Platform/Windows/ErrorHandling.hpp>
 #include <Platform/Windows/Path.hpp>
 #include <Platform/Windows/ProcessMemory.hpp>
+#include <Platform/Windows/ProcessPatchUtils.hpp>
 #endif
 
 using namespace CppMiniToolkit;

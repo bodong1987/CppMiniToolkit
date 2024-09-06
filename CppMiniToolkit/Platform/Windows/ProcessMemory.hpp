@@ -13,7 +13,7 @@ namespace CppMiniToolkit
 {
     namespace Windows
     {
-        class ProcessMemory
+        class ProcessMemory  // NOLINT(cppcoreguidelines-special-member-functions)
         {
         public:
             ProcessMemory() = delete;
@@ -21,8 +21,8 @@ namespace CppMiniToolkit
 
             struct Section
             {
-                LPVOID Start = nullptr;
-                LONGLONG Size = 0;
+                const BYTE* Start = nullptr;
+                SIZE_T Size = 0;
 
                 bool IsValid() const
                 {
@@ -30,7 +30,7 @@ namespace CppMiniToolkit
                 }
             };
 
-            static Section FindModuleSection(const HMODULE module, LPCSTR segmentName)
+            static Section FindModuleSection(const HMODULE module, const LPCSTR segmentName)
             {
                 assert(module != nullptr);
                 assert(segmentName != nullptr);
@@ -48,12 +48,12 @@ namespace CppMiniToolkit
                 auto sectionHeader = IMAGE_FIRST_SECTION(ntHeaders);
                 for (int i = 0; i < ntHeaders->FileHeader.NumberOfSections; i++, sectionHeader++)
                 {
-                    const auto sectionBase = reinterpret_cast<LONGLONG>(Address) + sectionHeader->VirtualAddress;
+                    const auto sectionBase = reinterpret_cast<SIZE_T>(Address) + sectionHeader->VirtualAddress;
                     const auto sectionSize = sectionHeader->Misc.VirtualSize;
 
                     if (strcmp(reinterpret_cast<char*>(sectionHeader->Name), segmentName) == 0)
                     {
-                        Result.Start = reinterpret_cast<LPVOID>(sectionBase);
+                        Result.Start = reinterpret_cast<const BYTE*>(sectionBase);  // NOLINT(performance-no-int-to-ptr)
                         Result.Size = sectionSize;
 
                         return Result;
@@ -63,21 +63,41 @@ namespace CppMiniToolkit
                 return Result;
             }
 
-            static LPVOID SearchInMemory(const LPCVOID startPos, const LONGLONG size, const LPCVOID signature, const LONGLONG length)
+            static const BYTE* SearchInMemory(const BYTE* startPos, const SIZE_T size, const BYTE* signature, const SIZE_T length)
             {
                 // ReSharper disable CppCStyleCast
-                const BYTE* position = std::search((BYTE*)startPos, (BYTE*)startPos + size, (BYTE*)signature, (BYTE*)signature + length);
+                const BYTE* position = std::search(startPos, startPos + size, signature, signature + length);
 
-                if (position == nullptr || position == (BYTE*)startPos + size)
+                if (position == nullptr || position == startPos + size)
                 {
                     return nullptr;
                 }
                 // ReSharper restore CppCStyleCast
 
+                return position;
+            }
+
+            static const BYTE* FuzzySearchInMemory(const BYTE* startPos, const SIZE_T size, const BYTE* signature, const SIZE_T length, const BYTE wildcard)
+            {
+                auto compare = [=](BYTE a, BYTE b) -> bool {
+                    return a == b || b == wildcard;
+                };
+
+                const BYTE* start = startPos;
+                const BYTE* end = start + size;
+                const BYTE* sig = signature;
+
+                const BYTE* position = std::search(start, end, sig, sig + length, compare);
+
+                if (position == end)
+                {
+                    return nullptr;
+                }
+
                 return const_cast<BYTE*>(position);
             }
 
-            static LPVOID SearchInSection(const HMODULE module, const LPCSTR segmentName, const LPCVOID signature, const LONGLONG length)
+            static const BYTE* SearchInSection(const HMODULE module, const LPCSTR segmentName, const BYTE* signature, const SIZE_T length)
             {
                 const auto segment = FindModuleSection(module, segmentName);
 
@@ -89,7 +109,7 @@ namespace CppMiniToolkit
                 return nullptr;
             }
 
-            static bool ReplaceMemory(void* const dest, const LPCVOID source, const LONGLONG length)
+            static bool ReplaceMemory(BYTE* const dest, const LPCVOID source, const SIZE_T length)
             {
                 void* TargetAddress = dest;
 
@@ -113,9 +133,15 @@ namespace CppMiniToolkit
                 return true;
             }
 
-            static LPVOID PatchMemory(const HMODULE module, const LPCSTR segmentName, const LPCVOID signature, LPCVOID const newBytes, const LONGLONG length)
+            template <SIZE_T CodeLength>
+            static bool ReplaceMemory(BYTE* dest, const BYTE(&codes)[CodeLength])
             {
-                const LPVOID pos = SearchInSection(module, segmentName, signature, length); // NOLINT(*-misplaced-const)
+                return ReplaceMemory(dest, codes, CodeLength);
+            }
+
+            static const BYTE* PatchMemory(const HMODULE module, const LPCSTR segmentName, const BYTE* signature, const BYTE* newBytes, const SIZE_T length)
+            {
+                const BYTE* pos = SearchInSection(module, segmentName, signature, length); // NOLINT(*-misplaced-const)
 
                 // assert(pos != nullptr);
 
@@ -125,7 +151,7 @@ namespace CppMiniToolkit
                     return nullptr;
                 }
 
-                if(!ReplaceMemory(pos, newBytes, length))
+                if(!ReplaceMemory(const_cast<BYTE*>(pos), newBytes, length))
                 {
                     return nullptr;
                 }
