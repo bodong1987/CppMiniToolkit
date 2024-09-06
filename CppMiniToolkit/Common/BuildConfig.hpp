@@ -115,3 +115,5 @@
         typeName& operator=(const typeName&) = delete; /*NOLINT(bugprone-macro-parentheses)*/\
         typeName& operator=(typeName&&) = delete; /*NOLINT(bugprone-macro-parentheses)*/\
         ~typeName() = delete
+
+// reserve this empty line
