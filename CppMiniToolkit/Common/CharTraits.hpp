@@ -4,7 +4,7 @@
 #include <cstdarg>
 #include <string>
 
-#include <Common/Build.hpp>
+#include <Common/BuildConfig.hpp>
 
 namespace CppMiniToolkit
 {

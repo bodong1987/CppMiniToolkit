@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <Common/Build.hpp>
+#include <Common/BuildConfig.hpp>
 
 #include "FileSystem/Path.hpp"
 

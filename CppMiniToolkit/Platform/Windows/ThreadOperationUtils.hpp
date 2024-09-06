@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include <Common/Build.hpp>
+#include <Common/BuildConfig.hpp>
 
 #include "Common/ScopedExit.hpp"
 

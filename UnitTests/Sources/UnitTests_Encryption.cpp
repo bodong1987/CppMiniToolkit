@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <Common/Build.hpp>
+#include <Common/BuildConfig.hpp>
 #include <Encryption/MD5.hpp>
 #include <Encryption/Crc32.hpp>
 #include <Common/DynamicBuffer.hpp>

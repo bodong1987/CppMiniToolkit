@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Common/Build.hpp>
+#include <Common/BuildConfig.hpp>
 #include <Common/ScopedExit.hpp>
 
 #if CPP_MINI_TOOLKIT_PLATFORM_WINDOWS

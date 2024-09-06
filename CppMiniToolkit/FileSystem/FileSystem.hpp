@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Common/Build.hpp>
+#include <Common/BuildConfig.hpp>
 #include <Common/DynamicBuffer.hpp>
 #include <fstream>
 #include <functional>

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Common/Build.hpp>
+#include <Common/BuildConfig.hpp>
 
 #if CPP_MINI_TOOLKIT_PLATFORM_WINDOWS
 #include <Platform/Windows/ProcessMemory.hpp>

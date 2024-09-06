@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Common/Build.hpp>
+#include <Common/BuildConfig.hpp>
 #include <string>
 #include <Common/CharTraits.hpp>
 
