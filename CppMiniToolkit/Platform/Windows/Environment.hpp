@@ -13,14 +13,12 @@
 
 namespace CppMiniToolkit
 {
-    namespace Windows
+    namespace PlatformWindows
     {
         class Environment
         {
         public:
             CPP_MINI_TOOLKIT_DECLARE_TOOLKIT_CLASS_TYPE(Environment);
-
-            typedef std::basic_string<TCHAR> StringT;
 
             typedef std::basic_string<TCHAR> StringT;
 

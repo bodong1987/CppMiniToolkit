@@ -11,7 +11,7 @@
 
 namespace CppMiniToolkit
 {
-    namespace Windows
+    namespace PlatformWindows
     {
         class ProcessOperationUtils
         {
