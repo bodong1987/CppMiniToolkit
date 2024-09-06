@@ -53,7 +53,6 @@ namespace CppMiniToolkit
                 CHAR PatchOffset = 0;
                 CHAR PatchSize = 0;
                 BYTE Wildcard = 0xFF;
-                BYTE FunctionAddressFlag = 0;
                 LPCVOID FunctionPointer = nullptr; // should be assembly function 
                 bool FuzzySearchInMemory = false;
             };
@@ -98,7 +97,7 @@ namespace CppMiniToolkit
                 ReplaceAssemblyFunctionAddress(
                     CallAsmFunctionCodes.data(),
                     CallAsmFunctionCodes.size(),
-                    options.FunctionAddressFlag,
+                    0,
                     options.FunctionPointer);
 
                 CallAsmFunctionCodes.insert(CallAsmFunctionCodes.end(), AddressOfTargetFunction + options.PatchOffset,
