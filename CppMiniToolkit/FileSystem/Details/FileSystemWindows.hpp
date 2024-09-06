@@ -8,6 +8,8 @@
 #if CPP_MINI_TOOLKIT_PLATFORM_WINDOWS
 
 #include <windows.h>
+// ReSharper disable once CppUnusedIncludeDirective
+#include <winioctl.h>
 #include <string>
 #include <Common/ScopedExit.hpp>
 
