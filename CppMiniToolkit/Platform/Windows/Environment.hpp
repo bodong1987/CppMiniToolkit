@@ -171,7 +171,7 @@ namespace CppMiniToolkit
 
                 std::vector<char> buffer(4096);
                 DWORD bytesRead = 0;
-                while (ReadFile(hRead, buffer.data(), buffer.size(), &bytesRead, nullptr))
+                while (ReadFile(hRead, buffer.data(), static_cast<DWORD>(buffer.size()), &bytesRead, nullptr))
                 {
                     Result.append(buffer.data(), bytesRead);
 
