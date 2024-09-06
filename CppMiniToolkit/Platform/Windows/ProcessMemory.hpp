@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include <Common/Build.hpp>
 
 #if CPPMINITOOLKIT_PLATFORM_WINDOWS
@@ -13,11 +12,10 @@ namespace CppMiniToolkit
 {
     namespace Windows
     {
-        class ProcessMemory  // NOLINT(cppcoreguidelines-special-member-functions)
+        class ProcessMemory
         {
         public:
-            ProcessMemory() = delete;
-            ~ProcessMemory() = delete;
+            CPPMINITOOLKIT_DECLARE_TOOLKIT_CLASS_TYPE(ProcessMemory);
 
             struct Section
             {

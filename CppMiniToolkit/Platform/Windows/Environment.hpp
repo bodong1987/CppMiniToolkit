@@ -18,8 +18,7 @@ namespace CppMiniToolkit
         class Environment
         {
         public:
-            Environment() = delete;
-            ~Environment() = delete;
+            CPPMINITOOLKIT_DECLARE_TOOLKIT_CLASS_TYPE(Environment);
 
             typedef std::basic_string<TCHAR> StringT;
 

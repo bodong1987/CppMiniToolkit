@@ -108,3 +108,10 @@
 #endif
 
 #define CPPMINITOOLKIT_UNREFERENCED_PARAMETER(p) (void)(p)
+#define CPPMINITOOLKIT_DECLARE_TOOLKIT_CLASS_TYPE(typeName) \
+        typeName() = delete; \
+        typeName(const typeName&) = delete; \
+        typeName(typeName&&) = delete; /*NOLINT(bugprone-macro-parentheses)*/\
+        typeName& operator=(const typeName&) = delete; /*NOLINT(bugprone-macro-parentheses)*/\
+        typeName& operator=(typeName&&) = delete; /*NOLINT(bugprone-macro-parentheses)*/\
+        ~typeName() = delete

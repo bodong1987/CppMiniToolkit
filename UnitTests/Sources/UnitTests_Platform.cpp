@@ -8,6 +8,7 @@
 #include <Platform/Windows/Path.hpp>
 #include <Platform/Windows/ProcessMemory.hpp>
 #include <Platform/Windows/ProcessPatchUtils.hpp>
+#include <Platform/Windows/QueryThreadInformationUtils.hpp>
 #endif
 
 using namespace CppMiniToolkit;

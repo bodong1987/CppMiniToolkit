@@ -16,8 +16,7 @@ namespace CppMiniToolkit
     class FileSystem
     {
     public:
-        FileSystem() = delete;
-        ~FileSystem() = delete;
+        CPPMINITOOLKIT_DECLARE_TOOLKIT_CLASS_TYPE(FileSystem);
 
         // is file or directory exists
         template <typename TCharType>

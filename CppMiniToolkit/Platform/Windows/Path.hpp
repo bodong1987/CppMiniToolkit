@@ -17,8 +17,7 @@ namespace CppMiniToolkit
         class PathUtils
         {
         public:
-            PathUtils() = delete;
-            ~PathUtils() = delete;
+            CPPMINITOOLKIT_DECLARE_TOOLKIT_CLASS_TYPE(PathUtils);
 
             typedef std::basic_string<TCHAR> StringT;
 

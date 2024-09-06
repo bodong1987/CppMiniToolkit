@@ -13,7 +13,6 @@
 
 #pragma comment(lib, "Dbghelp")
 
-
 namespace CppMiniToolkit
 {
     namespace Windows
@@ -21,8 +20,7 @@ namespace CppMiniToolkit
         class ErrorHandling
         {
         public:
-            ErrorHandling() = delete;
-            ~ErrorHandling() = delete;
+            CPPMINITOOLKIT_DECLARE_TOOLKIT_CLASS_TYPE(ErrorHandling);
 
             typedef std::basic_string<TCHAR> StringT;
 

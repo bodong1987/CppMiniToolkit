@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include <Common/Build.hpp>
 
 #if CPPMINITOOLKIT_PLATFORM_WINDOWS
@@ -11,11 +10,10 @@ namespace CppMiniToolkit
 {
     namespace Windows
     {
-        class ProcessPatchUtils  // NOLINT(cppcoreguidelines-special-member-functions)
+        class ProcessPatchUtils
         {
         public:
-            ProcessPatchUtils() = delete;
-            ~ProcessPatchUtils() = delete;
+            CPPMINITOOLKIT_DECLARE_TOOLKIT_CLASS_TYPE(ProcessPatchUtils);
 
             static bool ReplaceAssemblyFunctionAddress(BYTE* codes, const SIZE_T length, const BYTE flag,
                                                        const LPCVOID addressOfFunction)

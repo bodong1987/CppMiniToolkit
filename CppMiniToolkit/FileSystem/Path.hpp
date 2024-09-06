@@ -1,16 +1,16 @@
 #pragma once
 
+#include <Common/Build.hpp>
 #include <string>
-
 #include <Common/CharTraits.hpp>
 
 namespace CppMiniToolkit
 {
-    class PathUtils  // NOLINT(cppcoreguidelines-special-member-functions)
+    class PathUtils
     {
     public:
-        PathUtils() = delete;
-        ~PathUtils() = delete;
+        CPPMINITOOLKIT_DECLARE_TOOLKIT_CLASS_TYPE(PathUtils);
+        
     private:
         template <typename TCharType>
         static const TCharType* GetSplitFlags()
