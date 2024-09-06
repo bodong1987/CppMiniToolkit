@@ -20,8 +20,8 @@ Platform-related basic code base
 ## Text
 Text encoding conversion, UTF16 to UTF8, etc.
 
-# How to tests it
-Clone the current project, please pay attention to the sub-module googleTests, and then use Cmake to generate the project.
+# How to test it
+Clone the current project, please pay attention to the submodule googleTests, and then use Cmake to generate the project.
 
 # How to use it
 This is a pure header file C++ project, you only need to add CppMiniToolkit to the include directory of your C++ project.

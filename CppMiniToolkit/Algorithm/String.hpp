@@ -5,11 +5,10 @@
 
 namespace CppMiniToolkit
 {
-    class StringAlgorithm  // NOLINT(cppcoreguidelines-special-member-functions)
+    class StringAlgorithm
     {
     public:
-        StringAlgorithm() = delete;
-        ~StringAlgorithm() = delete;
+        CMT_DECLARE_TOOLKIT_CLASS_TYPE(StringAlgorithm);
 
         // equal
         template <typename TCharType>

@@ -4,7 +4,7 @@
 
 #include <Common/BuildConfig.hpp>
 
-#if CPP_MINI_TOOLKIT_PLATFORM_WINDOWS
+#if CMT_PLATFORM_WINDOWS
 #include <Text/Details/TextEncodingWindows.hpp>
 #else
 #include <Text/Details/TextEncodingGeneric.hpp>
@@ -15,7 +15,7 @@ namespace CppMiniToolkit
     class Encoding
     {
     public:
-        CPP_MINI_TOOLKIT_DECLARE_TOOLKIT_CLASS_TYPE(Encoding);
+        CMT_DECLARE_TOOLKIT_CLASS_TYPE(Encoding);
 
         static std::string UTF16ToUTF8(const char16_t* text)
         {
@@ -27,7 +27,7 @@ namespace CppMiniToolkit
             return TextEncodingDetails::UTF8ToUTF16(text);
         }
 
-#if CPP_MINI_TOOLKIT_PLATFORM_WINDOWS
+#if CMT_PLATFORM_WINDOWS
         static std::string UTF16ToANSI(const char16_t* text)
         {
             return PlatformWindows::TextEncodingWindows::UTF16ToANSI(text);
@@ -49,7 +49,7 @@ namespace CppMiniToolkit
         }
 #endif
 
-#if CPP_MINI_TOOLKIT_COMPILER_MSVC_WITH_CPP_CLI        
+#if CMT_COMPILER_MSVC_WITH_CPP_CLI
         static System::String^ UTF8ToCLIString(const std::string& str)
         {
             if (str.empty())
@@ -111,19 +111,19 @@ namespace CppMiniToolkit
     };
 }
 
-#define CPP_MINI_TOOLKIT_UTF8_TO_UTF16(text) CppMiniToolkit::Encoding::UTF8ToUTF16(text)
-#define CPP_MINI_TOOLKIT_UTF16_TO_UTF8(text) CppMiniToolkit::Encoding::UTF16ToUTF8(text)
+#define CMT_UTF8_TO_UTF16(text) CppMiniToolkit::Encoding::UTF8ToUTF16(text)
+#define CMT_UTF16_TO_UTF8(text) CppMiniToolkit::Encoding::UTF16ToUTF8(text)
 
-#if CPP_MINI_TOOLKIT_PLATFORM_WINDOWS
-#define CPP_MINI_TOOLKIT_WCHAR_TO_UTF8(text) CppMiniToolkit::Encoding::WCHARToUTF8(text)
-#define CPP_MINI_TOOLKIT_UTF8_TO_WCHAR(text) CppMiniToolkit::Encoding::UTF8ToWCHAR(text)
+#if CMT_PLATFORM_WINDOWS
+#define CMT_WCHAR_TO_UTF8(text) CppMiniToolkit::Encoding::WCHARToUTF8(text)
+#define CMT_UTF8_TO_WCHAR(text) CppMiniToolkit::Encoding::UTF8ToWCHAR(text)
 
-#if CPP_MINI_TOOLKIT_UNICODE
-#define CPP_MINI_TOOLKIT_TCHAR_TO_UTF8(text) CppMiniToolkit::Encoding::WCHARToUTF8(text)
-#define CPP_MINI_TOOLKIT_UTF8_TO_TCHAR(text) CppMiniToolkit::Encoding::UTF8ToWCHAR(text)
+#if CMT_UNICODE
+#define CMT_TCHAR_TO_UTF8(text) CppMiniToolkit::Encoding::WCHARToUTF8(text)
+#define CMT_UTF8_TO_TCHAR(text) CppMiniToolkit::Encoding::UTF8ToWCHAR(text)
 #else
-#define CPP_MINI_TOOLKIT_TCHAR_TO_UTF8(text) text
-#define CPP_MINI_TOOLKIT_UTF8_TO_TCHAR(text) text
+#define CMT_TCHAR_TO_UTF8(text) text
+#define CMT_UTF8_TO_TCHAR(text) text
 #endif
 
 #endif

@@ -2,7 +2,7 @@
 
 #include <Common/BuildConfig.hpp>
 
-#if CPP_MINI_TOOLKIT_PLATFORM_WINDOWS
+#if CMT_PLATFORM_WINDOWS
 #include <Platform/Windows/ProcessMemory.hpp>
 #include <vector>
 
@@ -13,7 +13,7 @@ namespace CppMiniToolkit
         class ProcessPatchUtils
         {
         public:
-            CPP_MINI_TOOLKIT_DECLARE_TOOLKIT_CLASS_TYPE(ProcessPatchUtils);
+            CMT_DECLARE_TOOLKIT_CLASS_TYPE(ProcessPatchUtils);
 
             static bool ReplaceAssemblyFunctionAddress(BYTE* codes, const SIZE_T length, const BYTE flag,
                                                        const LPCVOID addressOfFunction)

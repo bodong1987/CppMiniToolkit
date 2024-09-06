@@ -4,7 +4,7 @@
 
 #include "FileSystem/Path.hpp"
 
-#if CPP_MINI_TOOLKIT_PLATFORM_WINDOWS
+#if CMT_PLATFORM_WINDOWS
 #include <Platform/Windows/Environment.hpp>
 #include <Platform/Windows/ErrorHandling.hpp>
 #include <Platform/Windows/ProcessMemory.hpp>
@@ -16,7 +16,7 @@
 using namespace CppMiniToolkit;
 
 
-#if CPP_MINI_TOOLKIT_PLATFORM_WINDOWS
+#if CMT_PLATFORM_WINDOWS
 TEST(WindowsPlatform, Environment)
 {
     const auto systemVersion = PlatformWindows::Environment::GetSystemVersion();

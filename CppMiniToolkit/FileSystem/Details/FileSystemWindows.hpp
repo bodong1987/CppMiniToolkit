@@ -1,11 +1,11 @@
 // ReSharper disable CppRedundantQualifier
 #pragma once
 
-#if !CPP_MINI_TOOLKIT_PLATFORM_WINDOWS
+#if !CMT_PLATFORM_WINDOWS
 #error "This header file is provide for windows only"
 #endif
 
-#if CPP_MINI_TOOLKIT_PLATFORM_WINDOWS
+#if CMT_PLATFORM_WINDOWS
 
 #include <windows.h>
 // ReSharper disable once CppUnusedIncludeDirective
@@ -624,7 +624,7 @@ namespace CppMiniToolkit
                     return false;
                 }
 
-                CPP_MINI_TOOLKIT_SCOPED_EXIT(CloseHandle(hDevice));
+                CMT_SCOPED_EXIT(CloseHandle(hDevice));
 
                 STORAGE_PROPERTY_QUERY query{};
                 query.PropertyId = StorageDeviceSeekPenaltyProperty;

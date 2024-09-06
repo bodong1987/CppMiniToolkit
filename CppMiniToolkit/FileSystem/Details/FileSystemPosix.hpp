@@ -3,7 +3,7 @@
 
 #include <Common/BuildConfig.hpp>
 
-#if !CPP_MINI_TOOLKIT_PLATFORM_WINDOWS
+#if !CMT_PLATFORM_WINDOWS
 #include <string>
 #include <sys/stat.h>
 #include <dirent.h>

@@ -5,7 +5,7 @@
 #include <fstream>
 #include <functional>
 
-#if CPP_MINI_TOOLKIT_PLATFORM_WINDOWS
+#if CMT_PLATFORM_WINDOWS
 #include <FileSystem/Details/FileSystemWindows.hpp>
 #else
 #include <FileSystem/Details/FileSystemPosix.hpp>
@@ -16,7 +16,7 @@ namespace CppMiniToolkit
     class FileSystem
     {
     public:
-        CPP_MINI_TOOLKIT_DECLARE_TOOLKIT_CLASS_TYPE(FileSystem);
+        CMT_DECLARE_TOOLKIT_CLASS_TYPE(FileSystem);
 
         // is file or directory exists
         template <typename TCharType>

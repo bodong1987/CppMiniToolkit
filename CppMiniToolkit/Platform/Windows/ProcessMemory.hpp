@@ -2,7 +2,7 @@
 
 #include <Common/BuildConfig.hpp>
 
-#if CPP_MINI_TOOLKIT_PLATFORM_WINDOWS
+#if CMT_PLATFORM_WINDOWS
 #include <windows.h>
 #include <Psapi.h>
 #include <cassert>
@@ -15,7 +15,7 @@ namespace CppMiniToolkit
         class ProcessMemory
         {
         public:
-            CPP_MINI_TOOLKIT_DECLARE_TOOLKIT_CLASS_TYPE(ProcessMemory);
+            CMT_DECLARE_TOOLKIT_CLASS_TYPE(ProcessMemory);
 
             struct Section
             {

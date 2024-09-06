@@ -12,7 +12,7 @@ namespace CppMiniToolkit
         class TextEncodingGeneric
         {
         public:
-            CPP_MINI_TOOLKIT_DECLARE_TOOLKIT_CLASS_TYPE(TextEncodingGeneric);
+            CMT_DECLARE_TOOLKIT_CLASS_TYPE(TextEncodingGeneric);
 
         private:
             // @reference https://github.com/Davipb/utf8-utf16-converter/tree/master
@@ -432,7 +432,7 @@ namespace CppMiniToolkit
         };
     }
 
-#if !CPP_MINI_TOOLKIT_PLATFORM_WINDOWS
+#if !CMT_PLATFORM_WINDOWS
     typedef PlatformGeneric::TextEncodingGeneric TextEncodingDetails;
 #endif
 }
